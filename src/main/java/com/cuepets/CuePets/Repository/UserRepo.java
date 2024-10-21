@@ -1,6 +1,6 @@
-package Repository;
+package com.cuepets.CuePets.Repository;
 
-import Model.Users;
+import com.cuepets.CuePets.Model.Users;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
 public interface UserRepo extends MongoRepository<Users,String> {
