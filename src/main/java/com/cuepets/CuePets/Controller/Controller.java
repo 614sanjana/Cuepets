@@ -2,8 +2,8 @@ package com.cuepets.CuePets.Controller;
 
 
 
-import com.cuepets.CuePets.Model.Users;
-import com.cuepets.CuePets.Services.UserServices;
+import com.cuepets.CuePets.Model.PetOwner;
+import com.cuepets.CuePets.Services.PetOwnerServices;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,32 +14,32 @@ import org.springframework.web.bind.annotation.*;
 public class Controller {
 
     @Autowired
-    private UserServices userServices;
+    private PetOwnerServices petOwnerServices;
 
     @PostMapping(value="/addUsers")
-    private void addUsers(@RequestBody Users user) {
-        userServices.saveUser(user);
+    private void addUsers(@RequestBody PetOwner user) {
+        petOwnerServices.saveUser(user);
     }
 
     @GetMapping(value="/getAll")
-    private Iterable<Users>getUsers(){
-        return userServices.listAll();
+    private Iterable<PetOwner>getUsers(){
+        return petOwnerServices.listAll();
     }
 
     @PutMapping(value="/edit/{id}")
-    private Users updateUsers(@RequestBody Users user,@PathVariable(name="id") String _id){
+    private PetOwner updateUsers(@RequestBody PetOwner user, @PathVariable(name="id") String _id){
         user.setUserPhone(_id);
-        userServices.saveUser(user);
+        petOwnerServices.saveUser(user);
         return user;
     }
 
     @DeleteMapping(value="/deleteUsers/{id}")
     private void deleteUsers(@PathVariable("id") String _id){
-        userServices.deleteUser(_id);
+        petOwnerServices.deleteUser(_id);
     }
 
     @RequestMapping(value="/user/{id}")
-    private Users getUsers(@PathVariable(name="id") String userID){
-        return userServices.getUserByID(userID);
+    private PetOwner getUsers(@PathVariable(name="id") String userID){
+        return petOwnerServices.getUserByID(userID);
     }
 }

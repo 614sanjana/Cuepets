@@ -6,7 +6,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document(collation = "users")
 
-public class Users {
+public class PetOwner {
     @Id
     private String userPhone;
 
@@ -16,7 +16,7 @@ public class Users {
 
    private String userPassword;
 
-    public Users(String userName, String userEmail, String userPhone, String userPassword) {
+    public PetOwner(String userName, String userEmail, String userPhone, String userPassword) {
         this.userName = userName;
         this.userEmail = userEmail;
         this.userPhone = userPhone;
