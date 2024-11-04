@@ -1,6 +1,6 @@
 package com.cuepets.CuePets.Services;
 
-import com.cuepets.CuePets.Model.PetOwner;
+
 import com.cuepets.CuePets.Model.Pets;
 import com.cuepets.CuePets.Repository.PetsRepo;
 import org.springframework.beans.factory.annotation.Autowired;
