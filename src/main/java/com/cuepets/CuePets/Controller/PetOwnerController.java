@@ -36,7 +36,7 @@ public class PetOwnerController {    // check whether you can change the name as
         petOwnerServices.saveUser(user);
     }
     @GetMapping(value="/getUsers")
-    public List<PetOwner> getAllStudents() {
+    public List<PetOwner> getAllUsers() {
         return petOwnerRepo.findAll();
     }
 
