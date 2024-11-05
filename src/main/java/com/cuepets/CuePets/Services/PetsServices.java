@@ -15,5 +15,8 @@ public class PetsServices {
             petsRepo.save(pet);
     }
 
+    public Pets getPetsById(String id){
+        return petsRepo.findById(id).get();
+    }
 
 }

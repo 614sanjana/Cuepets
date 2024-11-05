@@ -22,7 +22,7 @@ import java.util.List;
 
 public class PetOwnerController {    // check whether you can change the name as PetOwnerController
 
-    private final Logger LOG = LoggerFactory.getLogger(getClass());
+  // private final Logger LOG = LoggerFactory.getLogger(getClass());
 
     @Autowired
     private PetOwnerServices petOwnerServices;

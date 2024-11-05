@@ -14,4 +14,8 @@ public class PetClinicServices {
         petClinicRepo.save(clinic);
     }
 
+    public PetClinic getClinicById(String id){
+        return petClinicRepo.findById(id).get();
+    }
+
 }
