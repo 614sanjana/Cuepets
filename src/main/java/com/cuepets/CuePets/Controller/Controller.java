@@ -21,25 +21,5 @@ public class Controller {
         petOwnerServices.saveUser(user);
     }
 
-    @GetMapping(value="/getAll")
-    private Iterable<PetOwner>getUsers(){
-        return petOwnerServices.listAll();
-    }
 
-    @PutMapping(value="/edit/{id}")
-    private PetOwner updateUsers(@RequestBody PetOwner user, @PathVariable(name="id") String _id){
-        user.setUserPhone(_id);
-        petOwnerServices.saveUser(user);
-        return user;
-    }
-
-    @DeleteMapping(value="/deleteUsers/{id}")
-    private void deleteUsers(@PathVariable("id") String _id){
-        petOwnerServices.deleteUser(_id);
-    }
-
-    @RequestMapping(value="/user/{id}")
-    private PetOwner getUsers(@PathVariable(name="id") String userID){
-        return petOwnerServices.getUserByID(userID);
-    }
 }
