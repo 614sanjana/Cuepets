@@ -19,7 +19,7 @@ public class PetOwnerServices {
         petOwnerRepo.save(user);
     }
 
-    public List<PetOwner> listAll() {
-        return null;
+    public PetOwner getUserByID(String id) {
+    return petOwnerRepo.findById(id).get();
     }
 }

@@ -35,9 +35,16 @@ public class PetOwnerController {    // check whether you can change the name as
     public void addUsers(@RequestBody PetOwner user) {
         petOwnerServices.saveUser(user);
     }
+
     @GetMapping(value="/getUsers")
     public List<PetOwner> getAllUsers() {
         return petOwnerRepo.findAll();
     }
+
+    @RequestMapping(value="/getUsers/{id}")
+    public PetOwner getById(@PathVariable(name="id")String id) {
+        return petOwnerServices.getUserByID(id);
+    }
+
 
 }
