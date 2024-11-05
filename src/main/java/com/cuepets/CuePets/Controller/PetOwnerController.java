@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 @CrossOrigin(origins="*")
 @RequestMapping("api/v1/user")
 
-public class Controller {
+public class PetOwnerController {    // check whether you can change the name as PetOwnerController
 
     @Autowired
     private PetOwnerServices petOwnerServices;
