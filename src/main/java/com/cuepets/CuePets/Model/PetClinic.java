@@ -6,7 +6,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Data
-@Document(collation="clinic")
+@Document(collection="clinic")
 public class PetClinic {
 
     @Id
@@ -16,5 +16,5 @@ public class PetClinic {
     private String doctorName;
     private String clinicLocation;
     private String doctorPhone;
-    
+
 }
