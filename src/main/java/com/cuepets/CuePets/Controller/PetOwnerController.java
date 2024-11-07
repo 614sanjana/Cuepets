@@ -22,7 +22,6 @@ import java.util.List;
 
 public class PetOwnerController {    // check whether you can change the name as PetOwnerController
 
-  // private final Logger LOG = LoggerFactory.getLogger(getClass());
 
     @Autowired
     private PetOwnerServices petOwnerServices;
@@ -32,8 +31,8 @@ public class PetOwnerController {    // check whether you can change the name as
 
 
     @PostMapping(value="/addUsers")
-    public void addUsers(@RequestBody PetOwner user) {
-        petOwnerServices.saveUser(user);
+    public PetOwner addUsers(@RequestBody PetOwner user) {
+       return petOwnerServices.saveUser(user);
     }
 
     @GetMapping(value="/getUsers")

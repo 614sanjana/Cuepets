@@ -1,67 +1,24 @@
 package com.cuepets.CuePets.Model;
 
+import lombok.Data;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.util.Random;
 
+@Data
 @Document(collection = "users")
 
 public class PetOwner {
     @Id
     private String userPhone;
 
-   private String userName;
 
-   private String userEmail;
+    private String ownerID;  //initally we thought transient annotation would be used but then an error occured because a data anotted by @Transient means we cant store it in DB
+                            //so therfore we removed the annotation since we wanted the ownerID to be stored in the DB
 
-   private String userPassword;
-
-    public PetOwner(String userName, String userEmail, String userPhone, String userPassword) {
-        this.userName = userName;
-        this.userEmail = userEmail;
-        this.userPhone = userPhone;
-        this.userPassword = userPassword;
-    }
-
-    public String getUserPhone() {
-        return userPhone;
-    }
-
-    public void setUserPhone(String userPhone) {
-        this.userPhone = userPhone;
-    }
-
-    public String getUserName() {
-        return userName;
-    }
-
-    public void setUserName(String userName) {
-        this.userName = userName;
-    }
-
-    public String getUserEmail() {
-        return userEmail;
-    }
-
-    public void setUserEmail(String userEmail) {
-        this.userEmail = userEmail;
-    }
-
-    public String getUserPassword() {
-        return userPassword;
-    }
-
-    public void setUserPassword(String userPassword) {
-        this.userPassword = userPassword;
-    }
-
-    @Override
-    public String toString() {
-        return "Users{" +
-                "userPhone='" + userPhone + '\'' +
-                ", userName='" + userName + '\'' +
-                ", userEmail='" + userEmail + '\'' +
-                ", userPassword='" + userPassword + '\'' +
-                '}';
-    }
+    private String userName;
+    private String userEmail;
+    private String userPassword;
 }
