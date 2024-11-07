@@ -2,21 +2,35 @@ package com.cuepets.CuePets.Services;
 
 import com.cuepets.CuePets.Model.PetOwner;
 import com.cuepets.CuePets.Repository.PetOwnerRepo;
-import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.util.Random;
 
 @Service
 public class PetOwnerServices {
+
     @Autowired
-     private PetOwnerRepo petOwnerRepo;
+    private PetOwnerRepo petOwnerRepo;
 
+    private static final int MIN = 11111;
+    private static final int MAX = 99999;
 
-    public void saveUser(PetOwner user){
+    public String generateUniqueOwnerID()
+    {
+        Random random = new Random();
+        String generatedID;
+        do
+        {
+            generatedID = String.valueOf(random.nextInt((MAX - MIN) + 1) + MIN);
+        } while (petOwnerRepo.existsByOwnerID(generatedID));
+        return generatedID;
+    }
+
+    public PetOwner saveUser(PetOwner user){
+        user.setOwnerID(generateUniqueOwnerID());
         petOwnerRepo.save(user);
+        return user;
     }
 
     public PetOwner getUserByID(String id) {
