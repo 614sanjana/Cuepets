@@ -8,9 +8,12 @@ import org.springframework.stereotype.Service;
 @Service
 public class PetBreedServices {
     @Autowired
-    private PetBreedRepo petBreedRepo;
+    private PetBreedRepo breedRepo;
 
-    public void saveBreed(PetBreed petBreed) {
-        petBreedRepo.save(petBreed);
+
+    public void breedSave(PetBreed breed){
+        breedRepo.save(breed);
     }
+
+
 }
