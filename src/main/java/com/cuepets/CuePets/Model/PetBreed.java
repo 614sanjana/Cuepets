@@ -7,7 +7,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import java.util.List;
 
 @Data
-@Document(collection="petbreed")
+@Document(collection="breed")
 public class PetBreed {
     @Id
     private String petBreedID;
