@@ -4,13 +4,21 @@ import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.util.List;
+
 @Data
 @Document(collection = "pets")
 public class Pets {
     @Id
-    private String petCode;
+    private String petID;
 
-    private String petType;
-
+    private String OwnerID;
+    private String petBreedID;
+    private String petName;
+    private String petAge;
+    private String petGender;
+    private boolean adoptionStatus=false;
+    private List<String> petBehaviour;
+    private List<String> petAllergies;
 
 }

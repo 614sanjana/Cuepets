@@ -10,8 +10,8 @@ import java.util.List;
 @Document(collection="breed")
 public class PetBreed {
     @Id
-    private String petBreedID;
+    private String breedID;
 
     private String breedName;
-    private List<String> petTypeID;
+    private String petTypeID;
 }

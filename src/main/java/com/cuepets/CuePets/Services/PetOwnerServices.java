@@ -13,7 +13,7 @@ public class PetOwnerServices {
     @Autowired
     private PetOwnerRepo petOwnerRepo;
 
-    private static final int MIN = 11111;
+    private static final int MIN = 1;
     private static final int MAX = 99999;
 
     public String generateUniqueOwnerID()
