@@ -15,7 +15,7 @@ public class PetBreedController {
     PetBreedServices petBreedServices;
 
     @PostMapping(value="/addBreed")
-    public void saveBreed(@RequestBody PetBreed breed){
-        petBreedServices.breedSave(breed);
+    public PetBreed saveBreed(@RequestBody PetBreed breed){
+        return petBreedServices.breedSave(breed);
     }
 }
