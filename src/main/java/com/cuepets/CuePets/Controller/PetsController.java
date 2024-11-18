@@ -14,16 +14,16 @@ import java.util.List;
 
 public class PetsController {
 
-    @Autowired
-    private PetsServices  petsServices;
+    @Autowired    //auto maps the method
+    private PetsServices petsServices;
 
     @Autowired
     private PetsRepo petsRepo;
 
 
-    @PostMapping(value="/addPets/{id}")
+    @PostMapping(value="/addPets/{id}")      //when we are going to add pet, we'll also pass owner id
     private Pets addPets(@PathVariable(name="id")String id,@RequestBody Pets pet) {  //Pets is a class in model harshitha!!
-        pet.setOwnerID(id);
+        pet.setOwnerID(id);                             //setter setOwnerId is a setter method which is defined in the lombok with which we can set values to the variables of that object
         return petsServices.savePets(pet);                                                  //the object of the Pets class is passed to the methods
     }
 

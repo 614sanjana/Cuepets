@@ -18,3 +18,4 @@ public class RegularAppointmentsController {
         regularAppointmentsServices.saveAppointments(appointments);
     }
 }
+
