@@ -1,0 +1,73 @@
+/* Main Section */
+.fact-section {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    margin: 1rem;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Title Styles */
+  .rw-text-title {
+    font-size: 1.8rem;
+    color: #333;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 1rem;
+  }
+  
+  .rw-text-highlight {
+    color: #1e8ffd;
+  }
+  
+  /* Fact Display Styles */
+  .rw-text-format {
+    font-size: 1.2rem;
+    line-height: 1.6;
+    color: #555;
+    text-align: center;
+    margin-bottom: 1rem;
+    font-style: italic;
+  }
+  
+  .rw-text-quote1,
+  .rw-text-quote2 {
+    font-size: 2rem;
+    color: #ccc;
+  }
+  
+  /* Pet Type Styles */
+  .rw-pet-type {
+    font-size: 1rem;
+    color: #1e8ffd;
+    font-weight: bold;
+    text-align: center;
+    margin-top: 0.5rem;
+  }
+  
+  /* Navigation Buttons */
+  .rw-btns {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 1rem;
+  }
+  
+  .rw-next-btn {
+    font-size: 1rem;
+    background-color: #1e8ffd;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .rw-next-btn:hover {
+    background-color: #005bb5;
+  }
+  
