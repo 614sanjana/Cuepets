@@ -44,8 +44,24 @@ public class AuthServices {
         return petOwnerRepo.existsByuserPhone(userPhone);
     }
 
-    public void signIn(SignIn signIn){
-        
+    public String signIn(SignIn signIn){
+        String userPhoneNo = signIn.getUserPhone();
+        String userPass = signIn.getUserPass();
+        PetOwner user = petOwnerRepo.findByuserPhone(userPhoneNo);
+        if(user!=null){
+            String hashedPassword = user.getUserPassword();
+            if(bCryptPasswordEncoder.matches(userPass,hashedPassword)){
+                return "Login Successfully";
+            }
+            else
+            {
+                return "Incorrect password !!";
+            }
+        }
+        else
+        {
+            return "No User Found !!";
+        }
     }
 
 }

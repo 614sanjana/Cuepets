@@ -9,4 +9,6 @@ public interface PetOwnerRepo extends MongoRepository<PetOwner,String> {
     boolean existsByOwnerID(String ownerID);
 
     boolean existsByuserPhone(String userPhone);
+
+    PetOwner findByuserPhone(String userPhone);
 }

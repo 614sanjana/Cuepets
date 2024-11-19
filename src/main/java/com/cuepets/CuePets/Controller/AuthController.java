@@ -1,5 +1,6 @@
 package com.cuepets.CuePets.Controller;
 
+import com.cuepets.CuePets.DTO.SignIn;
 import com.cuepets.CuePets.Model.Doctor;
 import com.cuepets.CuePets.Model.PetOwner;
 import com.cuepets.CuePets.Repository.PetOwnerRepo;
@@ -37,16 +38,8 @@ public class AuthController
     }
 
     @PostMapping(value="/signIn")
-    public String signIn(@RequestBody PetOwner user)
+    public String signIn(@RequestBody SignIn user)
     {
-        if(authServices.isUserExists(user.getUserPhone()))
-        {
-            return "User Already Exist !!";
-        }
-        else
-        {
-            authServices.saveUser(user);
-            return "User Added Successfully";
-        }
+        return authServices.signIn(user);
     }
 }
