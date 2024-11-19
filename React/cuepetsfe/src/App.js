@@ -1,21 +1,22 @@
-import { React, useState, useEffect } from "react";
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import Form from "./Components/LoginForm";
-import Design from "./Components/Design";
-import Register from "./Components/Register";
-import Dog from "./Components/Dog";
-import Cat from "./Components/Cat";
+import React from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import "./App.css";
+import Home from "./Pages/Home";
+import Legal from "./Pages/Legal";
+import NotFound from "./Pages/NotFound";
+import Appointment from "./Pages/Appointment";
+
 function App() {
   return (
-    <div className="flex w-full h-screen">
-      <div className="w-full flex items-center justify-center lg:w-1/2">
-        <Register />
-      </div >
-      <div className="flex relative items-start justify-center w-1/2 h-screen">
-        <div className="w-full flex items-center justify-center h-full no-scale-on-hover">
-        <Cat/>
-        </div>
-      </div>
+    <div className="App">
+      <Router basename="/Health-Plus">
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/legal" element={<Legal />} />
+          <Route path="/appointment" element={<Appointment />} />
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </Router>
     </div>
   );
 }
