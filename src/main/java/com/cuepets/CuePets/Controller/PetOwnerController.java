@@ -30,11 +30,6 @@ public class PetOwnerController {    // check whether you can change the name as
     private PetOwnerRepo petOwnerRepo;
 
 
-    @PostMapping(value="/addUsers")
-    public PetOwner addUsers(@RequestBody PetOwner user) {
-       return petOwnerServices.saveUser(user);
-    }
-
     @GetMapping(value="/getUsers")
     public List<PetOwner> getAllUsers() {
         return petOwnerRepo.findAll();

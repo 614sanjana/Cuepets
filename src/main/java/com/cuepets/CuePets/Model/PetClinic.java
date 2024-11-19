@@ -10,11 +10,11 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class PetClinic {
 
     @Id
-    private String clinicId;
+    private String clinicID;
 
     private String clinicName;
-    private String doctorName;
+    private String doctorID;
     private String clinicLocation;
-    private String doctorPhone;
-
+    private String clinicNumber;
+    private Boolean isOpen;
 }
