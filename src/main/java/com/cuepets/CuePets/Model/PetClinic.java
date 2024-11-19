@@ -13,7 +13,7 @@ public class PetClinic {
     private String clinicID;
 
     private String clinicName;
-    private String doctorID;
+    private String doctorID;  //link karo baba
     private String clinicLocation;
     private String clinicNumber;
     private Boolean isOpen;
