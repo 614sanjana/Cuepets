@@ -1,11 +1,11 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faBars,
   faXmark,
   faPaw,
   faSignInAlt,
-  faTimes,
 } from "@fortawesome/free-solid-svg-icons";
 import "../Styles/Navbar.css";
 import { Link } from "react-router-dom";
@@ -13,7 +13,11 @@ import "../App.css";
 
 function Navbar() {
   const [nav, setNav] = useState(false);
-  const [isSignInPanelOpen, setIsSignInPanelOpen] = useState(false);
+
+  const navigate = useNavigate();
+  const handleRedirect = () => {
+    navigate("/signin"); // Redirect to the AboutPage component
+  };
 
   const openNav = () => {
     setNav(!nav);
@@ -60,9 +64,9 @@ function Navbar() {
       <button
         className="navbar-btn"
         type="button"
+        onClick={handleRedirect}
       >
-        <Link to="/signin" className="navbar-links">
-       <FontAwesomeIcon icon={faSignInAlt} /> Sign In</Link>
+       <FontAwesomeIcon icon={faSignInAlt} /> Sign In
       </button>
       </div>
 

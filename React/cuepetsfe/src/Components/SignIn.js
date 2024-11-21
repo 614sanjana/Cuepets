@@ -1,15 +1,26 @@
 import * as React from "react";
 import { Link, useNavigate } from "react-router-dom";
-import axios from "axios";
 import api from "../API/ApiConfig";
+import { GoogleLogin } from '@react-oauth/google';
 
 export default function SignIn({ setAuthState, setUser }) {
   const [userPhone, setPhone] = React.useState("");
   const [userPass, setPassword] = React.useState("");
-  const [errorMessage, setErrorMessage] = React.useState(""); // Error state for error messages
+  const [errorsMessage, setErrorMessage] = React.useState(""); // Error state for error messages
   const [showForgotPassword, setShowForgotPassword] = React.useState(false); // State to control visibility of the Forgot Password link
 
   const navigate = useNavigate();
+
+  const responseMessage = (response) => {
+      console.log(response);
+  };
+  const errorMessage = (error) => {
+      console.log(error);
+  };
+
+  const handleRedirect = () => {
+    navigate("/"); // Redirect to the AboutPage component
+  };
 
   const handleSignIn = (e) => {
     e.preventDefault();
@@ -48,9 +59,10 @@ export default function SignIn({ setAuthState, setUser }) {
         <p className="ml-10 mt-4 font-bold text-2xl">Go Back</p>
         <button
           type="button"
+          onClick={handleRedirect}
           className="text-white mt-5 ml-5 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm p-2.5 text-center inline-flex items-center me-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
         >
-          <Link to="/" className="navbar-links">
+          
             <svg
               className="w-5 h-5"
               aria-hidden="true"
@@ -67,7 +79,6 @@ export default function SignIn({ setAuthState, setUser }) {
               />
             </svg>
             <span className="sr-only">Icon description</span>
-          </Link>
         </button>
       </div>
 
@@ -102,8 +113,8 @@ export default function SignIn({ setAuthState, setUser }) {
           </div>
 
           {/* Error Message */}
-          {errorMessage && (
-            <div className="text-red-500 text-center mb-4">{errorMessage}</div>
+          {errorsMessage && (
+            <div className="text-red-500 text-center mb-4">{errorsMessage}</div>
           )}
 
           {/* Remember Me & Forgot Password */}
@@ -129,8 +140,10 @@ export default function SignIn({ setAuthState, setUser }) {
             >
               Submit
             </button>
-            <div className="pb-2"></div>
-            <button className="py-3 w-full border border-gray-300 text-gray-700 font-semibold text-lg rounded-md flex items-center justify-center gap-2 hover:bg-green-500 hover:text-white transition-transform active:scale-95 hover:scale-105">
+            <div>
+            <GoogleLogin
+    render={renderProps => (
+      <button onClick={renderProps.onClick} className="py-3 w-full border border-gray-300 text-gray-700 font-semibold text-lg rounded-md flex items-center justify-center gap-2 hover:bg-green-500 hover:text-white transition-transform active:scale-95 hover:scale-105" >
               <svg
                 width="20"
                 height="20"
@@ -157,6 +170,13 @@ export default function SignIn({ setAuthState, setUser }) {
               </svg>
               Sign in with Google
             </button>
+    )}
+    buttonText="Sign in with Google"
+    onSuccess={responseMessage}
+    onFailure={errorMessage}
+/>
+            </div>
+            <div className="pb-2"></div>
           </div>
 
           {/* Footer */}
