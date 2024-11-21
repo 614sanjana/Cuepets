@@ -49,9 +49,8 @@ export default function SignIn({ setAuthState, setUser }) {
         <button
           type="button"
           className="text-white mt-5 ml-5 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm p-2.5 text-center inline-flex items-center me-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-          onClick={() => window.history.back()}
         >
-          <Link to="/CuePets" className="navbar-links">
+          <Link to="/" className="navbar-links">
             <svg
               className="w-5 h-5"
               aria-hidden="true"

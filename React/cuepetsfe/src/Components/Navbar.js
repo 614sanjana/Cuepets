@@ -21,7 +21,7 @@ function Navbar() {
 
 
   return (
-    <div className="navbar-section">
+    <div className="navbar-section text-2xl font-extrabold">
       <h1 className="navbar-title">
         <Link to="/">
           Cuepets <FontAwesomeIcon icon={faPaw} className="paw-icon" />
@@ -52,7 +52,7 @@ function Navbar() {
         </li>
         <li>
           <a href="#doctors" className="navbar-links">
-            Doctors
+            Creators
           </a>
         </li>
       </ul>
