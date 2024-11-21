@@ -15,10 +15,8 @@ function Doctors() {
         </h3>
 
         <p className="dt-description">
-          Meet our exceptional team of specialist doctors, dedicated to
-          providing top-notch healthcare services at Health Plus. Trust in their
-          knowledge and experience to lead you towards a healthier and happier
-          life.
+          Meet our exceptional team of specialist developers, dedicated to
+          developing a user friendly all in one pet-vet app.
         </p>
       </div>
 
