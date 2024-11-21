@@ -48,9 +48,9 @@ function Hero() {
             type="button"
             onClick={handleBookAppointmentClick}
           >
-            <FontAwesomeIcon icon={faPaw} /> Explore Services
+            <FontAwesomeIcon icon={faPaw} /> Get Started
           </button>
-          <div className="text-stats">
+          {/* <div className="text-stats">
             <div className="text-stats-container">
               <p>145k+</p>
               <p>Receive Patients</p>
@@ -65,13 +65,15 @@ function Hero() {
               <p>10+</p>
               <p>Years of Experience</p>
             </div>
-          </div>
+          </div> */}
         </div>
 
         <div className="hero-image-section">
           <img className="hero-image1" src={Doctor} alt="Doctor" />
         </div>
       </div>
+      
+
 
       <div
         onClick={scrollToTop}
@@ -79,6 +81,8 @@ function Hero() {
       >
         <FontAwesomeIcon icon={faAngleUp} />
       </div>
+      
+    
     </div>
   );
 }

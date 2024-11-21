@@ -7,6 +7,7 @@ import Article from "../Components/Article";
 import Reviews from "../Components/Reviews";
 import Doctors from "../Components/Doctors";
 import Footer from "../Components/Footer";
+import Creators from "../Components/Creators";
 
 function Home() {
   return (
@@ -17,7 +18,7 @@ function Home() {
       <About />
       <Article />
       <Reviews />
-      <Doctors />
+      <Creators/>
       <Footer />
     </div>
   );

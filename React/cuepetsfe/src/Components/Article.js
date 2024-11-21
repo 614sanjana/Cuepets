@@ -8,7 +8,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import "../Styles/Article.css";
 
-function PetCareTips() {
+function Article() {
   const navigate = useNavigate();
 
   const handleExploreArticlesClick = () => {
@@ -54,4 +54,4 @@ function PetCareTips() {
   );
 }
 
-export default PetCareTips;
+export default Article;
