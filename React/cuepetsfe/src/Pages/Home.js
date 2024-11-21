@@ -5,7 +5,6 @@ import Info from "../Components/Info";
 import About from "../Components/About";
 import Article from "../Components/Article";
 import Reviews from "../Components/Reviews";
-import Doctors from "../Components/Doctors";
 import Footer from "../Components/Footer";
 import Creators from "../Components/Creators";
 

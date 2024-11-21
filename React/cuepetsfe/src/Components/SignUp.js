@@ -1,6 +1,5 @@
 import * as React from "react";
 import { Link ,useNavigate } from "react-router-dom"; 
-import axios from "axios";
 import api from "../API/ApiConfig"
 
 export default function SignUp({ setAuthState, setUser }) {
@@ -11,6 +10,7 @@ export default function SignUp({ setAuthState, setUser }) {
   const [confirmpassword, setConfirmPassword] = React.useState();
   const navigate = useNavigate();
 
+   
     
   
     const handleSignUp = (e) => {
