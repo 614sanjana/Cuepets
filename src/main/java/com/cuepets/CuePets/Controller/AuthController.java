@@ -7,6 +7,8 @@ import com.cuepets.CuePets.Repository.PetOwnerRepo;
 import com.cuepets.CuePets.Services.AuthServices;
 import com.cuepets.CuePets.Services.PetOwnerServices;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
@@ -14,9 +16,8 @@ import java.util.Optional;
 @RestController
 @RequestMapping("api/v1/auth")
 @CrossOrigin(origins="*")
+public class AuthController {
 
-public class AuthController
-{
     @Autowired
     private PetOwnerRepo petOwnerRepo;
 
@@ -24,22 +25,17 @@ public class AuthController
     private AuthServices authServices;
 
     @PostMapping(value="/signUp")
-    public String addUser(@RequestBody PetOwner user)
-    {
-        if(authServices.isUserExists(user.getUserPhone()))
-        {
-            return "User Already Exist !!";
-        }
-        else
-        {
+    public ResponseEntity<String> addUser(@RequestBody PetOwner user) {
+        if(authServices.isUserExists(user.getUserPhone())) {
+            return new ResponseEntity<>("User Already Exists", HttpStatus.BAD_REQUEST);
+        } else {
             authServices.saveUser(user);
-            return "User Added Successfully";
+            return new ResponseEntity<>("User Added Successfully", HttpStatus.CREATED);
         }
     }
 
     @PostMapping(value="/signIn")
-    public String signIn(@RequestBody SignIn user)
-    {
+    public ResponseEntity<String> signIn(@RequestBody SignIn user) {
         return authServices.signIn(user);
     }
 }

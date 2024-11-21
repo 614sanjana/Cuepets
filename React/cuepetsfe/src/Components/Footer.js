@@ -7,6 +7,10 @@ function Footer() {
   return (
     <div className="footer-section">
       <div className="footer-container">
+      <div>
+      <script src="https://cdn.botpress.cloud/webchat/v2.2/inject.js"></script>
+      <script src="https://files.bpcontent.cloud/2024/11/06/09/20241106092412-VAYH0V9A.js"></script>
+      </div>
         <div className="ft-info">
           <div className="ft-info-p1">
             <p className="ft-title">
