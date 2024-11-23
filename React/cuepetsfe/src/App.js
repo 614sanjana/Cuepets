@@ -7,6 +7,7 @@ import NotFound from "./Pages/NotFound";
 import Appointment from "./Pages/Appointment";
 import SignIn from "./Components/SignIn";
 import SignUp from "./Components/SignUp";
+import Dashboard from "./Components/Dashboard";
 
 function App() {
   return (
@@ -19,6 +20,8 @@ function App() {
           <Route path="*" element={<NotFound />} />
           <Route path="/signin" element={<SignIn />} />
           <Route path="/signup" element={<SignUp />} />
+          <Route path="/dashboard" element={<Dashboard />} />
+
         </Routes>
       </Router>
     </div>

@@ -9,6 +9,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Random;
 
 @Service
@@ -33,10 +36,29 @@ public class AuthServices {
     }
 
     public void saveUser(PetOwner user) {
+        String userID = generateUniqueOwnerID();
         String hashedPass = bCryptPasswordEncoder.encode(user.getUserPassword());
         user.setUserPassword(hashedPass);
-        user.setOwnerID(generateUniqueOwnerID());
+        user.setOwnerID(userID);
         petOwnerRepo.save(user);
+        createUserFolder(userID);
+    }
+
+    private void createUserFolder(String userID) {
+        String baseDirectory = "src/main/resources/AssetData"; // Change this path as needed for your environment
+
+        try {
+            // Create the directory path
+            Path userFolderPath = Paths.get(baseDirectory, userID);
+
+            // Create directories if they do not exist
+            Files.createDirectories(userFolderPath);
+
+            System.out.println("Folder created at: " + userFolderPath.toString());
+        } catch (Exception e) {
+            System.err.println("Failed to create user folder for Owner ID: " + userID);
+            e.printStackTrace();
+        }
     }
 
     public boolean isUserExists(String userPhone) {
