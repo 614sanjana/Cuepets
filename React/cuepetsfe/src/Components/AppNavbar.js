@@ -11,7 +11,7 @@ import "../Styles/Navbar.css";
 import { Link } from "react-router-dom";
 import "../App.css";
 
-function Navbar() {
+function AppNavbar() {
   const [nav, setNav] = useState(false);
 
   const navigate = useNavigate();
@@ -26,7 +26,7 @@ function Navbar() {
 
   return (
     <div className="navbar-section text-2xl font-extrabold">
-       <h1 className="text-4xl navbar-title">
+      <h1 className="text-4xl navbar-title">
         <Link to="/">
           CuePets <FontAwesomeIcon icon={faPaw} className="paw-icon" />
         </Link>
@@ -35,18 +35,17 @@ function Navbar() {
       {/* Desktop */}
       <ul className="navbar-items">
         <li>
-          <Link to="/" className="navbar-links">
+          <Link to="#" className="navbar-links">
             Home
           </Link>
         </li>
         <li>
           <a href="#services" className="navbar-links">
-            Services
           </a>
         </li>
         <li>
           <a href="#about" className="navbar-links">
-            About
+          Pet Record
           </a>
         </li>
         <li>
@@ -56,9 +55,20 @@ function Navbar() {
         </li>
         <li>
           <a href="#doctors" className="navbar-links">
-            Creators
+            Appointment
           </a>
         </li>
+        <li>
+          <a href="#doctors" className="navbar-links">
+            Calender
+          </a>
+        </li>
+        <li>
+          <a href="#doctors" className="navbar-links">
+            Pet Adopt
+          </a>
+        </li>
+        
       </ul>
       <div>
       <button
@@ -122,4 +132,4 @@ function Navbar() {
   );
 }
 
-export default Navbar;
+export default AppNavbar;
