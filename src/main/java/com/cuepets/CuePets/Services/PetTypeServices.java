@@ -17,4 +17,8 @@ public class PetTypeServices {
     public PetType getTypeById(String id){
         return petTypeRepo.findById(id).get();
     }
+
+    public void deleteType(String id){
+        petTypeRepo.delete(id);
+    }
 }

@@ -33,4 +33,10 @@ public class PetTypeController {
     public PetType getById(@PathVariable(name="id")String id){
         return petTypeServices.getTypeById(id);
     }
+
+    @DeleteMapping(value="/deleteType/{id}")
+    public void deleteType(@PathVariable (name="id")String id){
+       petTypeServices.deleteType(id);
+    }
+
 }
