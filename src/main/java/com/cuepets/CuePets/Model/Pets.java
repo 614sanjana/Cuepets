@@ -20,5 +20,5 @@ public class Pets {
     private boolean adoptionStatus=false;
     private List<String> petBehaviour;
     private List<String> petAllergies;
-
+    private String PetProfile="";
 }

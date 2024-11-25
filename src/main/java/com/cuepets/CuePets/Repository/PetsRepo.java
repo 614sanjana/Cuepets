@@ -5,4 +5,5 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 
 public interface PetsRepo extends MongoRepository<Pets,String> {
     boolean existsByPetID(String generatedID);
+    Pets findByPetID(String id);
 }

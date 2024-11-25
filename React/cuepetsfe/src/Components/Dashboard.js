@@ -5,6 +5,7 @@ import Navbar from "./Navbar";
 import Footer from "./Footer";
 import AppNavbar from "./AppNavbar";
 import "../App.css";
+import FetchRecord from "./FetchRecord";
 
 
 export default function Dashboard({ }) {
@@ -12,6 +13,9 @@ export default function Dashboard({ }) {
     <div className="text-9xl grid h-screen">
     <AppNavbar/>
         <h1 className="flex justify-center items-center " >DashBoard</h1>
+        <div className="text-lg">
+          <FetchRecord/>
+        </div>
     <Footer/>
     </div>
   );
