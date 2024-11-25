@@ -31,7 +31,7 @@ public class PetHealthRecordController {
             LOGGER.error("Error uploading profile picture for user ID {}: {}", id, e.getMessage());
             return ResponseEntity.status(500).body("Failed to upload profile picture. Error: " + e.getMessage());
         }
-    }
+    };
 
     @GetMapping("/getRecords/{petId}")
     public ResponseEntity<List<PetHealthRecord>> getHealthRecords(@PathVariable(name = "petId") String petId) {
