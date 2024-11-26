@@ -30,20 +30,18 @@ function Footer() {
           <p className="ft-list-title">Our Services</p>
           <ul className="ft-list-items">
             <li>
-              <a href="#services">Emergency Vet Care</a>
+              <a href="#services">Medical Record Management</a>
             </li>
             <li>
-              <a href="#services">Vaccination & Health Checks</a>
+              <a href="#services">Vaccination Tracking</a>
             </li>
             <li>
-              <a href="#services">Pet Nutrition & Diet</a>
+              <a href="#services">Pet Adoption Assistance</a>
             </li>
             <li>
-              <a href="#services">Online Consultations</a>
+              <a href="#services">Blog Posts</a>
             </li>
-            <li>
-              <a href="#services">Adoption Assistance</a>
-            </li>
+
           </ul>
         </div>
 
