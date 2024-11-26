@@ -4,6 +4,7 @@ import com.cuepets.CuePets.Model.PetOwner;
 import com.cuepets.CuePets.Repository.PetOwnerRepo;
 import com.cuepets.CuePets.Services.PetOwnerServices;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -50,6 +51,19 @@ public class PetOwnerController {
             // Log the error and return an appropriate response
             LOGGER.error("Error uploading profile picture for user ID {}: {}", id, e.getMessage());
             return ResponseEntity.status(500).body("Failed to upload profile picture. Error: " + e.getMessage());
+        }
+    }
+
+    /*
+       Endpoint to delete the user data as per the ID
+    */
+    @DeleteMapping(value="deleteUser/{id}")
+    public ResponseEntity<String> deleteUserByID(@PathVariable(name="id")String id){
+        if(petOwnerRepo.existsByOwnerID(id)){
+            petOwnerRepo.deleteById(id);
+            return ResponseEntity.ok("Owner with ID: "+ id + "deleted successfully !!");
+        }else{
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Owner with ID" + id + "Not Found !!");
         }
     }
 }
