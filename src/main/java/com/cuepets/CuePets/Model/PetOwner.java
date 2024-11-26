@@ -13,6 +13,6 @@ public class PetOwner {
                             //so therfore we removed the annotation since we wanted the ownerID to be stored in the DB
     private String userName;
     private String userEmail;
-    private String pfpLocation;
+    private String pfpLocation="";
     private String userPassword;
 }
