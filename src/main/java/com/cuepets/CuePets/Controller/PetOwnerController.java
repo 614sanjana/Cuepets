@@ -1,7 +1,9 @@
 package com.cuepets.CuePets.Controller;
 
 import com.cuepets.CuePets.Model.PetOwner;
+import com.cuepets.CuePets.Repository.PetAdoptionRepo;
 import com.cuepets.CuePets.Repository.PetOwnerRepo;
+import com.cuepets.CuePets.Repository.PetsRepo;
 import com.cuepets.CuePets.Services.PetOwnerServices;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -9,7 +11,15 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Comparator;
 import java.util.List;
+import java.nio.file.*;
+import java.util.NoSuchElementException;
+
 
 @RestController
 @CrossOrigin(origins = "*")
@@ -21,6 +31,12 @@ public class PetOwnerController {
 
     @Autowired
     private PetOwnerRepo petOwnerRepo;
+
+    @Autowired
+    private PetsRepo petsRepo;
+
+    @Autowired
+    private PetAdoptionRepo petAdoptionRepo;
 
     private static final org.slf4j.Logger LOGGER = org.slf4j.LoggerFactory.getLogger(PetOwnerController.class);
 
@@ -57,13 +73,16 @@ public class PetOwnerController {
     /*
        Endpoint to delete the user data as per the ID
     */
-    @DeleteMapping(value="deleteUser/{id}")
-    public ResponseEntity<String> deleteUserByID(@PathVariable(name="id")String id){
-        if(petOwnerRepo.existsByOwnerID(id)){
-            petOwnerRepo.deleteById(id);
-            return ResponseEntity.ok("Owner with ID: "+ id + "deleted successfully !!");
-        }else{
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Owner with ID" + id + "Not Found !!");
+    @DeleteMapping(value = "/deleteUser/{id}")
+    public ResponseEntity<String> deleteUserByID(@PathVariable(name = "id") String id) {
+        try {
+            String result = petOwnerServices.deleteUserByID(id);
+            return ResponseEntity.ok(result);
+        } catch (NoSuchElementException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Failed to delete user and associated data. Error: " + e.getMessage());
         }
     }
 }
