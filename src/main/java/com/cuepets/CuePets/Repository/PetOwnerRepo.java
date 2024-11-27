@@ -13,4 +13,6 @@ public interface PetOwnerRepo extends MongoRepository<PetOwner,String> {
     PetOwner findByuserPhone(String userPhone);
 
     PetOwner findByOwnerID(String userId);
+
+    void deleteByownerID(String id);
 }

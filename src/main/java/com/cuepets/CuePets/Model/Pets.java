@@ -12,7 +12,7 @@ public class Pets {
     @Id
     private String petID;
 
-    private String OwnerID;
+    private String ownerID;
     private String petBreedID;
     private String petName;
     private String petAge;
@@ -20,5 +20,5 @@ public class Pets {
     private boolean adoptionStatus=false;
     private List<String> petBehaviour;
     private List<String> petAllergies;
-    private String PetProfile="";
+    private String PetProfile;
 }

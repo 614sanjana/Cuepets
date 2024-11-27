@@ -70,6 +70,8 @@ public class PetsServices {
             // Create directories if they do not exist
             Files.createDirectories(petsFolderPath);
 
+
+
             String successMessage = "Folder created at: " + petsFolderPath.toString();
             return new ResponseEntity<>(successMessage, HttpStatus.CREATED);
 
@@ -118,10 +120,14 @@ public class PetsServices {
 
             // Update the user's profile picture path in the database
             Pets updatePet = petsRepo.findByPetID(petId);
-            if (updatePet != null) {
+            if (updatePet != null)
+            {
                 updatePet.setPetProfile(uniqueFileName);
+                petsRepo.save(updatePet);
                 return ResponseEntity.status(HttpStatus.OK).body("Profile picture stored successfully.");
-            } else {
+            }
+            else
+            {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found.");
             }
         } catch (IOException e) {
