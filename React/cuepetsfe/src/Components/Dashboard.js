@@ -6,6 +6,7 @@ import Footer from "./Footer";
 import AppNavbar from "./AppNavbar";
 import "../App.css";
 import FetchRecord from "./FetchRecord";
+import Image from "./Image";
 
 
 export default function Dashboard({ }) {
@@ -14,7 +15,7 @@ export default function Dashboard({ }) {
     <AppNavbar/>
         <h1 className="flex justify-center items-center " >DashBoard</h1>
         <div className="text-lg">
-          <FetchRecord/>
+          <Image/>
         </div>
     <Footer/>
     </div>
