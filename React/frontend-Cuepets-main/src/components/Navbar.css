@@ -1,0 +1,94 @@
+/* General Styles */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+/* Navbar Styles */
+.custom-navbar {
+    background-color: #ffffff;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    padding: 0.5rem 1rem;
+    position: sticky; /* Makes the navbar sticky */
+    top: 0; /* Sticks to the top of the viewport */
+    z-index: 1000; /* Ensures it stays above other elements */
+}
+
+.navbar-brand img {
+    width: 40px;
+    height: 40px;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+/* Logo Hover Effect */
+.navbar-brand:hover img {
+    transform: rotate(360deg);
+    opacity: 0.8;
+}
+
+/* Navbar Links */
+.navbar-nav .nav-link {
+    color: #333;
+    font-size: 1rem;
+    text-transform: capitalize;
+    margin-left: 1rem;
+    transition: color 0.3s ease, transform 0.3s ease;
+}
+
+/* Services and About Hover Effect */
+.navbar-nav .nav-link:hover {
+    color: #ff8c00;
+    transform: scale(1.1);
+}
+
+/* Dropdown Menu */
+.navbar-nav .dropdown-menu {
+    border: none;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.dropdown-item {
+    color: #333;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.dropdown-item:hover {
+    background-color: #ff8c00;
+    color: #fff;
+}
+
+/* Chatbot Button */
+.btn-chatbot {
+    background-color: #ff8c00;
+    color: #ffffff;
+    font-size: 1rem;
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 4px;
+    text-transform: capitalize;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.btn-chatbot:hover {
+    background-color: #e07600;
+    transform: scale(1.1);
+}
+
+/* Header container to align elements in one row */
+.header-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+/* Styling for the "CUEPETS" name */
+.cuepets-name {
+    font-family: 'Arial', sans-serif;
+    font-weight: bold;
+    font-size: 2rem;
+    color: #ff8c00;
+    margin-left: 10px;
+}

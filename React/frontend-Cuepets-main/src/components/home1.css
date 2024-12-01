@@ -1,0 +1,72 @@
+/* Features Section */
+.features-section {
+    padding: 50px 20px;
+    background-color: #fff;
+  }
+  
+  /* Headings */
+  .features-heading {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #ff8c00;
+  }
+  
+  .features-subheading {
+    font-size: 1rem;
+    color: #555;
+  }
+  
+  .highlight {
+    color: #ff8c00;
+  }
+  
+  /* Feature Box */
+  .feature-box {
+    margin-bottom: 20px;
+  }
+  
+  .feature-icon {
+    font-size: 2rem;
+    color: #ff8c00;
+  }
+  
+  .feature-title {
+    font-size: 1.25rem;
+    font-weight: bold;
+    margin-top: 10px;
+    color: #333;
+  }
+  
+  .feature-description {
+    font-size: 0.9rem;
+    color: #555;
+  }
+  
+  /* Feature Image */
+  .feature-image {
+    width: 100%;
+    border-radius: 10px;
+  }
+  
+  /* Buttons */
+  .btn-primary {
+    background-color: #ff8c00;
+    border-color: #ff8c00;
+    color: #fff;
+  }
+  
+  .btn-primary:hover {
+    background-color: #e67e00;
+    border-color: #e67e00;
+  }
+  
+  .btn-outline-primary {
+    border-color: #ff8c00;
+    color: #ff8c00;
+  }
+  
+  .btn-outline-primary:hover {
+    background-color: #ff8c00;
+    color: #fff;
+  }
+  
