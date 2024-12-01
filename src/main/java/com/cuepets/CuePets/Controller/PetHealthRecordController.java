@@ -4,6 +4,7 @@ import com.cuepets.CuePets.Model.PetHealthRecord;
 import com.cuepets.CuePets.Repository.PetHealthRecordRepo;
 import com.cuepets.CuePets.Services.PetHealthRecordServices;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -34,7 +35,13 @@ public class PetHealthRecordController {
     };
 
     @GetMapping("/getRecords/{petId}")
-    public ResponseEntity<List<PetHealthRecord>> getHealthRecords(@PathVariable(name = "petId") String petId) {
+    public ResponseEntity<List<PetHealthRecord>> getHealthRecords(@PathVariable(name = "petId") String petId)
+    {
         return petHealthRecordServices.getAllHealthRecordsForPet(petId);
+    }
+
+    @GetMapping("/viewImage/{recordID}")
+    public ResponseEntity<Resource> viewHealthRecordImage(@PathVariable String recordID) {
+        return petHealthRecordServices.viewHealthRecordImage(recordID);
     }
 }

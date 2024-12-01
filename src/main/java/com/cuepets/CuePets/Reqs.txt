@@ -3,7 +3,6 @@ get mapping
 get by id
 search method
 pet adoption
-check the pets pfp location not being stored
 how to retrive all the data in the front end
 CI / CD
 admin board
