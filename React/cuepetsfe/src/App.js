@@ -8,6 +8,7 @@ import Appointment from "./Pages/Appointment";
 import SignIn from "./Components/SignIn";
 import SignUp from "./Components/SignUp";
 import Dashboard from "./Components/Dashboard";
+import AddPetForm from "./Components/AddPet";
 
 function App() {
   return (
@@ -21,7 +22,7 @@ function App() {
           <Route path="/signin" element={<SignIn />} />
           <Route path="/signup" element={<SignUp />} />
           <Route path="/dashboard" element={<Dashboard />} />
-
+          <Route path="/add-pet" element={<AddPetForm />} />
         </Routes>
       </Router>
     </div>

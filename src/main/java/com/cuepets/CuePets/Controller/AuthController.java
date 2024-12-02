@@ -32,8 +32,27 @@ public ResponseEntity<String> addUser(@RequestBody PetOwner user) {
     }
 }
 
-@PostMapping(value="/signIn")
-public ResponseEntity<String> signIn(@RequestBody SignIn user) {
-    return authServices.signIn(user);
-}
+    public ResponseEntity<String> signIn(SignIn user) {
+        // Authenticate user and get the OwnerID
+        String ownerId = authenticateUser(user);
+
+        if (ownerId != null) {
+            // If authentication is successful, you could return the OwnerID
+            // Alternatively, you can generate a JWT token here
+            return ResponseEntity.ok(ownerId);
+        } else {
+            // If authentication fails, return an error response
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid credentials");
+        }
+    }
+
+    private String authenticateUser(SignIn user) {
+        // Perform authentication logic here (e.g., check username/password, retrieve OwnerID)
+        // For example:
+        // If user is valid, return the corresponding ownerId, otherwise return null
+        if ("validUsername".equals(user.getUsername()) && "validPassword".equals(user.getPassword())) {
+            return "owner123"; // Sample OwnerID after successful authentication
+        }
+        return null;
+    }
 }
