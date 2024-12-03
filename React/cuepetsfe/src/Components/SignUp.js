@@ -80,26 +80,42 @@ export default function SignUp({ setAuthState, setUser }) {
             </div>
             {/* Password */}
             <div>
-              <label className="text-lg font-semibold">Password</label> {/* Increased label font size */}
-              <input
-                value={userPassword}
-                onChange={(e) => setPassword(e.target.value)}
-                className="w-full border border-gray-300 rounded-md p-2 text-lg bg-transparent"
-                placeholder="Enter your password"
-                type="password"
-              />
-            </div>
+  <label className="text-lg font-semibold">Password</label>
+  <input
+    value={userPassword}
+    onChange={(e) => setPassword(e.target.value)}
+    className={`w-full border rounded-md p-2 text-lg bg-transparent ${
+      confirmpassword && userPassword !== confirmpassword
+        ? "border-red-500"
+        : "border-gray-300"
+    }`}
+    placeholder="Enter your password"
+    type="password"
+  />
+</div>
             {/* Confirm Password */}
             <div>
-              <label className="text-lg font-semibold">Confirm Password</label> {/* Increased label font size */}
-              <input
-                value={confirmpassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-                className="w-full border border-gray-300 rounded-md p-2 text-lg bg-transparent"
-                placeholder="Confirm your password"
-                type="password"
-              />
-            </div>
+  <label className="text-lg font-semibold">Confirm Password</label>
+  <input
+    value={confirmpassword}
+    onChange={(e) => setConfirmPassword(e.target.value)}
+    className={`w-full border rounded-md p-2 text-lg bg-transparent ${
+      confirmpassword && userPassword !== confirmpassword
+        ? "border-red-500"
+        : userPassword && userPassword === confirmpassword
+        ? "border-green-500"
+        : "border-gray-300"
+    }`}
+    placeholder="Confirm your password"
+    type="password"
+  />
+  {confirmpassword && userPassword !== confirmpassword && (
+    <p className="text-red-500 text-sm mt-1">Passwords do not match.</p>
+  )}
+  {confirmpassword && userPassword === confirmpassword && (
+    <p className="text-green-500 text-sm mt-1">Passwords match!</p>
+  )}
+</div>
           </div>
 
           {/* Remember Me & Forgot Password */}

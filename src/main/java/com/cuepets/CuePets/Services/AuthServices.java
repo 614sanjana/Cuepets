@@ -65,24 +65,38 @@ public class AuthServices {
         return petOwnerRepo.existsByuserPhone(userPhone);
     }
 
-    public ResponseEntity<String> signIn(SignIn signIn) {
-        String userPhoneNo = signIn.getUserPhone();
-        String userPass = signIn.getUserPass();
+//    public ResponseEntity<String> signIn(SignIn signIn) {
+//        String userPhoneNo = signIn.getUserPhone();
+//        String userPass = signIn.getUserPass();
+//
+//        if (userPass == null || userPass.isEmpty()) {
+//            return new ResponseEntity<>("Password cannot be null or empty!", HttpStatus.BAD_REQUEST);
+//        }
+//
+//        PetOwner user = petOwnerRepo.findByuserPhone(userPhoneNo);
+//        if (user != null) {
+//            String hashedPassword = user.getUserPassword();
+//            if (bCryptPasswordEncoder.matches(userPass, hashedPassword)) {
+//                return new ResponseEntity<>("Login Successfully", HttpStatus.OK);
+//            } else {
+//                return new ResponseEntity<>("Incorrect password", HttpStatus.UNAUTHORIZED);
+//            }
+//        } else {
+//            return new ResponseEntity<>("No User Found", HttpStatus.NOT_FOUND);
+//        }
+//    }
+//
+//    public SignIn signInUser(String userPhone, String userPass) {
+//    }
 
-        if (userPass == null || userPass.isEmpty()) {
-            return new ResponseEntity<>("Password cannot be null or empty!", HttpStatus.BAD_REQUEST);
-        }
 
-        PetOwner user = petOwnerRepo.findByuserPhone(userPhoneNo);
-        if (user != null) {
-            String hashedPassword = user.getUserPassword();
-            if (bCryptPasswordEncoder.matches(userPass, hashedPassword)) {
-                return new ResponseEntity<>("Login Successfully", HttpStatus.OK);
-            } else {
-                return new ResponseEntity<>("Incorrect password", HttpStatus.UNAUTHORIZED);
-            }
-        } else {
-            return new ResponseEntity<>("No User Found", HttpStatus.NOT_FOUND);
+    public PetOwner authenticateUser(String userPhone, String userPass) {
+        // Fetch user by phone
+        PetOwner petOwner = petOwnerRepo.findById(userPhone).orElse(null);
+        if (petOwner != null && bCryptPasswordEncoder.matches(userPass, petOwner.getUserPassword()))
+        {
+            return petOwner;
         }
+        return null; // Invalid credentials
     }
 }

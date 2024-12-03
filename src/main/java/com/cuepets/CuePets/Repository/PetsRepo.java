@@ -3,6 +3,8 @@ package com.cuepets.CuePets.Repository;
 import com.cuepets.CuePets.Model.Pets;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
+import java.util.List;
+
 public interface PetsRepo extends MongoRepository<Pets,String> {
     boolean existsByPetID(String generatedID);
 
@@ -13,4 +15,6 @@ public interface PetsRepo extends MongoRepository<Pets,String> {
     boolean existsByownerID(String id);
 
     void deleteByOwnerID(String OwnerID);
+
+    List<Pets> findByadoptionStatus(boolean status);
 }

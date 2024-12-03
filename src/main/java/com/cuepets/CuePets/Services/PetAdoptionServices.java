@@ -1,16 +1,23 @@
 package com.cuepets.CuePets.Services;
 
 import com.cuepets.CuePets.Model.PetAdoption;
+import com.cuepets.CuePets.Model.Pets;
 import com.cuepets.CuePets.Repository.PetAdoptionRepo;
+import com.cuepets.CuePets.Repository.PetsRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Random;
 
 @Service
 public class PetAdoptionServices {
     @Autowired
     private PetAdoptionRepo petAdoptionRepo;
+
+    @Autowired
+    private PetsRepo petsRepo;
+
 
     private static final int MIN = 1;
     private static final int MAX = 99999;
@@ -29,6 +36,10 @@ public class PetAdoptionServices {
         newAdopt.setAdoptionID(generateUniqueAdoptionID());
         petAdoptionRepo.save(newAdopt);
         return newAdopt;
+    }
+
+    public List<Pets> getAvailablePets() {
+        return petsRepo.findByadoptionStatus(true);
     }
 
 }

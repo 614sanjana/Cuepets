@@ -6,6 +6,7 @@ import com.cuepets.CuePets.Repository.PetOwnerRepo;
 import com.cuepets.CuePets.Repository.PetsRepo;
 import com.cuepets.CuePets.Services.PetOwnerServices;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -49,6 +50,16 @@ public class PetOwnerController {
         return ResponseEntity.ok(users);
     }
 
+    @GetMapping(value = "/getUsersByID/{id}")
+    public ResponseEntity<PetOwner> getUserById(@PathVariable("id") String id) {
+        PetOwner user = petOwnerRepo.findByOwnerID(id);
+        if (user != null) {
+            return ResponseEntity.ok(user);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
     /**
      * Endpoint to set the profile picture of a user.
      *
@@ -84,5 +95,10 @@ public class PetOwnerController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Failed to delete user and associated data. Error: " + e.getMessage());
         }
+    }
+
+    @GetMapping("/viewImage/{ownerID}")
+    public ResponseEntity<Resource> viewUserPfpImage(@PathVariable String ownerID) {
+        return petOwnerServices.viewUserImage(ownerID);
     }
 }

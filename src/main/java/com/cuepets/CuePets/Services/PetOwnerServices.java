@@ -1,11 +1,18 @@
 package com.cuepets.CuePets.Services;
 
 import com.cuepets.CuePets.Controller.PetOwnerController;
+import com.cuepets.CuePets.Model.PetHealthRecord;
 import com.cuepets.CuePets.Model.PetOwner;
+import com.cuepets.CuePets.Model.Pets;
 import com.cuepets.CuePets.Repository.PetAdoptionRepo;
 import com.cuepets.CuePets.Repository.PetOwnerRepo;
 import com.cuepets.CuePets.Repository.PetsRepo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -17,6 +24,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Comparator;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 
 @Service
 public class PetOwnerServices {
@@ -133,6 +141,58 @@ public class PetOwnerServices {
                     });
         } else {
             LOGGER.warn("Folder does not exist: {}", folder);
+        }
+    }
+
+    public PetOwner getUserById(String id) {
+        Optional<PetOwner> user = petOwnerRepo.findById(id);
+        return user.orElse(null);  // Return null if user is not found
+    }
+
+    private static final Logger logger = LoggerFactory.getLogger(PetHealthRecordServices.class);
+
+    public ResponseEntity<Resource> viewUserImage(String ownerID) {
+        try {
+            // Fetch the owner by ID
+            PetOwner owner = (PetOwner) petOwnerRepo.findByOwnerID(ownerID);
+
+            // Log the fetched health record or null
+            if (owner == null) {
+                logger.warn("No user found for the owner ID: {}", ownerID);
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+            }
+            logger.info("Owner fetched successfully for ownerID: {}, PetID: {}", ownerID, owner.getOwnerID());
+
+            if (owner.getPfpLocation() == null || owner.getPfpLocation().isEmpty()) {
+                logger.warn("No pfp images found for ownerID: {}", ownerID);
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+            }
+
+            // Assuming there's only one image for now
+            String fileName = owner.getPfpLocation();
+
+            // Log the file name
+            logger.info("Pfp file name: {}", fileName);
+
+
+            String baseDirectory = "src/main/resources/AssetData/" + ownerID + "/User";
+            Path filePath = Paths.get(baseDirectory, fileName);
+
+            // Load the file as a Resource
+            Resource resource = new UrlResource(filePath.toUri());
+            if (!resource.exists() || !resource.isReadable()) {
+                logger.warn("File not found or not readable for file: {}", fileName);
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+            }
+
+            // Log the success and return the file as a response
+            logger.info("Returning the file as a resource: {}", fileName);
+            return ResponseEntity.ok()
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + resource.getFilename() + "\"")
+                    .body(resource);
+        } catch (Exception e) {
+            logger.error("Error fetching or processing the pfp for ownerID: {}", ownerID, e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
     }
 }
