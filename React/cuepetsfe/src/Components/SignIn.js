@@ -33,26 +33,28 @@ export default function SignIn({ setAuthState, setUser }) {
       return;
     }
 
-    // Post request to backend for sign in
-      api.post("/auth/signIn", { userPhone, userPass })
-      .then((result) => {
-        if (result.status === 200) {
-            alert("Login Successful !!");
-          navigate("/dashboard");
-        }
-      })
-      .catch((err) => {
-        if (err.response && err.response.status === 404) {
-          setErrorMessage("User Doesn't Exist !!");
-        } else if (err.response && err.response.status === 401) {
-          setErrorMessage("Invalid Credentials Try Forgot Password");
-          setShowForgotPassword(true); // Show the "Forgot Password" link if credentials are invalid
-        } else {
-          setErrorMessage("An error occurred. Please try again.");
-        }
-      });
+    // Post request to backend for sign-in
+api.post("/auth/signIn", { userPhone, userPass })
+.then((result) => {
+  if (result.status === 200) {
+    const { ownerID, userName } = result.data; // Extract ownerID and userName from response
+    localStorage.setItem("ownerID", ownerID); // Store ownerID in local storage
+    localStorage.setItem("userName", userName); // Optionally store userName in local storage
+    alert("Login Successful !!");
+    navigate("/dashboard");
+  }
+})
+.catch((err) => {
+  if (err.response && err.response.status === 404) {
+    setErrorMessage("User Doesn't Exist !!");
+  } else if (err.response && err.response.status === 401) {
+    setErrorMessage("Invalid Credentials Try Forgot Password");
+    setShowForgotPassword(true); // Show the "Forgot Password" link if credentials are invalid
+  } else {
+    setErrorMessage("An error occurred. Please try again.");
+  }
+});
   };
-
   return (
     <div className="min-h-screen bg-gray-100 overflow-hidden">
       <div className="flex items-center">

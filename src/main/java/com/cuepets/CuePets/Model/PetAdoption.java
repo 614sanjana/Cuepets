@@ -13,5 +13,5 @@ public class PetAdoption {
     private String ownerID;
     private String AdoptionDate= "Null";
     private String adopterID= "None";
-    private String adoptionStatus= "Available";
+    private Boolean adoptionStatus= false;
 }
