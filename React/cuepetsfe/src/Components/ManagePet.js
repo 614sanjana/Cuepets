@@ -4,7 +4,7 @@ import food from '../Assets/food.jpeg';
 import vet1 from '../Assets/vet1.jpeg';
 import behav from '../Assets/behav.jpeg';
 
-const PetBlog = () => {
+const ManagePets = () => {
   const [expandedIndex, setExpandedIndex] = useState(null);
   const navigate = useNavigate();
 
@@ -111,4 +111,4 @@ const PetBlog = () => {
   );
 };
 
-export default PetBlog;
+export default ManagePets;

@@ -161,7 +161,7 @@ public class PetOwnerServices {
                 logger.warn("No user found for the owner ID: {}", ownerID);
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
             }
-            logger.info("Owner fetched successfully for ownerID: {}, PetID: {}", ownerID, owner.getOwnerID());
+            logger.info("Owner fetched successfully for ownerID: {}", ownerID);
 
             if (owner.getPfpLocation() == null || owner.getPfpLocation().isEmpty()) {
                 logger.warn("No pfp images found for ownerID: {}", ownerID);
@@ -186,7 +186,7 @@ public class PetOwnerServices {
             }
 
             // Log the success and return the file as a response
-            logger.info("Returning the file as a resource: {}", fileName);
+            logger.info("Returning the file as a resource: {}", filePath);
             return ResponseEntity.ok()
                     .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + resource.getFilename() + "\"")
                     .body(resource);

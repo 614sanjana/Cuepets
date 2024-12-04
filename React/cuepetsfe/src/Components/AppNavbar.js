@@ -76,7 +76,7 @@ function AppNavbar() {
         type="button"
         onClick={handleRedirect}
       >
-       <FontAwesomeIcon icon={faSignInAlt} /> Sign In
+       <FontAwesomeIcon icon={faSignInAlt} /> Log Out
       </button>
       </div>
 
