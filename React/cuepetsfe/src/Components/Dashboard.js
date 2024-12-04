@@ -31,7 +31,43 @@ export default function Dashboard() {
     };
 
     fetchUserData();
-  }, []);
+  }, [ownerID]);
+
+  const [imageUrl, setImageUrl] = useState(null);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    // Fetch the health record image from the API
+    const fetchImage = async () => {
+      try {
+        // Make a GET request to the viewImage endpoint
+        const response = await fetch(`http://localhost:8080/api/v1/user/viewImage/${ownerID}`);
+
+        // Check if the response is successful
+        if (!response.ok) {
+          throw new Error('Image not found or an error occurred');
+        }
+
+        // Create a URL for the image
+        const imageBlob = await response.blob();
+        const imageUrl = URL.createObjectURL(imageBlob);
+
+        // Set the image URL in the state
+        setImageUrl(imageUrl);
+      } catch (err) {
+        // Set the error message in the state if something goes wrong
+        setError(err.message);
+      }
+    };
+
+    // Call the fetch function when the component mounts
+    fetchImage();
+  }, [ownerID]);
+
+
+  if (error) {
+    return <p className="text-center text-red-500">{error}</p>;
+  }
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -44,7 +80,7 @@ export default function Dashboard() {
   const handleUpdate = async () => {
     try {
       // Make API call to update user data (replace with actual user ID)
-      await axios.post(`http://localhost:8080/api/v1/user/setPfp/${userData.id}`, {
+      await axios.post(`http://localhost:8080/api/v1/user/setPfp/${ownerID}`, {
         file: userData.profilePicture, // Add profile picture if needed
       });
 
@@ -63,13 +99,14 @@ export default function Dashboard() {
         {/* Sidebar */}
         <div className="w-1/3 bg-blue-200 p-6 flex flex-col items-center">
           {/* Profile Photo */}
-          <div className="w-60 h-60 rounded-3xl bg-gray-300 mb-4 overflow-hidden">
-            <img
-              src={userData.pfpLocation}
-              alt="Profile"
-              className="w-full h-full object-cover"
-            />
-          </div>
+          <div>
+      {error && <p>Error: {error}</p>}
+      {imageUrl ? (
+        <img src={imageUrl} alt="Health Record" style={{ width: '100%', height: 'auto' }} />
+      ) : (
+        <p>Loading image...</p>
+      )}
+    </div>
 
           {/* User Details */}
           <div className="w-full space-y-4">
@@ -141,7 +178,19 @@ export default function Dashboard() {
               Add Pet
             </Link>
             <Link
-              to="/post-blog"
+              to="/blog-post"
+              className="bg-blue-300 h-20 p-4 rounded-lg shadow-md hover:shadow-lg hover:bg-blue-400"
+            >
+              Post Blog
+            </Link>
+            <Link
+              to="/blog-post"
+              className="bg-blue-300 h-20 p-4 rounded-lg shadow-md hover:shadow-lg hover:bg-blue-400"
+            >
+              Manage Pet
+            </Link>
+            <Link
+              to="/blog-post"
               className="bg-blue-300 h-20 p-4 rounded-lg shadow-md hover:shadow-lg hover:bg-blue-400"
             >
               Post Blog

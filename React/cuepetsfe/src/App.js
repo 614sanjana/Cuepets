@@ -9,7 +9,8 @@ import SignIn from "./Components/SignIn";
 import SignUp from "./Components/SignUp";
 import Dashboard from "./Components/Dashboard";
 import AddPetForm from "./Components/AddPet";
-
+import PetBlog from "./Components/blogpost";
+import ManagePets from "./Components/ManagePet";
 function App() {
   return (
     <div className="App">
@@ -23,6 +24,8 @@ function App() {
           <Route path="/signup" element={<SignUp />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/add-pet" element={<AddPetForm />} />
+          <Route path="/blog-post" element={<PetBlog/>}/>
+          <Route path="/manage-pets" element={<ManagePets/>}/>
         </Routes>
       </Router>
     </div>
