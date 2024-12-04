@@ -1,7 +1,6 @@
 package com.cuepets.CuePets.Services;
 
 
-import com.cuepets.CuePets.Model.PetOwner;
 import com.cuepets.CuePets.Model.Pets;
 import com.cuepets.CuePets.Repository.PetOwnerRepo;
 import com.cuepets.CuePets.Repository.PetsRepo;
@@ -15,6 +14,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 import java.util.Random;
 
 @Service
@@ -146,5 +146,9 @@ public class PetsServices {
     public void savePet(Pets pet) {
         pet.setPetID(generateUniquePetID());
         petsRepo.save(pet);
+    }
+
+    public List<Pets> getPetsByOwnerId(String ownerId) {
+        return petsRepo.findByOwnerID(ownerId);
     }
 }

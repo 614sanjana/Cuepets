@@ -1,5 +1,6 @@
 package com.cuepets.CuePets.Controller;
 
+import com.cuepets.CuePets.Model.PetHealthRecord;
 import com.cuepets.CuePets.Model.Pets;
 import com.cuepets.CuePets.Services.PetsServices;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -58,4 +60,19 @@ public class PetsController {
             return new ResponseEntity<>("Pet not found with ID: " + id, HttpStatus.NOT_FOUND);
         }
     }
+
+    @GetMapping("/allPets/{ownerId}")
+    public ResponseEntity<Object> getAllPetsByOwnerId(@PathVariable("ownerId") String ownerId) {
+        try {
+            List<Pets> petsList = petsServices.getPetsByOwnerId(ownerId);
+            if (petsList.isEmpty()) {
+                return new ResponseEntity<>("No pets found for owner ID: " + ownerId, HttpStatus.NOT_FOUND);
+            }
+            return new ResponseEntity<>(petsList, HttpStatus.OK);
+        } catch (Exception e) {
+            LOGGER.error("Error fetching pets for owner ID {}: {}", ownerId, e.getMessage());
+            return new ResponseEntity<>("Error fetching pets: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
 }
