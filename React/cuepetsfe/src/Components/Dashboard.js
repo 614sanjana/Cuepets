@@ -150,7 +150,7 @@ export default function Dashboard() {
           {/* Top Half */}
           <div className="h-40 flex space-x-4 mb-4 text-4xl">
             <Link
-              to="/records"
+              to="/pet-records"
               className="flex-1 bg-purple-300 p-4 rounded-xl shadow-md hover:shadow-lg hover:bg-purple-400"
             >
               Records
@@ -184,16 +184,16 @@ export default function Dashboard() {
               Post Blog
             </Link>
             <Link
-              to="/blog-post"
+              to="/manage-pets"
               className="bg-blue-300 h-20 p-4 rounded-lg shadow-md hover:shadow-lg hover:bg-blue-400"
             >
               Manage Pet
             </Link>
             <Link
-              to="/blog-post"
+              to="/blog-manage"
               className="bg-blue-300 h-20 p-4 rounded-lg shadow-md hover:shadow-lg hover:bg-blue-400"
             >
-              Post Blog
+              Blog Manager
             </Link>
           </div>
         </div>

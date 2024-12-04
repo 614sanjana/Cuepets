@@ -2,9 +2,8 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
-const ManagePets = () => {
+const Adopt = () => {
   const [pets, setPets] = useState([]);
-  const [expandedIndex, setExpandedIndex] = useState(null);
   const [editPet, setEditPet] = useState(null);
   const [isEditPopupOpen, setIsEditPopupOpen] = useState(false);
   const [formValues, setFormValues] = useState({});
@@ -14,8 +13,7 @@ const ManagePets = () => {
   useEffect(() => {
     const fetchPets = async () => {
       try {
-        const ownerId = localStorage.getItem('ownerID'); // Replace with the actual owner ID
-        const response = await axios.get(`http://localhost:8080/api/v1/pets/allPets/${ownerId}`);
+        const response = await axios.get(`http://localhost:8080/api/v1/adoption/availablePets`);
         setPets(response.data);
       } catch (error) {
         console.error("Error fetching pets:", error);
@@ -76,7 +74,7 @@ const ManagePets = () => {
       </button>
 
       <h1 className="text-4xl font-bold text-blue-600 mb-6">
-        Manage my Cute Pets
+        Adopt Cute Pets from Cue Pets
       </h1>
       <p className="text-lg text-gray-600 mb-8">
         Manage or edit your Pets
@@ -171,4 +169,4 @@ const ManagePets = () => {
   );
 };
 
-export default ManagePets;
+export default Adopt;
