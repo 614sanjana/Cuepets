@@ -35,35 +35,33 @@ export default function Dashboard() {
 
   const [imageUrl, setImageUrl] = useState(null);
   const [error, setError] = useState(null);
-
   useEffect(() => {
     // Fetch the health record image from the API
     const fetchImage = async () => {
       try {
         // Make a GET request to the viewImage endpoint
         const response = await fetch(`http://localhost:8080/api/v1/user/viewImage/${ownerID}`);
-
+  
         // Check if the response is successful
         if (!response.ok) {
           throw new Error('Image not found or an error occurred');
         }
-
+  
         // Create a URL for the image
         const imageBlob = await response.blob();
         const imageUrl = URL.createObjectURL(imageBlob);
-
+  
         // Set the image URL in the state
         setImageUrl(imageUrl);
       } catch (err) {
-        // Set the error message in the state if something goes wrong
-        setError(err.message);
+        // If fetch fails, set a default image URL
+        setImageUrl("https://via.placeholder.com/150"); // Replace with your default image URL
       }
     };
-
+  
     // Call the fetch function when the component mounts
     fetchImage();
   }, [ownerID]);
-
 
   if (error) {
     return <p className="text-center text-red-500">{error}</p>;
@@ -99,14 +97,14 @@ export default function Dashboard() {
         {/* Sidebar */}
         <div className="w-1/3 bg-blue-200 p-6 flex flex-col items-center">
           {/* Profile Photo */}
-          <div>
-      {error && <p>Error: {error}</p>}
-      {imageUrl ? (
-        <img src={imageUrl} alt="Health Record" style={{ width: '100%', height: 'auto' }} />
-      ) : (
-        <p>Loading image...</p>
-      )}
-    </div>
+         {/* Profile Photo */}
+<div>
+  {imageUrl ? (
+    <img src={imageUrl} alt="Profile or Default" className="w-60 h-60 rounded-xl mb-10" />
+  ) : (
+    <p>Loading image...</p>
+  )}
+</div>
 
           {/* User Details */}
           <div className="w-full space-y-4">
