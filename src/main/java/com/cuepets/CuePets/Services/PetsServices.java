@@ -151,60 +151,45 @@ public class PetsServices {
 
     public List<Pets> getPetsByOwnerId(String ownerId) {
         return petsRepo.findByOwnerID(ownerId);
-//    }
-//    private static final Logger logger = LoggerFactory.getLogger(PetsServices.class);
-//    public ResponseEntity<Resource> viewPetImage(String petID) {
-//            try {
-//                // Fetch the health record by ID
-//                Pets pet = (Pets) petsRepo.findByPetID(petID);
-//
-//                // Log the fetched health record or null
-//                if (pet == null) {
-//                    logger.warn("Pet pfp not found for PetID: {}", petID);
-//                    return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-//                }
-//                logger.info("Pet pfp fetched successfully for petID: {}", petID);
-//
-//                if (pet.getPetProfile() == null || pet.getPetProfile().isEmpty()) {
-//                    logger.warn("No Pfp images found for petID: {}", petID);
-//                    return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-//                }
-//
-//                // Assuming there's only one image for now
-//                String fileName = pet.getPetProfile();
-//
-//                // Log the file name
-//                logger.info("Pet pfp file name: {}", fileName);
-//
-//                // Construct the file path based on the petID and ownerID
-//                String ownerID = pet.getOwnerID();
-//                PetOwner owner = petOwnerRepo.findByOwnerID(ownerID);
-//                if (pet == null) {
-//                    logger.warn("Pet not found for PetID: {}", petID);
-//                    return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-//                }
-//
-//                String ownerID = pet.getOwnerID();
-//                String baseDirectory = "src/main/resources/AssetData/" + ownerID + "/Pets/" + petID + "/Health_Record";
-//                Path filePath = Paths.get(baseDirectory, fileName);
-//
-//                // Load the file as a Resource
-//                Resource resource = new UrlResource(filePath.toUri());
-//                if (!resource.exists() || !resource.isReadable()) {
-//                    logger.warn("File not found or not readable for file: {}", fileName);
-//                    return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-//                }
-//
-//                // Log the success and return the file as a response
-//                logger.info("Returning the file as a resource: {}", fileName);
-//                return ResponseEntity.ok()
-//                        .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + resource.getFilename() + "\"")
-//                        .body(resource);
-//            } catch (Exception e) {
-//                logger.error("Error fetching or processing the health record for recordID: {}", recordID, e);
-//                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
-//            }
-//        }
-//    }
     }
+
+    private static final Logger logger = LoggerFactory.getLogger(PetsServices.class);
+
+
+    public ResponseEntity<Resource> viewPetImage(String petID) {
+
+            try {
+                // Fetch the pet from the database using petID
+                Pets pet = petsRepo.findByPetID(petID);
+                if (pet == null || pet.getPetProfile() == null || pet.getPetProfile().isEmpty()) {
+                    return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+                }
+
+                String ownerID = pet.getOwnerID();
+
+                // Define the base directory and file path
+                String baseDirectory = "src/main/resources/AssetData/" + ownerID + "/Pets/" + petID + "/PetProfile";
+                Path filePath = Paths.get(baseDirectory, pet.getPetProfile());
+
+                // Check if the file exists
+                if (!Files.exists(filePath)) {
+                    return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+                }
+
+                // Create a resource for the file
+                Resource resource = new UrlResource(filePath.toUri());
+                if (!resource.exists() || !resource.isReadable()) {
+                    throw new IOException("Could not read file: " + filePath.toString());
+                }
+
+                // Set appropriate headers for the response
+                return ResponseEntity.ok()
+                        .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"")
+                        .body(resource);
+
+            } catch (Exception e) {
+                logger.error("Error retrieving profile picture for pet ID {}: {}", petID, e.getMessage());
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+            }
+        }
 }

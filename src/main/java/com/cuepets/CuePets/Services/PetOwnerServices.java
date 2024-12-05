@@ -149,7 +149,7 @@ public class PetOwnerServices {
         return user.orElse(null);  // Return null if user is not found
     }
 
-    private static final Logger logger = LoggerFactory.getLogger(PetHealthRecordServices.class);
+    private static final Logger logger = LoggerFactory.getLogger(PetOwnerServices.class);
 
     public ResponseEntity<Resource> viewUserImage(String ownerID) {
         try {
