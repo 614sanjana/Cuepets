@@ -4,5 +4,5 @@ import com.cuepets.CuePets.Model.BlogPosts;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
 public interface BlogPostsRepo extends MongoRepository<BlogPosts,String> {
-    boolean existsByBlogPostId(String generatedID);
+
 }
