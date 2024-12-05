@@ -13,8 +13,8 @@ function Hero() {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  const handleBookAppointmentClick = () => {
-    navigate("/appointment");
+  const SignUp= () => {
+    navigate("/signup");
   };
 
   useEffect(() => {
@@ -46,7 +46,7 @@ function Hero() {
           <button
             className="text-appointment-btn"
             type="button"
-            onClick={handleBookAppointmentClick}
+            onClick={SignUp}
           >
             <FontAwesomeIcon icon={faPaw} /> Get Started
           </button>

@@ -1,7 +1,6 @@
 package com.cuepets.CuePets.Controller;
 
 import com.cuepets.CuePets.Model.Doctor;
-import com.cuepets.CuePets.Model.PetOwner;
 import com.cuepets.CuePets.Repository.DoctorRepo;
 import com.cuepets.CuePets.Services.DoctorServices;
 import org.springframework.beans.factory.annotation.Autowired;

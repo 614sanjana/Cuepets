@@ -1,7 +1,6 @@
 package com.cuepets.CuePets.Controller;
 
 import com.cuepets.CuePets.Model.BlogPosts;
-import com.cuepets.CuePets.Model.Doctor;
 import com.cuepets.CuePets.Repository.BlogPostsRepo;
 import com.cuepets.CuePets.Services.BlogPostsServices;
 import org.springframework.beans.factory.annotation.Autowired;
