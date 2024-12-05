@@ -1,71 +1,210 @@
-import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
-import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 const ManagePets = () => {
-  const { ownerId } = useParams(); // Assuming ownerId is passed via URL params
   const [pets, setPets] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [expandedIndex, setExpandedIndex] = useState(null);
+  const [editPet, setEditPet] = useState(null);
+  const [isEditPopupOpen, setIsEditPopupOpen] = useState(false);
+  const [formValues, setFormValues] = useState({});
   const navigate = useNavigate();
+  const [imageUrl, setImageUrl] = useState(null);
 
+  // Fetch pets data
   useEffect(() => {
-    // Fetch all pets for the owner
     const fetchPets = async () => {
       try {
+        const ownerId = localStorage.getItem('ownerID'); // Replace with the actual owner ID
         const response = await axios.get(`http://localhost:8080/api/v1/pets/allPets/${ownerId}`);
         setPets(response.data);
-        setLoading(false);
       } catch (error) {
         console.error("Error fetching pets:", error);
-        setLoading(false);
       }
     };
 
     fetchPets();
-  }, [ownerId]);
+  }, []);
 
-  if (loading) {
-    return <div>Loading...</div>;
-  }
+  useEffect(() => {
+    const fetchImage = async () => {
+      try {
+        const response = await fetch(
+          `http://localhost:8080/api/v1/user/viewImage/${petID}`
+        );
+        if (!response.ok) {
+          throw new Error("Image not found or an error occurred");
+        }
+        const imageBlob = await response.blob();
+        const imageUrl = URL.createObjectURL(imageBlob);
+        setImageUrl(imageUrl);
+      } catch (err) {
+        setImageUrl("https://via.placeholder.com/150");
+      }
+    };
+
+    fetchImage();
+  }, [petID]);
+
+  // Open edit popup
+  const handleEditClick = (pet) => {
+    setEditPet(pet);
+    setFormValues(pet);
+    setIsEditPopupOpen(true);
+  };
+
+  // Handle form changes
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormValues({ ...formValues, [name]: value });
+  };
+
+  // Save edited pet details
+  const handleSave = async () => {
+    try {
+      const ownerId = localStorage.getItem('ownerID'); // Replace with the actual owner ID
+      const response = await axios.get(`http://localhost:8080/api/v1/pets/addPet/${ownerId}`);
+      console.log(response.data);
+      setPets(response.data);
+    } catch (error) {
+      console.error("Error saving pet details:", error);
+    }
+  };
+
+  // Handle file upload for image
+  const handleFileUpload = (event, pet) => {
+    const file = event.target.files[0];
+    if (file) {
+      console.log(`Uploading ${file.name} for ${pet.petName}`);
+      const formData = new FormData();
+      formData.append("file", file);
+
+      const ownerId = localStorage.getItem('ownerID');
+      axios.post(`http://localhost:8080/api/v1/pets/setPfp/${pet.petID}`, formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      })
+      .then(response => {
+        alert('Image uploaded successfully');
+        // Optionally, fetch and update the pet image after upload
+        setImageUrl(URL.createObjectURL(file)); // Display the new image immediately
+      })
+      .catch(error => {
+        console.error("Error uploading image", error);
+      });
+    }
+  };
+
+  const handleBackButton = () => {
+    window.history.back();
+  };
 
   return (
-    <div className="container">
-      <h1 className="text-center text-2xl font-semibold">Manage Pets</h1>
+    <div className="h-screen p-8 justify-start bg-gradient-to-br from-white to-blue-100 text-center font-sans animate-fadeIn">
+      <button
+        className="fixed top-5 left-5 bg-blue-600 text-white px-4 py-2 rounded-lg shadow hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 transform hover:-translate-x-1 transition-all"
+        onClick={handleBackButton}
+      >
+        &larr; Back
+      </button>
 
-      {/* Display pets */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
-        {pets.length === 0 ? (
-          <p>No pets found for this owner.</p>
-        ) : (
-          pets.map((pet) => (
-            <div key={pet.petID} className="bg-white p-4 rounded-lg shadow-md">
-              {/* Pet Profile Image */}
+      <h1 className="text-4xl font-bold text-blue-600 mb-6">
+        Manage my Cute Pets
+      </h1>
+      <p className="text-lg text-gray-600 mb-8">
+        Manage or edit your Pets
+      </p>
+
+      <div className="flex flex-wrap ml-0 p-10 gap-6 max-w-6xl mx-auto">
+        {pets.map((pet, index) => (
+          <div
+            key={index}
+            className="bg-white rounded-xl shadow-lg p-6 w-full sm:w-80 text-center transform transition-transform hover:-translate-y-2 hover:shadow-xl"
+          >
+            <div className="p-6 flex flex-col items-center">
+              {/* Profile Photo */}
               <div className="mb-4">
                 <img
-                  src={`http://localhost:8080/api/v1/pets/viewImage/${pet.petID}`} // Fetch image from the backend
-                  alt={`${pet.petName}'s profile`}
-                  className="w-60 h-60 rounded-xl mb-4 object-cover"
+                  src={pet.petImage || "https://via.placeholder.com/150"} // Use pet image URL from backend
+                  alt="Profile"
+                  className="w-60 h-60 rounded-xl mb-4"
                 />
               </div>
-
-              {/* Pet details */}
-              <h2 className="text-xl font-semibold">{pet.petName}</h2>
-              <p>Age: {pet.petAge}</p>
-              <p>Gender: {pet.petGender}</p>
-              <p>Breed: {pet.petBreed}</p>
-
-              {/* Link to Edit Pet */}
-              <button
-                className="mt-4 bg-blue-500 text-white px-4 py-2 rounded-lg"
-                onClick={() => navigate(`/editPet/${pet.petID}`)} // Navigate to edit pet page
-              >
-                Edit Pet
-              </button>
+              {/* Upload New Profile Picture */}
+              <div className="mb-6">
+                <input
+                  type="file"
+                  id="profilePictureUpload"
+                  accept="image/*"
+                  className="hidden"
+                  onChange={(e) => handleFileUpload(e, pet)} // Upload file for the selected pet
+                />
+                <label
+                  htmlFor="profilePictureUpload"
+                  className="cursor-pointer bg-blue-500 text-white px-4 py-2 rounded-lg shadow-md hover:bg-blue-600 transition duration-200"
+                >
+                  Upload New Picture
+                </label>
+              </div>
             </div>
-          ))
-        )}
+            <h3 className="text-xl font-semibold text-blue-600 mb-2">
+              {pet.petName}
+            </h3>
+            <p className="text-gray-500 mb-4">Age: {pet.petAge}</p>
+            <button
+              className="bg-blue-600 text-white px-4 py-2 rounded-lg font-semibold shadow hover:bg-blue-800 transform hover:scale-105 transition-all"
+              onClick={() => handleEditClick(pet)}
+            >
+              Edit Details
+            </button>
+          </div>
+        ))}
       </div>
+
+      {isEditPopupOpen && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+          <div className="bg-white rounded-lg p-6 w-full max-w-md">
+            <h2 className="text-xl font-bold text-blue-600 mb-4">Edit Pet Details</h2>
+            <form>
+              <div className="mb-4">
+                <label className="block text-gray-700 mb-2">Name:</label>
+                <input
+                  type="text"
+                  name="petName"
+                  value={formValues.petName || ''}
+                  onChange={handleChange}
+                  className="w-full border rounded-lg p-2"
+                />
+              </div>
+              <div className="mb-4">
+                <label className="block text-gray-700 mb-2">Age:</label>
+                <input
+                  type="number"
+                  name="petAge"
+                  value={formValues.petAge || ''}
+                  onChange={handleChange}
+                  className="w-full border rounded-lg p-2"
+                />
+              </div>
+              <div className="flex justify-end">
+                <button
+                  type="button"
+                  className="bg-gray-400 text-white px-4 py-2 rounded-lg mr-2"
+                  onClick={() => setIsEditPopupOpen(false)}
+                >
+                  Cancel
+                </button>
+                <button
+                  type="button"
+                  className="bg-blue-600 text-white px-4 py-2 rounded-lg"
+                  onClick={handleSave}
+                >
+                  Save
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

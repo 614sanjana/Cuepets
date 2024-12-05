@@ -13,20 +13,7 @@ public class BlogPostsServices {
     @Autowired
     private BlogPostsRepo blogPostsRepo;
 
-    public BlogPosts saveBlogPosts(BlogPosts blogPosts)
-    {
-       HEAD
-        Random random = new Random();
-        String generatedID;
-        do
-        {
-            generatedID = String.valueOf(random.nextInt((MAX - MIN) + 1) + MIN);
-        } while (blogPostsRepo.existsByBlogPostId(generatedID));
-        return generatedID;
-    }
-
      public BlogPosts saveBlogPosts(BlogPosts blogPosts) {
-        blogPosts.setBlogPostId(generateUniqueBlogPostID());
         // Generate a UUID and set it as the blog ID
         blogPosts.setBlogId(UUID.randomUUID().toString());
         blogPostsRepo.save(blogPosts);
