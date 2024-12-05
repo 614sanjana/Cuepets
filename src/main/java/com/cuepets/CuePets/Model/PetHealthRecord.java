@@ -12,6 +12,7 @@ public class PetHealthRecord {
     private String recordID;
     private String petID;
     private String clinicID;
+    private String description;
     private LocalDate recordDateAndTime;
     private List<String> reportImage;
 }

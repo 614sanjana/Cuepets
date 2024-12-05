@@ -5,11 +5,13 @@ import com.cuepets.CuePets.Repository.PetHealthRecordRepo;
 import com.cuepets.CuePets.Services.PetHealthRecordServices;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @RestController
 @RequestMapping("api/v1/healthrecord")
@@ -44,4 +46,20 @@ public class PetHealthRecordController {
     public ResponseEntity<Resource> viewHealthRecordImage(@PathVariable String recordID) {
         return petHealthRecordServices.viewHealthRecordImage(recordID);
     }
+
+    /*
+     Endpoint to delete the record
+  */
+//    @DeleteMapping(value = "/deleteRecord/{id}")
+//    public ResponseEntity<String> deleteRecordByID(@PathVariable(name = "id") String recordId) {
+//        try {
+//            String result = petOwnerServices.deleteUserByID(id);
+//            return ResponseEntity.ok(result);
+//        } catch (NoSuchElementException e) {
+//            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+//        } catch (Exception e) {
+//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+//                    .body("Failed to delete user and associated data. Error: " + e.getMessage());
+//        }
+//    }
 }
