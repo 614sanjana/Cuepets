@@ -5,7 +5,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.data.mongodb.config.EnableMongoAuditing;
 
 @SpringBootApplication
-public class CuePetsApplication {
+public class
+CuePetsApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(CuePetsApplication.class, args);
