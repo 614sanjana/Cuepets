@@ -9,7 +9,7 @@ public class BlogPosts {
 
     @Id
     private String blogId;
-
+    private String ownerId;
     private String blogTitle;
     private String blogDesc;
     private String blogContent;

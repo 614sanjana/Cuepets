@@ -17,5 +17,6 @@ public class RegularAppointments {
     private String appointmentTime;
     private String reasonForAppointment;
     private String veterinarianName;
+    private String description;
     private String clinicName;
 }
