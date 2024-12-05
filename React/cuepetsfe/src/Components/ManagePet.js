@@ -9,6 +9,8 @@ const ManagePets = () => {
   const [isEditPopupOpen, setIsEditPopupOpen] = useState(false);
   const [formValues, setFormValues] = useState({});
   const navigate = useNavigate();
+  const [imageUrl, setImageUrl] = useState(null);
+
 
   // Fetch pets data
   useEffect(() => {
@@ -41,10 +43,6 @@ const ManagePets = () => {
   // Save edited pet details
   const handleSave = async () => {
     try {
-      await axios.put(`http://localhost:8080/api/v1/pets`, formValues);
-      setIsEditPopupOpen(false);
-      setEditPet(null);
-      // Refresh pets data
       const ownerId = localStorage.getItem('ownerID'); // Replace with the actual owner ID
       const response = await axios.get(`http://localhost:8080/api/v1/pets/allPets/${ownerId}`);
       console.log(response.data);
@@ -88,26 +86,60 @@ const ManagePets = () => {
             key={index}
             className="bg-white rounded-xl shadow-lg p-6 w-full sm:w-80 text-center transform transition-transform hover:-translate-y-2 hover:shadow-xl"
           >
-            <img
-              src={pet.petImage || 'https://via.placeholder.com/150'} // Replace with pet image URL
-              alt={pet.petName}
-              className="w-full rounded-lg mb-4 transform transition-transform hover:scale-105"
-            />
-            <div>
-    <button
-      className="bg-gray-300 text-black px-4 py-2 rounded-lg font-semibold shadow hover:bg-gray-400 transform hover:scale-105 transition-all"
-      onClick={() => document.getElementById(`fileInput-${index}`).click()}
-    >
-      Upload Picture
-    </button>
-    <input
-      id={`fileInput-${index}`}
-      type="file"
-      accept="image/*"
-      className="hidden"
-      onChange={(e) => handleFileUpload(e, pet)}
-    />
-  </div>
+            <div className=" p-6 flex flex-col items-center">
+              {/* Profile Photo */}
+              <div className="mb-4">
+                <img 
+                  src="https://via.placeholder.com/150" 
+                  alt="Profile" 
+                  className="w-60 h-60 rounded-xl mb-4" 
+                />
+              </div>
+              {/* Upload New Profile Picture */}
+              <div className="mb-6">
+                <input
+                  type="file"
+                  id="profilePictureUpload"
+                  accept="image/*"
+                  className="hidden"
+                  onChange={async (e) => {
+                    if (e.target.files && e.target.files[0]) {
+                      const file = e.target.files[0];
+                      const formData = new FormData();
+                      formData.append("file", file);
+                      const ownerId = localStorage.getItem('ownerID');
+                      try {
+                        const response = await axios.post(
+                          `http://localhost:8080/api/v1/user/setPfp/${ownerId}`,
+                          formData,
+                          {
+                            headers: { "Content-Type": "multipart/form-data" },
+                          }
+                        );
+                        
+                        if (response.status === 200) {
+                          alert("Profile picture updated successfully.");
+                          const updatedImageResponse = await fetch(
+                            `http://localhost:8080/api/v1/user/viewImage/${ownerId}`
+                          );
+                          const imageBlob = await updatedImageResponse.blob();
+                          setImageUrl(URL.createObjectURL(imageBlob));
+                        }
+                      } catch (error) {
+                        console.error("Error uploading profile picture", error);
+                      }
+                    }
+                  }}
+                />
+                <label
+                  htmlFor="profilePictureUpload"
+                  className="cursor-pointer bg-blue-500 text-white px-4 py-2 rounded-lg shadow-md hover:bg-blue-600 transition duration-200"
+                >
+                  Upload New Picture
+                </label>
+              </div>
+             
+            </div>
             <h3 className="text-xl font-semibold text-blue-600 mb-2">
               {pet.petName}
             </h3>

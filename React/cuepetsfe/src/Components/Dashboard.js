@@ -95,53 +95,98 @@ export default function Dashboard() {
       <AppNavbar />
       <div className="dashboard h-[90vh] flex flex-grow bg-gray-100">
         {/* Sidebar */}
-        <div className="w-1/3 bg-blue-200 p-6 flex flex-col items-center">
-          {/* Profile Photo */}
-         {/* Profile Photo */}
-<div>
-  {imageUrl ? (
-    <img src={imageUrl} alt="Profile or Default" className="w-60 h-60 rounded-xl mb-10" />
-  ) : (
-    <p>Loading image...</p>
-  )}
+<div className="w-1/3 bg-blue-200 p-6 flex flex-col items-center">
+  {/* Profile Photo */}
+  <div className="mb-4">
+    {imageUrl ? (
+      <img src={imageUrl} alt="Profile" className="w-60 h-60 rounded-xl mb-4" />
+    ) : (
+      <p>Loading image...</p>
+    )}
+  </div>
+  {/* Upload New Profile Picture */}
+  <div className="mb-6">
+    <input
+      type="file"
+      id="profilePictureUpload"
+      accept="image/*"
+      className="hidden"
+      onChange={async (e) => {
+        if (e.target.files && e.target.files[0]) {
+          const file = e.target.files[0];
+          const formData = new FormData();
+          formData.append("file", file);
+
+          try {
+            // API call to upload profile picture
+            const response = await axios.post(
+              `http://localhost:8080/api/v1/user/setPfp/${ownerID}`,
+              formData,
+              {
+                headers: { "Content-Type": "multipart/form-data" },
+              }
+            );
+            
+            if (response.status === 200) {
+              alert("Profile picture updated successfully.");
+              // Reload the image to show updated profile picture
+              const updatedImageResponse = await fetch(
+                `http://localhost:8080/api/v1/user/viewImage/${ownerID}`
+              );
+              const imageBlob = await updatedImageResponse.blob();
+              setImageUrl(URL.createObjectURL(imageBlob));
+            }
+          } catch (error) {
+            console.error("Error uploading profile picture", error);
+          }
+        }
+      }}
+    />
+    <label
+      htmlFor="profilePictureUpload"
+      className="cursor-pointer bg-blue-500 text-white px-4 py-2 rounded-lg shadow-md hover:bg-blue-600 transition duration-200"
+    >
+      Upload New Picture
+    </label>
+  </div>
+
+  {/* User Details */}
+  <div className="w-full space-y-4">
+    <input
+      type="text"
+      name="name"
+      value={userData.userName}
+      onChange={handleChange}
+      className="w-full p-2 rounded-lg border border-gray-300 bg-white text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-200"
+      disabled={!isEditing} // Make it non-editable unless in editing mode
+    />
+    <input
+      type="email"
+      name="email"
+      value={userData.userEmail}
+      onChange={handleChange}
+      className="w-full p-2 rounded-lg border border-gray-300 bg-white text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-200"
+      disabled={!isEditing}
+    />
+    <input
+      type="text"
+      name="Phone"
+      value={userData.userPhone}
+      onChange={handleChange}
+      className="w-full p-2 rounded-lg border border-gray-300 bg-white text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-200"
+      disabled={!isEditing}
+    />
+  </div>
+
+  {/* Update Button */}
+  <button
+    className="mt-6 bg-blue-500 text-white px-4 py-2 rounded-lg shadow-md hover:bg-blue-600 transition duration-200"
+    onClick={() => setIsEditing(!isEditing)}
+  >
+    {isEditing ? "Save Changes" : "Update Details"}
+  </button>
 </div>
 
-          {/* User Details */}
-          <div className="w-full space-y-4">
-            <input
-              type="text"
-              name="name"
-              value={userData.userName}
-              onChange={handleChange}
-              className="w-full p-2 rounded-lg border border-gray-300 bg-white text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-200"
-              disabled={!isEditing} // Make it non-editable unless in editing mode
-            />
-            <input
-              type="email"
-              name="email"
-              value={userData.userEmail}
-              onChange={handleChange}
-              className="w-full p-2 rounded-lg border border-gray-300 bg-white text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-200"
-              disabled={!isEditing}
-            />
-            <input
-              type="text"
-              name="Phone"
-              value={userData.userPhone}
-              onChange={handleChange}
-              className="w-full p-2 rounded-lg border border-gray-300 bg-white text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-200"
-              disabled={!isEditing}
-            />
-          </div>
-
-          {/* Update Button */}
-          <button
-            className="mt-6 bg-blue-500 text-white px-4 py-2 rounded-lg shadow-md hover:bg-blue-600 transition duration-200"
-            onClick={() => setIsEditing(!isEditing)}
-          >
-            {isEditing ? "Save Changes" : "Update Details"}
-          </button>
-        </div>
 
         {/* Main Content */}
         <div className="w-2/3 flex flex-col p-4">
