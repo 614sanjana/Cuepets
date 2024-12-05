@@ -25,27 +25,37 @@ const ManagePets = () => {
 
     fetchPets();
   }, []);
+  const [imageUrls, setImageUrls] = useState({});
 
-  useEffect(() => {
-    const fetchImage = async () => {
-      try {
-        const response = await fetch(
-          `http://localhost:8080/api/v1/user/viewImage/${petID}`
-        );
-        if (!response.ok) {
-          throw new Error("Image not found or an error occurred");
-        }
-        const imageBlob = await response.blob();
-        const imageUrl = URL.createObjectURL(imageBlob);
-        setImageUrl(imageUrl);
-      } catch (err) {
-        setImageUrl("https://via.placeholder.com/150");
-      }
-    };
+useEffect(() => {
+  const fetchImage = async (petID) => {
+    try {
+      const response = await fetch(`http://localhost:8080/api/v1/pets/viewImage/${petID}`);
+      const imageBlob = await response.blob();
+      const imageUrl = URL.createObjectURL(imageBlob);
+      setImageUrls((prevState) => ({
+        ...prevState,
+        [petID]: imageUrl,
+      }));
+    } catch (err) {
+      setImageUrls((prevState) => ({
+        ...prevState,
+        [petID]: "https://via.placeholder.com/150",  // Fallback image if fetch fails
+      }));
+    }
+  };
 
-    fetchImage();
-  }, [petID]);
-
+  pets.forEach(pet => {
+    if (!imageUrls[pet.petID]) {  // Check if imageUrl is already set
+      setImageUrls((prevState) => ({
+        ...prevState,
+        [pet.petID]: "https://via.placeholder.com/150",  // Set the default fallback image
+      }));
+      fetchImage(pet.petID);
+    }
+  });
+}, [pets]);
+  
   // Open edit popup
   const handleEditClick = (pet) => {
     setEditPet(pet);
@@ -63,9 +73,10 @@ const ManagePets = () => {
   const handleSave = async () => {
     try {
       const ownerId = localStorage.getItem('ownerID'); // Replace with the actual owner ID
-      const response = await axios.get(`http://localhost:8080/api/v1/pets/addPet/${ownerId}`);
+      const response = await axios.put(`http://localhost:8080/api/v1/pets/addPet/${editPet.ownerId}`, formValues);
       console.log(response.data);
-      setPets(response.data);
+      setPets((prevPets) => prevPets.map((pet) => pet.petID === editPet.petID ? response.data : pet));
+      setIsEditPopupOpen(false);
     } catch (error) {
       console.error("Error saving pet details:", error);
     }
@@ -115,49 +126,49 @@ const ManagePets = () => {
       </p>
 
       <div className="flex flex-wrap ml-0 p-10 gap-6 max-w-6xl mx-auto">
-        {pets.map((pet, index) => (
-          <div
-            key={index}
-            className="bg-white rounded-xl shadow-lg p-6 w-full sm:w-80 text-center transform transition-transform hover:-translate-y-2 hover:shadow-xl"
-          >
-            <div className="p-6 flex flex-col items-center">
-              {/* Profile Photo */}
-              <div className="mb-4">
-                <img
-                  src={pet.petImage || "https://via.placeholder.com/150"} // Use pet image URL from backend
-                  alt="Profile"
-                  className="w-60 h-60 rounded-xl mb-4"
-                />
-              </div>
-              {/* Upload New Profile Picture */}
-              <div className="mb-6">
-                <input
-                  type="file"
-                  id="profilePictureUpload"
-                  accept="image/*"
-                  className="hidden"
-                  onChange={(e) => handleFileUpload(e, pet)} // Upload file for the selected pet
-                />
-                <label
-                  htmlFor="profilePictureUpload"
-                  className="cursor-pointer bg-blue-500 text-white px-4 py-2 rounded-lg shadow-md hover:bg-blue-600 transition duration-200"
-                >
-                  Upload New Picture
-                </label>
-              </div>
-            </div>
-            <h3 className="text-xl font-semibold text-blue-600 mb-2">
-              {pet.petName}
-            </h3>
-            <p className="text-gray-500 mb-4">Age: {pet.petAge}</p>
-            <button
-              className="bg-blue-600 text-white px-4 py-2 rounded-lg font-semibold shadow hover:bg-blue-800 transform hover:scale-105 transition-all"
-              onClick={() => handleEditClick(pet)}
-            >
-              Edit Details
-            </button>
-          </div>
-        ))}
+      {pets.map((pet, index) => (
+  <div
+    key={index}
+    className="bg-white rounded-xl shadow-lg p-6 w-full sm:w-80 text-center transform transition-transform hover:-translate-y-2 hover:shadow-xl"
+  >
+    <div className="p-6 flex flex-col items-center">
+      {/* Profile Photo */}
+      <div className="mb-4">
+        <img
+          src={imageUrls[pet.petID] || "https://via.placeholder.com/150"}  // Default to placeholder if no image URL
+          alt="Profile"
+          className="w-60 h-60 rounded-xl mb-4"
+        />
+      </div>
+      {/* Upload New Profile Picture */}
+      <div className="mb-6">
+        <input
+          type="file"
+          id="profilePictureUpload"
+          accept="image/*"
+          className="hidden"
+          onChange={(e) => handleFileUpload(e, pet)} // Upload file for the selected pet
+        />
+        <label
+          htmlFor="profilePictureUpload"
+          className="cursor-pointer bg-blue-500 text-white px-4 py-2 rounded-lg shadow-md hover:bg-blue-600 transition duration-200"
+        >
+          Upload New Picture
+        </label>
+      </div>
+    </div>
+    <h3 className="text-xl font-semibold text-blue-600 mb-2">
+      {pet.petName}
+    </h3>
+    <p className="text-gray-500 mb-4">Age: {pet.petAge}</p>
+    <button
+      className="bg-blue-600 text-white px-4 py-2 rounded-lg font-semibold shadow hover:bg-blue-800 transform hover:scale-105 transition-all"
+      onClick={() => handleEditClick(pet)}
+    >
+      Edit Details
+    </button>
+  </div>
+))}
       </div>
 
       {isEditPopupOpen && (
