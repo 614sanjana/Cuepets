@@ -76,9 +76,8 @@ public class PetsController {
         }
     }
 
-//    @GetMapping("/viewImage/{petID}")
-//    public ResponseEntity<Resource> viewPetPfpImage(@PathVariable String petID) {
-//        return petsServices.viewPetImage(petID);
-//    }
-
+    @GetMapping("/viewImage/{petID}")
+    public ResponseEntity<Resource> viewPetPfpImage(@PathVariable String petID) {
+        return petsServices.viewPetImage(petID);
+    }
 }
