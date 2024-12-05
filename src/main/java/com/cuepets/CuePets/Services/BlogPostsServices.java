@@ -15,7 +15,7 @@ public class BlogPostsServices {
 
     public BlogPosts saveBlogPosts(BlogPosts blogPosts)
     {
-<<<<<<< HEAD
+       HEAD
         Random random = new Random();
         String generatedID;
         do
@@ -27,10 +27,8 @@ public class BlogPostsServices {
 
      public BlogPosts saveBlogPosts(BlogPosts blogPosts) {
         blogPosts.setBlogPostId(generateUniqueBlogPostID());
-=======
         // Generate a UUID and set it as the blog ID
         blogPosts.setBlogId(UUID.randomUUID().toString());
->>>>>>> 733e2a8de15caa6b78d12a0da9ff1d4a0cf7a9ac
         blogPostsRepo.save(blogPosts);
         return blogPosts;
     }
