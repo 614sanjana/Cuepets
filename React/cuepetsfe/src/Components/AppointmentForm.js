@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { useNavigate } from 'react-router-dom'; // Import useNavigate for React Router v6
 
 const AppointmentHistory = () => {
   const currentDate = new Date();
@@ -29,6 +30,8 @@ const AppointmentHistory = () => {
   const [clickCount, setClickCount] = useState({}); // Track the click count for each date
   const [confirmationModal, setConfirmationModal] = useState(false); // For confirmation modal
   const [appointmentToDelete, setAppointmentToDelete] = useState(null); // Track which appointment to delete
+
+  const navigate = useNavigate(); // Initialize useNavigate hook
 
   // Handle saving a new appointment
   const handleSubmit = (date) => {
@@ -194,42 +197,38 @@ const AppointmentHistory = () => {
     }
   };
 
+  // Handle Go Back action
+  const handleGoBack = () => {
+    navigate(-1); // Go back to the previous page
+  };
+
   return (
-    <div className="container mx-auto py-4 flex">
-      {/* Left Side (Calendar) */}
-      <div className="w-1/2 p-4 border rounded-lg">
-        <div className="text-center">
-          <h2 className="text-2xl font-bold">{months[month]} {year}</h2>
-          <div className="flex justify-center mt-2">
-            <select
-              className="border p-2 rounded"
-              value={month}
-              onChange={(e) => setMonth(e.target.selectedIndex)}
-            >
-              {months.map((month, index) => (
-                <option key={index} value={index}>{month}</option>
-              ))}
-            </select>
-            <input
-              type="number"
-              value={year}
-              onChange={(e) => setYear(e.target.value)}
-              className="border p-2 rounded w-20 ml-4"
-            />
+    <div className="container mx-auto py-4">
+      {/* Go Back Button at the top-right */}
+      <div className="absolute top-4 right-4">
+        <button
+          onClick={handleGoBack}
+          className="bg-gray-500 text-white py-2 px-6 rounded-lg text-sm hover:bg-gray-600"
+        >
+          Go Back
+        </button>
+      </div>
+
+      <div className="flex justify-center mt-12">
+        <div className="w-full md:w-1/2 p-4">
+          <h2 className="text-2xl font-semibold mb-4">Your Appointments</h2>
+          <div className="grid grid-cols-7 gap-4 mt-6 text-center">
+            {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map((day, index) => (
+              <div key={index} className="font-semibold">{day}</div>
+            ))}
+            {renderCalendarDays()}
           </div>
         </div>
 
-        <div className="grid grid-cols-7 gap-4 mt-6 text-center">
-          {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map((day, index) => (
-            <div key={index} className="font-semibold">{day}</div>
-          ))}
-          {renderCalendarDays()}
+        {/* Right Side (Appointment Details) */}
+        <div className="w-full md:w-1/2 p-4">
+          {renderAppointmentDetails()}
         </div>
-      </div>
-
-      {/* Right Side (Appointment Details) */}
-      <div className="w-1/2 p-4">
-        {renderAppointmentDetails()}
       </div>
 
       {/* Confirmation Modal */}
