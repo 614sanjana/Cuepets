@@ -19,9 +19,14 @@ public class BlogPostsController {
     @Autowired
     private BlogPostsServices blogPostsServices;
 
-    @PostMapping(value="/addBlogPosts")
-    public BlogPosts addBlogPosts(@RequestBody BlogPosts blogPosts) {
-        return blogPostsServices.saveBlogPosts(blogPosts);
+    @PostMapping(value="/addBlogPosts/{id}")
+    public BlogPosts addBlogPosts(@RequestBody BlogPosts blogPosts,@PathVariable(name="id")String ownerId) {
+        return blogPostsServices.saveBlogPosts(blogPosts,ownerId);
+    }
+
+    @GetMapping(value="/getBlogs/{id}")
+    public List<BlogPosts> getUserBlogs(@PathVariable(name="id")String userId){
+        return blogPostsRepo.findByownerId(userId);
     }
 
     @GetMapping(value="/getBlogPosts")

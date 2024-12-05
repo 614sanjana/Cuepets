@@ -13,14 +13,11 @@ public class BlogPostsServices {
     @Autowired
     private BlogPostsRepo blogPostsRepo;
 
-     public BlogPosts saveBlogPosts(BlogPosts blogPosts) {
+     public BlogPosts saveBlogPosts(BlogPosts blogPosts,String ownerID) {
         // Generate a UUID and set it as the blog ID
+        blogPosts.setOwnerId(ownerID);
         blogPosts.setBlogId(UUID.randomUUID().toString());
         blogPostsRepo.save(blogPosts);
         return blogPosts;
-    }
-
-    public BlogPosts getBlogPostsByID(String id) {
-        return blogPostsRepo.findById(id).orElseThrow(() -> new RuntimeException("BlogPost not found with ID: " + id));
     }
 }
