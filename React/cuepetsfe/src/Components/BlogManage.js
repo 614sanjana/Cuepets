@@ -3,9 +3,12 @@ import { useNavigate } from 'react-router-dom';
 import food from '../Assets/food.jpeg';
 import vet1 from '../Assets/vet1.jpeg';
 import behav from '../Assets/behav.jpeg';
+import recipeCat from '../Assets/recipeCat.jpeg'; // Add respective images
+import recipeDog from '../Assets/recipeDog.jpeg';
+import recipeRabbit from '../Assets/recipeRabbit.jpeg';
 
 const BlogManage = () => {
-  const [expandedIndex, setExpandedIndex] = useState(null);
+  const [expandedIndices, setExpandedIndices] = useState([]);
   const navigate = useNavigate();
 
   const articles = [
@@ -43,10 +46,50 @@ const BlogManage = () => {
         "Monitor your pet for any unusual behavior or symptoms.",
       ],
     },
+    {
+      title: "Recipes for Cats",
+      description: "Delicious and healthy recipes for your feline friends.",
+      image: recipeCat,
+      tips: [
+        "Cooked chicken and fish with a small portion of rice.",
+        "Include cooked eggs for protein boost.",
+        "Avoid spices, salt, and seasonings.",
+        "Incorporate pumpkin puree for better digestion.",
+        "Serve in small portions and refrigerate leftovers.",
+      ],
+    },
+    {
+      title: "Recipes for Dogs",
+      description: "Homemade recipes to keep your dogs healthy and happy.",
+      image: recipeDog,
+      tips: [
+        "Cooked chicken, sweet potatoes, and green beans.",
+        "Add bone broth for flavor and nutrition.",
+        "Avoid onions, garlic, and chocolate.",
+        "Include cooked oatmeal for a fiber boost.",
+        "Serve fresh and warm for better taste.",
+      ],
+    },
+    {
+      title: "Recipes for Rabbits",
+      description: "Wholesome recipes tailored for your rabbits.",
+      image: recipeRabbit,
+      tips: [
+        "Combine fresh greens like kale and parsley.",
+        "Add small portions of fruits like apples (seedless).",
+        "Avoid high-sugar and processed foods.",
+        "Use pellets sparingly with fresh hay as the base diet.",
+        "Ensure constant access to clean, fresh water.",
+      ],
+    },
   ];
 
   const toggleReadMore = (index) => {
-    setExpandedIndex(expandedIndex === index ? null : index);
+    setExpandedIndices((prevIndices) =>
+      prevIndices.includes(index)
+        ? prevIndices.filter((i) => i !== index)
+        : [...prevIndices, index]
+    );
   };
 
   const handleBackButton = () => {
@@ -62,12 +105,8 @@ const BlogManage = () => {
         &larr; Back
       </button>
 
-      <h1 className="text-4xl font-bold text-blue-600 mb-6">
-        Manage My Blogs
-      </h1>
-      <p className="text-lg text-gray-600 mb-8">
-        Keep Track Of All Your Blogs 
-      </p>
+      <h1 className="text-4xl font-bold text-blue-600 mb-6">Manage My Blogs</h1>
+      <p className="text-lg text-gray-600 mb-8">Keep Track Of All Your Blogs</p>
 
       <div className="flex flex-wrap justify-center gap-6 max-w-6xl mx-auto">
         {articles.map((article, index) => (
@@ -88,9 +127,9 @@ const BlogManage = () => {
               className="bg-blue-600 text-white px-4 py-2 rounded-lg font-semibold shadow hover:bg-blue-800 transform hover:scale-105 transition-all"
               onClick={() => toggleReadMore(index)}
             >
-              {expandedIndex === index ? "Show Less" : "Read More"}
+              {expandedIndices.includes(index) ? "Show Less" : "Read More"}
             </button>
-            {expandedIndex === index && (
+            {expandedIndices.includes(index) && (
               <div className="mt-4 bg-blue-50 p-4 rounded-lg shadow text-left">
                 <h4 className="text-lg font-semibold text-blue-600 mb-2">
                   Quick Tips:

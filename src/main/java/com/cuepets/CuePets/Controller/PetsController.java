@@ -4,6 +4,7 @@ import com.cuepets.CuePets.Model.PetHealthRecord;
 import com.cuepets.CuePets.Model.Pets;
 import com.cuepets.CuePets.Services.PetsServices;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -74,5 +75,10 @@ public class PetsController {
             return new ResponseEntity<>("Error fetching pets: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+//    @GetMapping("/viewImage/{petID}")
+//    public ResponseEntity<Resource> viewPetPfpImage(@PathVariable String petID) {
+//        return petsServices.viewPetImage(petID);
+//    }
 
 }
