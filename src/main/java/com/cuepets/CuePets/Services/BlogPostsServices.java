@@ -24,7 +24,7 @@ public class BlogPostsServices {
         return generatedID;
     }
 
-    public BlogPosts saveBlogPosts(BlogPosts blogPosts){
+     public BlogPosts saveBlogPosts(BlogPosts blogPosts) {
         blogPosts.setBlogPostId(generateUniqueBlogPostID());
         blogPostsRepo.save(blogPosts);
         return blogPosts;
