@@ -7,6 +7,8 @@ const Record = () => {
   const [selectedPet, setSelectedPet] = useState(null);
   const [healthRecords, setHealthRecords] = useState([]);
   const [selectedFile, setSelectedFile] = useState(null);
+  const [showModal, setShowModal] = useState(false); // Modal visibility state
+  const [imageToShow, setImageToShow] = useState(null); // The image to display in the modal
   const navigate = useNavigate();
 
   // Fetch pets data
@@ -85,8 +87,40 @@ const Record = () => {
     }
   };
 
-  const handleViewImage = (recordID) => {
-    window.open(`http://localhost:8080/api/v1/healthrecord/viewImage/${recordID}`, "_blank");
+  const [imageUrl, setImageUrl] = useState(null);
+  const [error, setError] = useState(null);
+
+  // Open the modal with the image
+  const handleViewImage = async (record) => {
+    const recordID = record.recordID; // Get the recordID for the specific record
+
+    // Store the recordID in localStorage to persist it
+    localStorage.setItem("recordID", recordID);
+
+    try {
+      // Fetch the image using the stored recordID
+      const response = await fetch(`http://localhost:8080/api/v1/healthrecord/viewImage/${recordID}`);
+      
+      if (!response.ok) {
+        throw new Error("Image not found or an error occurred");
+      }
+
+      // Create a URL for the image from the response blob
+      const imageBlob = await response.blob();
+      const imageUrl = URL.createObjectURL(imageBlob);
+      
+      // Set the image URL in the state to display in the modal
+      setImageToShow(imageUrl);
+      setShowModal(true);
+    } catch (err) {
+      setError(err.message);
+    }
+  };
+
+  // Close the modal
+  const closeModal = () => {
+    setShowModal(false);
+    setImageToShow(null);
   };
 
   return (
@@ -164,7 +198,7 @@ const Record = () => {
                       <td className="border px-4 py-2">
                         <button
                           className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-800"
-                          onClick={() => handleViewImage(record.recordID)}
+                          onClick={() => handleViewImage(record)} // Pass the record to view the image
                         >
                           View Image
                         </button>
@@ -181,6 +215,25 @@ const Record = () => {
           )}
         </div>
       </div>
+
+      {/* Modal for full-screen image */}
+      {showModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+          <div className="relative bg-white p-4">
+            <button
+              className="absolute top-0 right-0 bg-red-600 text-white p-2 rounded-full"
+              onClick={closeModal}
+            >
+              X
+            </button>
+            {error ? (
+              <p className="text-red-500">{error}</p>
+            ) : (
+              <img src={imageToShow} alt="Health Record" className="max-w-full max-h-screen" />
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 };
