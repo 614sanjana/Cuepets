@@ -162,6 +162,7 @@ public class PetsServices {
                 // Fetch the pet from the database using petID
                 Pets pet = petsRepo.findByPetID(petID);
                 if (pet == null || pet.getPetProfile() == null || pet.getPetProfile().isEmpty()) {
+                    logger.warn("No user found for the owner ID: {}", petID);
                     return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
                 }
 
@@ -170,9 +171,10 @@ public class PetsServices {
                 // Define the base directory and file path
                 String baseDirectory = "src/main/resources/AssetData/" + ownerID + "/Pets/" + petID + "/PetProfile";
                 Path filePath = Paths.get(baseDirectory, pet.getPetProfile());
-
+                logger.warn("File Path : "+ filePath);
                 // Check if the file exists
                 if (!Files.exists(filePath)) {
+                    logger.warn("File Path doesnt exist");
                     return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
                 }
 
@@ -183,6 +185,7 @@ public class PetsServices {
                 }
 
                 // Set appropriate headers for the response
+                logger.warn("Sucess");
                 return ResponseEntity.ok()
                         .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"")
                         .body(resource);

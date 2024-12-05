@@ -39,9 +39,6 @@ export default function Dashboard() {
         const response = await fetch(
           `http://localhost:8080/api/v1/user/viewImage/${ownerID}`
         );
-        if (!response.ok) {
-          throw new Error("Image not found or an error occurred");
-        }
         const imageBlob = await response.blob();
         const imageUrl = URL.createObjectURL(imageBlob);
         setImageUrl(imageUrl);
