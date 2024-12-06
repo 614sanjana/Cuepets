@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom'; // Import useNavigate for React Router v6+
 import 'react-toastify/dist/ReactToastify.css';
 
 const AppointmentHistory = () => {
@@ -30,6 +31,8 @@ const AppointmentHistory = () => {
   const [clickCount, setClickCount] = useState({});
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
   const [dateToUnmark, setDateToUnmark] = useState(null);
+
+  const navigate = useNavigate(); // Initialize useNavigate
 
   const handleDateClick = (date) => {
     const dateKey = date.toLocaleDateString();
@@ -96,7 +99,7 @@ const AppointmentHistory = () => {
       daysArray.push(
         <div
           key={i}
-          className={`relative w-12 h-12 flex items-center justify-center cursor-pointer rounded-lg border 
+          className={`relative w-12 h-12 flex items-center justify-center cursor-pointer rounded-lg border
             ${isAppointmentScheduled ? 'bg-green-500 text-white' : 'hover:bg-gray-200'} 
             ${selectedDate === dateKey ? 'bg-blue-500 text-white' : ''}`}
           onClick={() => handleDateClick(date)}
@@ -215,11 +218,20 @@ const AppointmentHistory = () => {
   };
 
   return (
-    <div className="p-4">
-      <h1 className="text-2xl font-bold mb-4">Appointment History</h1>
-      <div className="flex space-x-4">
-        <div className="flex flex-col bg-blue-100 rounded-lg shadow-lg p-4 w-1/2">
-          <div className="flex justify-between items-center mb-4">
+    <div className="p-4 relative">
+      {/* Go Back Button (outside the form, at top-right corner) */}
+      <button
+        onClick={() => navigate(-1)} // Navigate to the previous page
+        className="absolute top-4 right-4 text-white bg-blue-500 px-4 py-2 rounded hover:bg-blue-600"
+      >
+        Go Back
+      </button>
+
+      {/* Calendar and Appointment Section */}
+      <div className="flex space-x-4 mt-16">
+        {/* Calendar Section */}
+        <div className="w-1/2 p-4 border rounded-lg shadow-md bg-light-blue-200 border-light-blue-300">
+          <div className="flex items-center space-x-4 mb-4 bg-light-blue-300 p-4 rounded-t-lg">
             <select
               value={month}
               onChange={(e) => setMonth(Number(e.target.value))}
@@ -245,9 +257,12 @@ const AppointmentHistory = () => {
           </div>
           <div className="grid grid-cols-7 gap-4">{renderCalendarDays()}</div>
         </div>
-        <div className="w-1/2">{renderAppointmentDetails()}</div>
+
+        {/* Appointment Form Section */}
+        <div className="w-1/2 p-4 border rounded-lg shadow-md bg-white">{renderAppointmentDetails()}</div>
       </div>
 
+      {/* Confirm Dialog */}
       {showConfirmDialog && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
           <div className="bg-white p-4 rounded shadow-lg">
