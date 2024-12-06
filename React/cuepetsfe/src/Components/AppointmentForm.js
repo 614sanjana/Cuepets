@@ -87,21 +87,24 @@ const AppointmentHistory = () => {
 
   const renderCalendarDays = () => {
     const daysArray = [];
+    
+    // First, create the empty divs for the days before the first day of the month
     for (let i = 0; i < firstDayOfMonth; i++) {
       daysArray.push(<div key={`empty-${i}`} className="w-12 h-12"></div>);
     }
-
+  
+    // Now, loop through the actual days of the month, from 1 to daysInMonth
     for (let i = 1; i <= daysInMonth; i++) {
-      const date = new Date(year, month, i);
-      const dateKey = date.toLocaleDateString();
+      const date = new Date(year, month, i); // Create a date object for each day
+      const dateKey = date.toLocaleDateString(); // Get a unique key for the date
       const isAppointmentScheduled = appointments[dateKey];
-
+  
       daysArray.push(
         <div
           key={i}
-          className={`relative w-12 h-12 flex items-center justify-center cursor-pointer rounded-lg border
+          className={`flex items-center justify-center m-0 p-0 cursor-pointer rounded-lg border
             ${isAppointmentScheduled ? 'bg-green-500 text-white' : 'hover:bg-gray-200'} 
-            ${selectedDate === dateKey ? 'bg-blue-500 text-white' : ''}`}
+            ${selectedDate === dateKey ? 'bg-blue-500 text-white' : ''} flex-1`}
           onClick={() => handleDateClick(date)}
         >
           {i}
@@ -119,9 +122,10 @@ const AppointmentHistory = () => {
         </div>
       );
     }
-
+  
     return daysArray;
   };
+  
 
   const renderAppointmentDetails = () => {
     if (selectedDate && appointments[selectedDate]) {
@@ -218,7 +222,7 @@ const AppointmentHistory = () => {
   };
 
   return (
-    <div className="p-4 relative">
+    <div className="p-4 h-screen relative overflow-hidden">
       {/* Go Back Button (outside the form, at top-right corner) */}
       <button
         onClick={() => navigate(-1)} // Navigate to the previous page
@@ -228,9 +232,9 @@ const AppointmentHistory = () => {
       </button>
 
       {/* Calendar and Appointment Section */}
-      <div className="flex space-x-4 mt-16">
+      <div className="flex space-x-20 mt-16 h-screen">
         {/* Calendar Section */}
-        <div className="w-1/2 p-4 border rounded-lg shadow-md bg-light-blue-200 border-light-blue-300">
+        <div className="w-1/2 h-screen overflow-hidden p-4 border rounded-lg shadow-md bg-light-blue-200 border-light-blue-300">
           <div className="flex items-center space-x-4 mb-4 bg-light-blue-300 p-4 rounded-t-lg">
             <select
               value={month}
@@ -255,7 +259,7 @@ const AppointmentHistory = () => {
               ))}
             </select>
           </div>
-          <div className="grid grid-cols-7 gap-4">{renderCalendarDays()}</div>
+          <div className="grid h-3/4 grid-cols-7 gap-2 ">{renderCalendarDays()}</div>
         </div>
 
         {/* Appointment Form Section */}
