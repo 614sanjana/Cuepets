@@ -12,11 +12,9 @@ public class RegularAppointments {
 
     private String ownerId;
     private String petId;
-    private String clinicId;
-    private String appointmentDate;
-    private String appointmentTime;
-    private String reasonForAppointment;
+    private String clinicName;
+    private String location;
+    private String appointmentDateTime;
     private String veterinarianName;
     private String description;
-    private String clinicName;
 }
