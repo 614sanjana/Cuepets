@@ -12,7 +12,7 @@ function Article() {
   const navigate = useNavigate();
 
   const handleExploreArticlesClick = () => {
-    navigate("/articles");
+    navigate("/blog-manage");
   };
 
   return (
