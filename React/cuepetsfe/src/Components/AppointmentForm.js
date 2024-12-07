@@ -72,6 +72,30 @@ const AppointmentScheduler = () => {
     }));
   };
 
+  const fetchAppointments = async () => {
+    try {
+      const response = await axios.get(
+        `http://localhost:8080/api/v1/appointments/getAppointments/${ownerID}`
+      );
+      console.log(response.data);
+      const appointmentsData = response.data.reduce((acc, appointment) => {
+        const date = new Date(appointment.appointmentDate).toLocaleDateString(); // Ensure consistent format
+        if (!acc[date]) acc[date] = [];
+        acc[date].push(appointment); // Store all appointments for the same date
+        return acc;
+      }, {});
+      setAppointments(appointmentsData); // Set appointments grouped by date
+    } catch (error) {
+      console.error("Error fetching appointments:", error);
+    }
+  };
+
+    useEffect(() => {
+        fetchAppointments(); // Fetch appointments when the component is accessed
+    }, [ownerID]);
+  
+
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -115,16 +139,16 @@ const AppointmentScheduler = () => {
 
   const renderCalendarDays = () => {
     const daysArray = [];
-
+  
     for (let i = 0; i < firstDayOfMonth; i++) {
       daysArray.push(<div key={`empty-${i}`} className="w-8 h-8"></div>);
     }
-
+  
     for (let i = 1; i <= daysInMonth; i++) {
       const date = new Date(year, month, i);
       const dateKey = date.toLocaleDateString();
-      const isAppointmentScheduled = appointments[dateKey];
-
+      const isAppointmentScheduled = appointments[dateKey]; // Check if appointments exist for this date
+  
       daysArray.push(
         <div
           key={i}
@@ -136,12 +160,13 @@ const AppointmentScheduler = () => {
           <div className="flex items-center justify-center h-8">
             {isAppointmentScheduled && (
               <>
-                {appointments[dateKey]?.appointmentType === "vaccination" && (
-                  <FaSyringe className="text-white text-xl" />
-                )}
-                {appointments[dateKey]?.appointmentType === "regular" && (
-                  <FaClipboardList className="text-white text-xl" />
-                )}
+                {appointments[dateKey].map((appt, idx) => (
+                  appt.appointmentType === "vaccination" ? (
+                    <FaSyringe key={`vaccine-${idx}`} className="text-white text-xl" />
+                  ) : (
+                    <FaClipboardList key={`regular-${idx}`} className="text-white text-xl" />
+                  )
+                ))}
               </>
             )}
           </div>
@@ -151,7 +176,7 @@ const AppointmentScheduler = () => {
         </div>
       );
     }
-
+  
     return daysArray;
   };
 
@@ -230,28 +255,30 @@ const AppointmentScheduler = () => {
                 </select>
               </div>
 
-              <div className="mb-4">
-                <label className="block font-medium mb-2">Clinic Name</label>
-                <input
-                  type="text"
-                  name="clinicName"
-                  value={newAppointment.clinicName}
-                  onChange={handleChange}
-                  className="w-full border p-2 rounded"
-                  required
-                />
-              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="mb-4">
+                  <label className="block font-medium mb-2">Clinic Name</label>
+                  <input
+                    type="text"
+                    name="clinicName"
+                    value={newAppointment.clinicName}
+                    onChange={handleChange}
+                    className="w-full border p-2 rounded"
+                    required
+                  />
+                </div>
 
-              <div className="mb-4">
-                <label className="block font-medium mb-2">Location</label>
-                <input
-                  type="text"
-                  name="location"
-                  value={newAppointment.location}
-                  onChange={handleChange}
-                  className="w-full border p-2 rounded"
-                  required
-                />
+                <div className="mb-4">
+                  <label className="block font-medium mb-2">Location</label>
+                  <input
+                    type="text"
+                    name="location"
+                    value={newAppointment.location}
+                    onChange={handleChange}
+                    className="w-full border p-2 rounded"
+                    required
+                  />
+                </div>
               </div>
 
               <div className="mb-4">
@@ -299,16 +326,18 @@ const AppointmentScheduler = () => {
                   value={newAppointment.description}
                   onChange={handleChange}
                   className="w-full border p-2 rounded"
-                  required
                 />
               </div>
 
-              <button type="submit" className="w-full py-2 px-4 bg-blue-500 text-white rounded hover:bg-blue-600">
+              <button
+                type="submit"
+                className="w-full bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600"
+              >
                 Save Appointment
               </button>
             </form>
           ) : (
-            <p>Select a date to add an appointment</p>
+            <div>Select a date to schedule an appointment</div>
           )}
         </div>
       </div>
