@@ -1,75 +1,110 @@
+/* General Navbar Section */
 .navbar-section {
-    padding: 0 32px;
+    padding: 0 40px; /* Increased padding for better spacing */
     display: flex;
     justify-content: space-between;
     align-items: center;
-    height: 100px;
+    height: 80px; /* Reduced height for a sleeker look */
     background-color: white;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Modern shadow for a floating effect */
+    z-index: 100; /* Ensure it stays on top */
+    transition: background-color 0.3s ease;
 }
-.navbar-title a {
-    color: #1A8EFD;
-    letter-spacing: .6px;
-    text-decoration: none;
-}
+
+/* Navbar Title */
 .navbar-title {
     font-family: 'Poppins', sans-serif;
-}
-.navbar-sign {
-    color: #54de54;
-    font-family: Cambria, sans-serif;
-    font-size: 40px;
+    font-size: 35px;
     font-weight: bold;
+    color: #1A8EFD;
+    letter-spacing: 1px;
 }
+
+.navbar-title a {
+    color: inherit;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.navbar-title a:hover {
+    color: #0cc2ea; /* Soft hover effect */
+}
+
+/* Navbar Sign */
+.navbar-sign {
+    font-family: 'Cambria', sans-serif;
+    font-size: 36px;
+    font-weight: bold;
+    color: #54de54;
+    letter-spacing: 1px;
+}
+
+/* Navbar Items */
 .navbar-items {
     list-style-type: none;
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 32px;
-    font-family: 'Rubik', sans-serif;
+    gap: 40px; /* Increased gap for better spacing */
 }
+
 .navbar-items > li {
     list-style-type: none;
 }
+
 .navbar-links {
     text-decoration: none;
-    color: black;
-    font-size: 18px;
-    letter-spacing: .8px;
+    color: #333; /* Dark color for better contrast */
+    font-size: 21px;
+    font-family: 'Rubik', sans-serif;
+    font-weight: 600;
+    letter-spacing: 0.8px;
+    transition: color 0.3s ease, transform 0.3s ease;
 }
+
 .navbar-links:hover {
     color: #0cc2ea;
+    transform: translateY(-2px); /* Slight lift effect */
 }
+
+/* Navbar Button */
 .navbar-btn {
-    padding: 14px 20px;
+    padding: 12px 24px; /* Adjusted padding for better proportion */
     color: white;
     border: 1px solid transparent;
-    border-radius: 28px;
-    outline: transparent;
+    border-radius: 30px; /* Slightly rounded corners */
     background-color: #1A8EFD;
-    font-size: 18px;
+    font-size: 16px;
     font-family: 'Rubik', sans-serif;
-    letter-spacing: .8px;
+    font-weight: 600;
+    letter-spacing: 1px;
     cursor: pointer;
-    transition: all .4s ease;
+    transition: all 0.3s ease;
 }
+
 .navbar-btn:hover {
     color: #1A8EFD;
     background-color: white;
     border: 1px solid #1A8EFD;
+    transform: translateY(-2px); /* Slight lift effect */
 }
+
 /* Hamburger Icon */
 .mobile-nav {
     display: none;
 }
+
 .hamb-icon {
-    width: 26px;
-    height: 26px;
+    width: 30px;
+    height: 30px;
     cursor: pointer;
+    transition: color 0.3s ease;
 }
+
 .hamb-icon:hover {
-    color: #0cc2ea;
+    color: #0cc2ea; /* Soft hover effect */
 }
+
 /* Mobile Navbar */
 .mobile-navbar {
     display: flex;
@@ -83,43 +118,54 @@
     z-index: 20;
     justify-content: center;
     align-items: center;
-    transition: left .5s ease-in-out;
+    transition: left 0.5s ease-in-out;
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
 }
+
 .mobile-navbar-close {
     position: absolute;
     top: 28px;
     right: 28px;
+    cursor: pointer;
 }
+
 .mobile-navbar-close .hamb-icon:hover {
     color: rgb(255, 22, 22);
 }
+
 .open-nav {
     left: 0;
 }
+
 .mobile-navbar-links {
     list-style-type: none;
     display: flex;
     flex-direction: column;
-    font-size: 24px;
-    gap: 24px;
+    font-size: 22px;
+    gap: 30px;
     text-align: center;
 }
+
 .mobile-navbar-links li a {
     text-decoration: none;
-    color: black;
+    color: #333;
     font-family: 'Poppins', sans-serif;
-    font-weight: bold;
-    letter-spacing: .8px;
-    transition: color .3s ease-in-out;
+    font-weight: 600;
+    letter-spacing: 1px;
+    transition: color 0.3s ease, transform 0.3s ease;
 }
+
 .mobile-navbar-links li a:hover {
     color: #0cc2ea;
+    transform: translateY(-2px); /* Slight lift effect */
 }
-/* Responsive */
+
+/* Mobile Navbar Visibility */
 @media screen and (max-width: 900px) {
     .navbar-btn, .navbar-items {
         display: none;
     }
+
     .mobile-nav {
         display: block;
     }
