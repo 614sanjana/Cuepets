@@ -14,6 +14,8 @@ import ManagePets from "./Components/ManagePet";
 import BlogManage from "./Components/BlogManage";
 import Adopt from "./Components/Adopt";
 import Record from "./Components/Records";
+import Rehome from "./Components/Rehome";
+
 
 function App() {
   return (
@@ -33,6 +35,7 @@ function App() {
           <Route path="/blog-manage" element={<BlogManage/>}/>
           <Route path="/adopt" element={<Adopt/>}/>
           <Route path="/pet-records" element={<Record/>}/>
+          <Route path="/rehome" element={<Rehome/>}/>
 
         </Routes>
       </Router>
