@@ -1,7 +1,9 @@
 package com.cuepets.CuePets.Controller;
 
+import com.cuepets.CuePets.Model.PetBreed;
 import com.cuepets.CuePets.Model.PetHealthRecord;
 import com.cuepets.CuePets.Model.Pets;
+import com.cuepets.CuePets.Repository.PetsRepo;
 import com.cuepets.CuePets.Services.PetsServices;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
@@ -12,14 +14,18 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RestController
-@CrossOrigin("*")
+@CrossOrigin(origins = "*")
 @RequestMapping("api/v1/pets")
 public class PetsController {
 
     @Autowired
     private PetsServices petsServices;
+
+    @Autowired
+    private PetsRepo petsRepo;
 
     private static final org.slf4j.Logger LOGGER = org.slf4j.LoggerFactory.getLogger(PetOwnerController.class);
 
@@ -80,4 +86,26 @@ public class PetsController {
     public ResponseEntity<Resource> viewPetPfpImage(@PathVariable String petID) {
         return petsServices.viewPetImage(petID);
     }
+
+    @GetMapping("/names/{ownerID}")
+    public List<String> getAllPetsNames(@PathVariable String ownerID) {
+        // Retrieve all pets for the given ownerID and map to petName
+        return petsRepo.findAll()
+                .stream()
+                .filter(pet -> pet.getOwnerID().equals(ownerID)) // Filter by ownerID
+                .map(Pets::getPetName) // Map to petName
+                .collect(Collectors.toList()); // Collect as a list
+    }
+
+    @GetMapping("/getPetID/{petName}")
+    public ResponseEntity<String> getPetID(@PathVariable(name = "petName") String petName) {
+        Pets pet = petsRepo.findByPetName(petName);
+        if (pet != null) {
+            return ResponseEntity.ok(pet.getPetID()); // Return 200 OK with the petID
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Pet not found"); // Return 404 with error message
+        }
+    }
+
+
 }
