@@ -16,6 +16,7 @@ const AppointmentScheduler = () => {
   const [month, setMonth] = useState(new Date().getMonth());
   const [year, setYear] = useState(new Date().getFullYear());
   const [pets, setPets] = useState([]);
+  const [selectedPetName, setSelectedPetName] = useState(""); // Store the pet name
   const [selectedPetID, setSelectedPetID] = useState(null);
   const [newAppointment, setNewAppointment] = useState({
     clinicName: "",
@@ -44,6 +45,23 @@ const AppointmentScheduler = () => {
       ...prev,
       appointmentDate: date.toLocaleDateString(),
     }));
+  };
+
+  const fetchPetID = async (petName) => {
+    try {
+      const response = await axios.get(`http://localhost:8080/api/v1/pets/getPetID/${petName}`);
+      setSelectedPetID(response.data); // Set the fetched pet ID
+    } catch (error) {
+      toast.error(`Error fetching pet ID: ${error.response?.data || error.message}`, {
+        position: toast.POSITION.TOP_CENTER,
+      });
+    }
+  };
+
+  const handlePetChange = (e) => {
+    const petName = e.target.value;
+    setSelectedPetName(petName);
+    fetchPetID(petName); // Fetch the pet ID when a pet is selected
   };
 
   const handleChange = (e) => {
@@ -198,14 +216,14 @@ const AppointmentScheduler = () => {
               <div className="mb-4">
                 <label className="block font-medium mb-2">Select Pet</label>
                 <select
-                  value={selectedPetID}
-                  onChange={(e) => setSelectedPetID(e.target.value)}
+                  value={selectedPetName}
+                  onChange={handlePetChange}
                   className="w-full border p-2 rounded"
                   required
                 >
                   <option value="">Select a Pet</option>
                   {pets.map((pet) => (
-                    <option key={pet.petID} value={pet.petID}>
+                    <option key={pet} value={pet}>
                       {pet}
                     </option>
                   ))}
@@ -259,12 +277,11 @@ const AppointmentScheduler = () => {
                 >
                   <option value="regular">Regular</option>
                   <option value="vaccination">Vaccination</option>
-                  <option value="checkup">Check-Up</option>
                 </select>
               </div>
 
               <div className="mb-4">
-                <label className="block font-medium mb-2">Time</label>
+                <label className="block font-medium mb-2">Appointment Time</label>
                 <input
                   type="time"
                   name="appointmentTime"
@@ -282,23 +299,20 @@ const AppointmentScheduler = () => {
                   value={newAppointment.description}
                   onChange={handleChange}
                   className="w-full border p-2 rounded"
-                  rows="2"
                   required
-                ></textarea>
+                />
               </div>
 
-              <button
-                type="submit"
-                className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-              >
+              <button type="submit" className="w-full py-2 px-4 bg-blue-500 text-white rounded hover:bg-blue-600">
                 Save Appointment
               </button>
             </form>
           ) : (
-            <div className="text-center text-gray-500">Select a date to schedule an appointment</div>
+            <p>Select a date to add an appointment</p>
           )}
         </div>
       </div>
+
       <ToastContainer />
     </div>
   );

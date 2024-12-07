@@ -11,5 +11,5 @@ public interface AppointmentsRepo extends MongoRepository<Appointments,String> {
 
     List<Appointments> findByPetId(String petId);
 
-    ResponseEntity<List<PetHealthRecord>> findByOwnerId(String ownerId);
+    List<Appointments> findByOwnerId(String ownerId);
 }

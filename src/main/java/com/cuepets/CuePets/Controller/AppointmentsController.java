@@ -29,10 +29,14 @@ public class AppointmentsController {
     private static final org.slf4j.Logger LOGGER = org.slf4j.LoggerFactory.getLogger(PetOwnerController.class);
 
 
-    @GetMapping("/getAppointments/{ownerId}")
-    public ResponseEntity<List<PetHealthRecord>> getPetAppointments(@PathVariable(name = "ownerId") String ownerId)
-    {
-        return appointmentsServices.getAllAppointments(ownerId);
+    @GetMapping(value="/getAppointments/{ownerId}")
+    public ResponseEntity<List<Appointments>> getPetAppointments(@PathVariable(name = "ownerId") String ownerId) {
+        List<Appointments> appointments = appointmentsServices.getAllAppointments(ownerId);
+        if (appointments == null || appointments.isEmpty()) {
+            return ResponseEntity.noContent().build();  // No appointments found
+        }
+        return ResponseEntity.ok(appointments);  // Return appointments with HTTP 200
     }
+
 }
 
