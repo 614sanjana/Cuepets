@@ -22,7 +22,8 @@ public class AppointmentsServices {
         appointmentsRepo.save(appointments);
     }
 
-    public ResponseEntity<List<PetHealthRecord>> getAllAppointments(String ownerId) {
+    public List<Appointments> getAllAppointments(String ownerId) {
+        // Retrieve appointments based on the ownerId
         return appointmentsRepo.findByOwnerId(ownerId);
     }
 }
