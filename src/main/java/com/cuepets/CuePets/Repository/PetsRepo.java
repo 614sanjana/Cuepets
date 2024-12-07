@@ -19,4 +19,6 @@ public interface PetsRepo extends MongoRepository<Pets,String> {
     List<Pets> findByadoptionStatus(boolean status);
 
     List<Pets> findByOwnerID(String ownerId);
+
+    Pets findByPetName(String petName);
 }
