@@ -15,6 +15,7 @@ import BlogManage from "./Components/BlogManage";
 import Adopt from "./Components/Adopt";
 import Record from "./Components/Records";
 import Rehome from "./Components/Rehome";
+import ViewStatus from "./Components/ViewStatus";
 
 
 function App() {
@@ -36,6 +37,7 @@ function App() {
           <Route path="/adopt" element={<Adopt/>}/>
           <Route path="/pet-records" element={<Record/>}/>
           <Route path="/rehome" element={<Rehome/>}/>
+          <Route path="/view-status" element={<ViewStatus/>}/>
 
         </Routes>
       </Router>
