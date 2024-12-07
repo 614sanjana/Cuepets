@@ -1,74 +1,48 @@
 import React, { useState } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate for React Router v6+
 import 'react-toastify/dist/ReactToastify.css';
 
-const AppointmentHistory = () => {
-  const currentDate = new Date();
-  const currentYear = currentDate.getFullYear();
-  const currentMonth = currentDate.getMonth();
-  const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
-  const firstDayOfMonth = new Date(currentYear, currentMonth, 1).getDay();
-
+const AppointmentScheduler = () => {
   const months = [
     'January', 'February', 'March', 'April', 'May', 'June',
-    'July', 'August', 'September', 'October', 'November', 'December'
+    'July', 'August', 'September', 'October', 'November', 'December',
   ];
 
   const [appointments, setAppointments] = useState({});
   const [selectedDate, setSelectedDate] = useState(null);
-  const [month, setMonth] = useState(currentMonth);
-  const [year, setYear] = useState(currentYear);
+  const [month, setMonth] = useState(new Date().getMonth());
+  const [year, setYear] = useState(new Date().getFullYear());
   const [newAppointment, setNewAppointment] = useState({
     clinicName: '',
     place: '',
     doctorName: '',
     petName: '',
-    type: 'regular', // default to "regular"
+    type: 'regular',
     time: '',
     description: '',
   });
-  const [clickCount, setClickCount] = useState({});
-  const [showConfirmDialog, setShowConfirmDialog] = useState(false);
-  const [dateToUnmark, setDateToUnmark] = useState(null);
 
-  const navigate = useNavigate(); // Initialize useNavigate
+  // List of pets (this should come from your Manage Pet section)
+  const pets = ['Buddy', 'Bella', 'Charlie', 'Max']; // Example, replace with actual data
+
+  const isLeapYear = (year) => (year % 4 === 0 && year % 100 !== 0) || year % 400 === 0;
+  const getDaysInMonth = (month, year) => {
+    if (month === 1) return isLeapYear(year) ? 29 : 28;
+    if ([3, 5, 8, 10].includes(month)) return 30;
+    return 31;
+  };
+
+  const daysInMonth = getDaysInMonth(month, year);
+  const firstDayOfMonth = new Date(year, month, 1).getDay();
 
   const handleDateClick = (date) => {
     const dateKey = date.toLocaleDateString();
-    const currentClickCount = clickCount[dateKey] || 0;
-
-    if (currentClickCount === 1 && appointments[dateKey]) {
-      setClickCount((prev) => ({ ...prev, [dateKey]: 2 }));
-    } else {
-      setClickCount((prev) => ({ ...prev, [dateKey]: 1 }));
-    }
     setSelectedDate(dateKey);
   };
 
-  const handleUnmarkClick = (dateKey) => {
-    setShowConfirmDialog(true);
-    setDateToUnmark(dateKey);
-  };
-
-  const confirmUnmark = () => {
-    setAppointments((prevAppointments) => {
-      const updatedAppointments = { ...prevAppointments };
-      delete updatedAppointments[dateToUnmark];
-      return updatedAppointments;
-    });
-    setShowConfirmDialog(false);
-    setDateToUnmark(null);
-    toast.success('Appointment Unmarked!', { position: toast.POSITION.TOP_CENTER });
-  };
-
-  const cancelUnmark = () => {
-    setShowConfirmDialog(false);
-    setDateToUnmark(null);
-  };
-
-  const handleSubmit = (date) => {
-    const dateKey = date.toLocaleDateString();
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const dateKey = selectedDate;
     setAppointments((prevAppointments) => ({
       ...prevAppointments,
       [dateKey]: newAppointment,
@@ -79,26 +53,44 @@ const AppointmentHistory = () => {
       place: '',
       doctorName: '',
       petName: '',
-      type: 'regular', // reset type
+      type: 'regular',
       time: '',
       description: '',
     });
   };
 
+  const handleUnmark = () => {
+    setAppointments((prevAppointments) => {
+      const updatedAppointments = { ...prevAppointments };
+      delete updatedAppointments[selectedDate];
+      return updatedAppointments;
+    });
+    toast.info('Appointment Unmarked!', { position: toast.POSITION.TOP_CENTER });
+    setSelectedDate(null);
+  };
+
+  const formatTime = (time) => {
+    const date = new Date(`1970-01-01T${time}:00`);
+    let hours = date.getHours();
+    let minutes = date.getMinutes();
+    const ampm = hours >= 12 ? 'PM' : 'AM';
+    hours = hours % 12;
+    hours = hours ? hours : 12; // the hour '0' should be '12'
+    minutes = minutes < 10 ? '0' + minutes : minutes;
+    return `${hours}:${minutes} ${ampm}`;
+  };
+
   const renderCalendarDays = () => {
     const daysArray = [];
-    
-    // First, create the empty divs for the days before the first day of the month
     for (let i = 0; i < firstDayOfMonth; i++) {
-      daysArray.push(<div key={`empty-${i}`} className="w-12 h-12"></div>);
+      daysArray.push(<div key={`empty-${i}`} className="w-8 h-8"></div>);
     }
-  
-    // Now, loop through the actual days of the month, from 1 to daysInMonth
+
     for (let i = 1; i <= daysInMonth; i++) {
-      const date = new Date(year, month, i); // Create a date object for each day
-      const dateKey = date.toLocaleDateString(); // Get a unique key for the date
+      const date = new Date(year, month, i);
+      const dateKey = date.toLocaleDateString();
       const isAppointmentScheduled = appointments[dateKey];
-  
+
       daysArray.push(
         <div
           key={i}
@@ -108,134 +100,28 @@ const AppointmentHistory = () => {
           onClick={() => handleDateClick(date)}
         >
           {i}
-          {isAppointmentScheduled && clickCount[dateKey] === 2 && (
-            <button
-              className="absolute top-1 right-1 bg-red-500 text-white text-xs py-1 px-2 rounded"
-              onClick={(e) => {
-                e.stopPropagation();
-                handleUnmarkClick(dateKey);
-              }}
-            >
-              Unmark
-            </button>
-          )}
         </div>
       );
     }
-  
-    return daysArray;
-  };
-  
 
-  const renderAppointmentDetails = () => {
-    if (selectedDate && appointments[selectedDate]) {
-      const appointment = appointments[selectedDate];
-      return (
-        <div className="p-4 border rounded-lg shadow-md bg-white">
-          <h3 className="text-xl font-semibold">Appointment Details</h3>
-          <p><strong>Clinic Name:</strong> {appointment.clinicName}</p>
-          <p><strong>Place:</strong> {appointment.place}</p>
-          <p><strong>Doctor Name:</strong> {appointment.doctorName}</p>
-          <p><strong>Pet Name:</strong> {appointment.petName}</p>
-          <p><strong>Type:</strong> {appointment.type === 'vaccination' ? 'Vaccination' : 'Regular Appointment'}</p>
-          <p><strong>Time:</strong> {new Date(`1970-01-01T${appointment.time}`).toLocaleString([], { hour: '2-digit', minute: '2-digit', hour12: true })}</p>
-          <p><strong>Description:</strong> {appointment.description}</p>
-        </div>
-      );
-    } else if (selectedDate) {
-      return (
-        <div className="p-4 border rounded-lg shadow-md bg-white">
-          <h3 className="text-xl font-semibold">Add Appointment</h3>
-          <input
-            type="text"
-            placeholder="Clinic Name"
-            className="w-full p-2 mb-2 border rounded"
-            value={newAppointment.clinicName}
-            onChange={(e) => setNewAppointment({ ...newAppointment, clinicName: e.target.value })}
-          />
-          <input
-            type="text"
-            placeholder="Place"
-            className="w-full p-2 mb-2 border rounded"
-            value={newAppointment.place}
-            onChange={(e) => setNewAppointment({ ...newAppointment, place: e.target.value })}
-          />
-          <input
-            type="text"
-            placeholder="Doctor Name"
-            className="w-full p-2 mb-2 border rounded"
-            value={newAppointment.doctorName}
-            onChange={(e) => setNewAppointment({ ...newAppointment, doctorName: e.target.value })}
-          />
-          <input
-            type="text"
-            placeholder="Pet Name"
-            className="w-full p-2 mb-2 border rounded"
-            value={newAppointment.petName}
-            onChange={(e) => setNewAppointment({ ...newAppointment, petName: e.target.value })}
-          />
-          <div className="mb-4">
-            <label className="mr-4">Appointment Type</label>
-            <label className="mr-4">
-              <input
-                type="radio"
-                name="appointmentType"
-                value="regular"
-                checked={newAppointment.type === 'regular'}
-                onChange={() => setNewAppointment({ ...newAppointment, type: 'regular' })}
-              />
-              Regular Appointment
-            </label>
-            <label>
-              <input
-                type="radio"
-                name="appointmentType"
-                value="vaccination"
-                checked={newAppointment.type === 'vaccination'}
-                onChange={() => setNewAppointment({ ...newAppointment, type: 'vaccination' })}
-              />
-              Vaccination
-            </label>
-          </div>
-          <input
-            type="time"
-            className="w-full p-2 mb-2 border rounded"
-            value={newAppointment.time}
-            onChange={(e) => setNewAppointment({ ...newAppointment, time: e.target.value })}
-          />
-          <textarea
-            placeholder="Description"
-            className="w-full p-2 mb-2 border rounded"
-            value={newAppointment.description}
-            onChange={(e) => setNewAppointment({ ...newAppointment, description: e.target.value })}
-          />
-          <button
-            onClick={() => handleSubmit(new Date(selectedDate))}
-            className="mt-2 bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600"
-          >
-            Save Appointment
-          </button>
-        </div>
-      );
-    }
-    return null;
+    return daysArray;
   };
 
   return (
-    <div className="p-4 h-screen relative overflow-hidden">
-      {/* Go Back Button (outside the form, at top-right corner) */}
-      <button
-        onClick={() => navigate(-1)} // Navigate to the previous page
-        className="absolute top-4 right-4 text-white bg-blue-500 px-4 py-2 rounded hover:bg-blue-600"
-      >
-        Go Back
-      </button>
+    <div className="p-4 h-screen bg-gray-50">
+      <div className="flex justify-between items-center mb-4">
+        <div className="text-xl font-semibold">YOUR APPOINTMENTS</div>
+        <button
+          onClick={() => window.history.back()}
+          className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+        >
+          Go Back
+        </button>
+      </div>
 
-      {/* Calendar and Appointment Section */}
-      <div className="flex space-x-20 mt-16 h-screen">
-        {/* Calendar Section */}
-        <div className="w-1/2 h-screen overflow-hidden p-4 border rounded-lg shadow-md bg-light-blue-200 border-light-blue-300">
-          <div className="flex items-center space-x-4 mb-4 bg-light-blue-300 p-4 rounded-t-lg">
+      <div className="flex space-x-10">
+        <div className="w-1/3 p-4 border rounded-lg shadow-md bg-light-blue-100 border-light-blue-300">
+          <div className="flex items-center justify-between mb-4">
             <select
               value={month}
               onChange={(e) => setMonth(Number(e.target.value))}
@@ -252,47 +138,167 @@ const AppointmentHistory = () => {
               onChange={(e) => setYear(Number(e.target.value))}
               className="border p-2 rounded"
             >
-              {Array.from({ length: 10 }, (_, i) => currentYear - 5 + i).map((yr) => (
-                <option key={yr} value={yr}>
-                  {yr}
+              {Array.from({ length: 26 }, (_, i) => 2015 + i).map((yearValue) => (
+                <option key={yearValue} value={yearValue}>
+                  {yearValue}
                 </option>
               ))}
             </select>
           </div>
-          <div className="grid h-3/4 grid-cols-7 gap-2 ">{renderCalendarDays()}</div>
-        </div>
 
-        {/* Appointment Form Section */}
-        <div className="w-1/2 p-4 border rounded-lg shadow-md bg-white">{renderAppointmentDetails()}</div>
-      </div>
-
-      {/* Confirm Dialog */}
-      {showConfirmDialog && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-white p-4 rounded shadow-lg">
-            <h2 className="text-lg font-semibold mb-4">Are you sure?</h2>
-            <p>Do you really want to unmark this appointment?</p>
-            <div className="mt-4 flex justify-end space-x-2">
-              <button
-                onClick={confirmUnmark}
-                className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
-              >
-                Yes
-              </button>
-              <button
-                onClick={cancelUnmark}
-                className="bg-gray-300 px-4 py-2 rounded hover:bg-gray-400"
-              >
-                No
-              </button>
-            </div>
+          <div className="grid grid-cols-7 gap-1 bg-light-blue-200 border border-light-blue-400 rounded-lg p-2">
+            {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map((day) => (
+              <div key={day} className="font-semibold text-center">
+                {day}
+              </div>
+            ))}
+            {renderCalendarDays()}
           </div>
         </div>
-      )}
 
+        <div className="w-2/3 p-4 border rounded-lg shadow-md bg-gray-100">
+          {selectedDate && appointments[selectedDate] ? (
+            <div>
+              <h3 className="text-xl font-semibold mb-4">Appointment for {selectedDate}</h3>
+              <div className="mb-4">
+                <p><strong>Clinic Name:</strong> {appointments[selectedDate].clinicName}</p>
+                <p><strong>Place:</strong> {appointments[selectedDate].place}</p>
+                <p><strong>Doctor Name:</strong> {appointments[selectedDate].doctorName}</p>
+                <p><strong>Pet Name:</strong> {appointments[selectedDate].petName}</p>
+                <p><strong>Type:</strong> {appointments[selectedDate].type}</p>
+                <p><strong>Time:</strong> {formatTime(appointments[selectedDate].time)}</p>
+                <p><strong>Description:</strong> {appointments[selectedDate].description}</p>
+              </div>
+              <button
+                onClick={handleUnmark}
+                className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
+              >
+                Unmark Appointment
+              </button>
+            </div>
+          ) : selectedDate ? (
+            <form onSubmit={handleSubmit}>
+              <h3 className="text-xl font-semibold mb-4">Add Appointment for {selectedDate}</h3>
+              <div className="mb-4">
+                <label className="block font-medium mb-2">Clinic Name</label>
+                <input
+                  type="text"
+                  value={newAppointment.clinicName}
+                  onChange={(e) =>
+                    setNewAppointment({ ...newAppointment, clinicName: e.target.value })
+                  }
+                  className="w-full border p-2 rounded"
+                  required
+                />
+              </div>
+              <div className="mb-4">
+                <label className="block font-medium mb-2">Place</label>
+                <input
+                  type="text"
+                  value={newAppointment.place}
+                  onChange={(e) =>
+                    setNewAppointment({ ...newAppointment, place: e.target.value })
+                  }
+                  className="w-full border p-2 rounded"
+                  required
+                />
+              </div>
+              <div className="mb-4">
+                <label className="block font-medium mb-2">Doctor Name</label>
+                <input
+                  type="text"
+                  value={newAppointment.doctorName}
+                  onChange={(e) =>
+                    setNewAppointment({ ...newAppointment, doctorName: e.target.value })
+                  }
+                  className="w-full border p-2 rounded"
+                  required
+                />
+              </div>
+              <div className="mb-4">
+                <label className="block font-medium mb-2">Pet Name</label>
+                <select
+                  value={newAppointment.petName}
+                  onChange={(e) =>
+                    setNewAppointment({ ...newAppointment, petName: e.target.value })
+                  }
+                  className="w-full border p-2 rounded"
+                >
+                  <option value="">Select Pet</option>
+                  {pets.map((petName, index) => (
+                    <option key={index} value={petName}>
+                      {petName}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div className="mb-4">
+                <label className="block font-medium mb-2">Appointment Type</label>
+                <div className="flex space-x-4">
+                  <label>
+                    <input
+                      type="radio"
+                      value="regular"
+                      checked={newAppointment.type === 'regular'}
+                      onChange={(e) =>
+                        setNewAppointment({ ...newAppointment, type: e.target.value })
+                      }
+                    />
+                    Regular
+                  </label>
+                  <label>
+                    <input
+                      type="radio"
+                      value="vaccination"
+                      checked={newAppointment.type === 'vaccination'}
+                      onChange={(e) =>
+                        setNewAppointment({ ...newAppointment, type: e.target.value })
+                      }
+                    />
+                    Vaccination
+                  </label>
+                </div>
+              </div>
+              <div className="mb-4">
+                <label className="block font-medium mb-2">Time</label>
+                <input
+                  type="time"
+                  value={newAppointment.time}
+                  onChange={(e) =>
+                    setNewAppointment({ ...newAppointment, time: e.target.value })
+                  }
+                  className="w-full border p-2 rounded"
+                  required
+                />
+              </div>
+              <div className="mb-4">
+                <label className="block font-medium mb-2">Description</label>
+                <textarea
+                  value={newAppointment.description}
+                  onChange={(e) =>
+                    setNewAppointment({ ...newAppointment, description: e.target.value })
+                  }
+                  className="w-full border p-2 rounded"
+                  required
+                ></textarea>
+              </div>
+              <button
+                type="submit"
+                className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+              >
+                Save Appointment
+              </button>
+            </form>
+          ) : (
+            <p className="text-center text-gray-600">
+              Select a date to view or add an appointment.
+            </p>
+          )}
+        </div>
+      </div>
       <ToastContainer />
     </div>
   );
 };
 
-export default AppointmentHistory;
+export default AppointmentScheduler;
