@@ -76,10 +76,10 @@ function Footer() {
               <a href="mailto:appointments@petcare.com">appointments@petcare.com</a>
             </li>
             <li>
-              <a href="tel:+022 5454 5252">+022 5454 5252</a>
+              <a href="tel:+022 5454 5252">+922 5454 5252</a>
             </li>
             <li>
-              <a href="tel:+022 2326 6232">+022 2326 6232</a>
+              <a href="tel:+022 2326 6232">+822 2326 6232</a>
             </li>
           </ul>
         </div>
@@ -91,7 +91,7 @@ function Footer() {
         <ul className="ft-social-links">
           <li>
             <a
-              href="https://linkedin.com/in/Alkaison/"
+              href="https://linkedin.com"
               title="LinkedIn"
               target="_blank"
               rel="noopener noreferrer"
@@ -125,7 +125,7 @@ function Footer() {
 
           <li>
             <a
-              href="https://x.com/Alkaison/"
+              href="https:twitter.com/"
               title="Twitter"
               target="_blank"
               rel="noopener noreferrer"

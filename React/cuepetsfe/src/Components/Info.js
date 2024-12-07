@@ -23,8 +23,8 @@ function PetInfo() {
         />
 
         <InformationCard
-          title="Vaccination Tracking"
-          description="Stay on top of your pet's vaccination schedule with our tracking service. Receive timely reminders for upcoming vaccinations and maintain a log of completed ones, keeping your pet healthy and safe."
+          title="Appointment Tracking"
+          description="Stay on top of your pet's appointment schedule with our tracking service. Receive timely reminders for upcoming vaccinations and maintain a log of completed ones, keeping your pet healthy and safe."
           icon={faSyringe}
         />
 

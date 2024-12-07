@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const Rehome = () => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     ownerName: '',
     location: '',
@@ -16,7 +18,9 @@ const Rehome = () => {
     spayed: '',
   });
 
-  const [petDetails, setPetDetails] = useState(null);
+  const handleViewStatusClick = () => {
+    navigate('/view-status'); // This will navigate to the Rehome component
+  };
 
   const handleChange = (e) => {
     const { name, value, type, files } = e.target;
@@ -29,7 +33,8 @@ const Rehome = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    setPetDetails(formData);
+    console.log('Form Data:', formData);
+    // Reset the form after submission
     setFormData({
       ownerName: '',
       location: '',
@@ -46,43 +51,22 @@ const Rehome = () => {
     });
   };
 
-  const renderPetDetails = () => {
-    if (!petDetails) return null;
-
-    const { petImage, petName, petAge, petSex, petType, petBreed, vaccinated, spayed } = petDetails;
-
-    return (
-      <div className="mt-8">
-        <h3 className="text-2xl font-bold">Saved Pet Details</h3>
-        <div className="border p-4 rounded-lg shadow-lg">
-          {petImage && (
-            <img
-              src={URL.createObjectURL(petImage)}
-              alt={petName}
-              className="w-32 h-32 object-cover rounded-full mb-4"
-            />
-          )}
-          <p><strong>Pet Name:</strong> {petName}</p>
-          <p><strong>Age:</strong> {petAge}</p>
-          <p><strong>Sex:</strong> {petSex}</p>
-          <p><strong>Type:</strong> {petType}</p>
-          <p><strong>Breed:</strong> {petBreed}</p>
-          <p><strong>Vaccinated:</strong> {vaccinated}</p>
-          <p><strong>Spayed/Neutered:</strong> {spayed}</p>
-          <p><strong>Owner Name:</strong> {formData.ownerName}</p>
-          <p><strong>Location:</strong> {formData.location}</p>
-          <p><strong>Email:</strong> {formData.email}</p>
-          <p><strong>Phone:</strong> {formData.phone}</p>
-        </div>
-      </div>
-    );
-  };
-
   return (
-    <div className="p-6 bg-gray-100 min-h-screen">
+    <div className="p-6 bg-gray-100 min-h-screen relative">
+      {/* "View Status" Button */}
+      <button
+        onClick={handleViewStatusClick} // Navigates to the View Status page
+        className="absolute top-6 right-6 px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600"
+      >
+        View Status
+      </button>
+
+      {/* Page Title */}
       <div className="text-center text-2xl font-bold mb-8">Rehome Your Pet</div>
 
+      {/* Form */}
       <form onSubmit={handleSubmit} className="bg-white p-8 rounded-lg shadow-lg space-y-6">
+        {/* Form Fields */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div className="w-full">
             <label className="block mb-2">Owner Name</label>
@@ -215,14 +199,16 @@ const Rehome = () => {
               value="Yes"
               onChange={handleChange}
               required
-            /> Yes
+            />{' '}
+            Yes
             <input
               type="radio"
               name="vaccinated"
               value="No"
               onChange={handleChange}
               required
-            /> No
+            />{' '}
+            No
           </div>
 
           <div>
@@ -233,27 +219,27 @@ const Rehome = () => {
               value="Yes"
               onChange={handleChange}
               required
-            /> Yes
+            />{' '}
+            Yes
             <input
               type="radio"
               name="spayed"
               value="No"
               onChange={handleChange}
               required
-            /> No
+            />{' '}
+            No
           </div>
         </div>
 
         <button
           type="submit"
+          onClick={handleViewStatusClick}
           className="px-6 py-3 bg-blue-500 text-white rounded-full hover:bg-blue-600"
         >
           Save Pet
         </button>
       </form>
-
-      {/* Display saved pet details */}
-      {renderPetDetails()}
     </div>
   );
 };
