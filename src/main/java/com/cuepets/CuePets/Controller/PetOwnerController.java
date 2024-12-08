@@ -106,4 +106,20 @@ public class PetOwnerController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found"); // Return 404 with error message
         }
     }
+
+    @PutMapping("/updateUser/{ownerID}")
+    public ResponseEntity<String> updateUser(@PathVariable String ownerID, @RequestBody PetOwner user) {
+        PetOwner owner = petOwnerRepo.findByOwnerID(ownerID);
+        if (owner != null) {
+            // Update fields of the existing owner object with the new user data
+            owner.setUserName(user.getUserName()); // Example of updating the name
+            owner.setUserEmail(user.getUserEmail());
+            owner.setUserPhone(user.getUserPhone());
+            // Save the updated owner object
+            petOwnerRepo.save(owner);
+            return ResponseEntity.ok("Updated");
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
+        }
+    }
 }

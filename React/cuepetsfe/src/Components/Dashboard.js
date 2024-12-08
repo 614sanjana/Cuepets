@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link,Navigate } from "react-router-dom";
-import AppNavbar from "./AppNavbar";
-import Footer from "./Footer";
+import { Link, Navigate } from "react-router-dom";
 import axios from "axios";
 
 export default function Dashboard() {
@@ -13,11 +11,9 @@ export default function Dashboard() {
     profilePicture: "https://via.placeholder.com/150", // Default picture URL
   });
 
-
   const [isEditing, setIsEditing] = useState(false);
+  const [showUpdateForm, setShowUpdateForm] = useState(false); // Track if the update form should be displayed
   const ownerID = localStorage.getItem("ownerID");
-
- 
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -34,7 +30,6 @@ export default function Dashboard() {
 
     fetchUserData();
   }, [ownerID]);
-
 
   useEffect(() => {
     const fetchImage = async () => {
@@ -63,19 +58,34 @@ export default function Dashboard() {
 
   const handleUpdate = async () => {
     try {
-      await axios.post(`http://localhost:8080/api/v1/user/setPfp/${ownerID}`, {
-        file: userData.profilePicture,
-      });
+      // Prepare the user data to update
+      const updatedUser = {
+        userName: userData.userName,
+        userEmail: userData.userEmail,
+        userPhone: userData.userPhone,
+        profilePicture: userData.profilePicture,  // Optionally, include profile picture if needed
+      };
 
-      console.log("User data updated:", userData);
-      setIsEditing(false);
+      // Send a POST request to update the user details
+      const response = await axios.put(
+        `http://localhost:8080/api/v1/user/updateUser/${ownerID}`,
+        updatedUser
+      );
+
+      if (response.status === 200) {
+        console.log("User data updated:", updatedUser);
+        setIsEditing(false);
+        setShowUpdateForm(false); // Hide the update form
+        alert("User details updated successfully.");
+      }
     } catch (error) {
       console.error("Error updating user data", error);
     }
   };
+
   if (!ownerID) {
     alert("Login First !!");
-    return <Navigate to="/login" />;  // Redirect to login page if not logged in
+    return <Navigate to="/login" />; // Redirect to login page if not logged in
   }
 
   return (
@@ -95,6 +105,7 @@ export default function Dashboard() {
               <p>Loading image...</p>
             )}
           </div>
+
           {/* Upload New Profile Picture */}
           <div className="mb-6">
             <input
@@ -138,50 +149,62 @@ export default function Dashboard() {
               Upload New Picture
             </label>
           </div>
-{/* Input Fields */}
-<input
-  type="text"
-  name="name"
-  value={userData.userName}
-  onChange={handleChange}
-  className="w-full p-2 rounded-lg border border-gray-300 bg-white text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-200"
-  disabled={!isEditing}
-/>
-<input
-  type="email"
-  name="email"
-  value={userData.userEmail}
-  onChange={handleChange}
-  className="w-full p-2 rounded-lg border border-gray-300 bg-white text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-200"
-  disabled={!isEditing}
-/>
-<input
-  type="text"
-  name="phone"
-  value={userData.userPhone}
-  onChange={handleChange}
-  className="w-full p-2 rounded-lg border border-gray-300 bg-white text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-200"
-  disabled={!isEditing}
-/>
 
+          {/* Owner Details Display */}
+          <div className="mb-6 text-center">
+            <p className="text-xl font-semibold">Owner Details</p>
+            <div className="mt-4 text-gray-700">
+              <p><strong>Name:</strong> {userData.userName}</p>
+              <p><strong>Email:</strong> {userData.userEmail}</p>
+              <p><strong>Phone:</strong> {userData.userPhone}</p>
+            </div>
+          </div>
 
-       {/* Update Button */}
-<button
-  className="mt-6 bg-blue-500 text-white px-4 py-2 rounded-lg shadow-md hover:bg-blue-600 transition duration-200"
-  onClick={() => {
-    if (isEditing) {
-      handleUpdate(); // Save changes
-    } else {
-      setIsEditing(true); // Enable editing mode
-    }
-  }}
->
-  {isEditing ? "Save Changes" : "Update Details"}
-</button>
-</div>
+          {/* Button to Show Update Form */}
+          <button
+            className="mt-6 bg-blue-500 text-white px-4 py-2 rounded-lg shadow-md hover:bg-blue-600 transition duration-200"
+            onClick={() => setShowUpdateForm(!showUpdateForm)}
+          >
+            {showUpdateForm ? "Cancel" : "Update Details"}
+          </button>
+
+          {/* Update Form */}
+          {showUpdateForm && (
+            <div className="mt-6 space-y-4">
+              <input
+                type="text"
+                name="userName"
+                value={userData.userName}
+                onChange={handleChange}
+                className="w-full p-2 rounded-lg border border-gray-300 bg-white text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+              <input
+                type="email"
+                name="userEmail"
+                value={userData.userEmail}
+                onChange={handleChange}
+                className="w-full p-2 rounded-lg border border-gray-300 bg-white text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+              <input
+                type="text"
+                name="userPhone"
+                value={userData.userPhone}
+                onChange={handleChange}
+                className="w-full p-2 rounded-lg border border-gray-300 bg-white text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+              <button
+                className="w-full bg-blue-500 text-white px-4 py-2 rounded-lg shadow-md hover:bg-blue-600 transition duration-200"
+                onClick={handleUpdate}
+              >
+                Save Changes
+              </button>
+            </div>
+          )}
+        </div>
 
         {/* Main Content */}
         <div className="w-2/3 flex flex-col p-4">
+          {/* Links to other pages */}
           <div className="h-40 flex space-x-4 mb-4 text-4xl">
             <Link
               to="/pet-records"
@@ -203,6 +226,7 @@ export default function Dashboard() {
             </Link>
           </div>
 
+          {/* Additional Links */}
           <div className="flex flex-col space-y-4 flex-grow">
             <Link
               to="/add-pet"
@@ -226,7 +250,7 @@ export default function Dashboard() {
               to="/blog-manage"
               className="bg-blue-300 h-20 p-4 rounded-lg shadow-md hover:shadow-lg hover:bg-blue-400"
             >
-              Blog Manager
+              Manage Blogs
             </Link>
           </div>
         </div>
