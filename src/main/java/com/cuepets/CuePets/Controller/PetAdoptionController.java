@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@CrossOrigin("*")
+@CrossOrigin(origins="*")
 @RequestMapping("api/v1/adoption")
 public class PetAdoptionController {
     @Autowired
@@ -30,13 +30,10 @@ public class PetAdoptionController {
     petAdopt.setOwnerID(userId);
     petAdopt.setPetID(petId);
     petAdopt.setAdoptionStatus(true);
-    petAdoptionRepo.save(petAdopt);
-    Pets pet = petsRepo.findByPetID(petId);
+    Pets pet=petsRepo.findByPetID(petId);
     if(pet!=null){
         pet.setAdoptionStatus(true);
         petsRepo.save(pet);
-    }else{
-        LOGGER.error("Error");
     }
     return petAdoptionServices.addAdopt(petAdopt);
     }

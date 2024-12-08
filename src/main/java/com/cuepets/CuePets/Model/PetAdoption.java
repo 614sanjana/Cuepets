@@ -11,6 +11,9 @@ public class PetAdoption {
 
     private String petID;
     private String ownerID;
+    private String spayedOrNeutered;
+    private String vaccinated;
+    private String Location;
     private String AdoptionDate= "Null";
     private String adopterID= "None";
     private Boolean adoptionStatus= false;
