@@ -26,9 +26,11 @@ const AppointmentScheduler = () => {
     appointmentTime: "",
     appointmentDate: "",
     description: "",
+    ampm: "",
   });
   const [selectedAppointment, setSelectedAppointment] = useState(null);
-  const [isFormVisible, setIsFormVisible] = useState(false);  // State to toggle between form and appointment details
+  const [isFormVisible, setIsFormVisible] = useState(false);
+  const [isHovered, setIsHovered] = useState(false); // For hover effect
 
   const isLeapYear = (year) => (year % 4 === 0 && year % 100 !== 0) || year % 400 === 0;
 
@@ -51,13 +53,13 @@ const AppointmentScheduler = () => {
 
     if (appointments[dateKey] && appointments[dateKey].length > 0) {
       setSelectedAppointment(appointments[dateKey][0]);
-      setIsFormVisible(false);  // Hide the form when appointment is selected
+      setIsFormVisible(false);
     } else {
       setSelectedAppointment(null);
-      setIsFormVisible(true);  // Show the form when no appointment is available for the selected date
+      setIsFormVisible(true);
     }
   };
-  
+
   useEffect(() => {
     const fetchPets = async () => {
       try {
@@ -67,8 +69,8 @@ const AppointmentScheduler = () => {
         console.error("Error fetching pets:", error);
       }
     };
-    fetchPets()},[ownerID]);
-  
+    fetchPets();
+  }, [ownerID]);
 
   const fetchPetID = async (petName) => {
     try {
@@ -97,10 +99,7 @@ const AppointmentScheduler = () => {
 
   const fetchAppointments = async () => {
     try {
-      const response = await axios.get(
-        `http://localhost:8080/api/v1/appointments/getAppointments/${ownerID}`
-      );
-      console.log(response.data);
+      const response = await axios.get(`http://localhost:8080/api/v1/appointments/getAppointments/${ownerID}`);
       const appointmentsData = response.data.reduce((acc, appointment) => {
         const date = new Date(appointment.appointmentDate).toLocaleDateString();
         if (!acc[date]) acc[date] = [];
@@ -117,7 +116,6 @@ const AppointmentScheduler = () => {
     fetchAppointments();
   }, [ownerID]);
 
-
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -126,13 +124,17 @@ const AppointmentScheduler = () => {
       return;
     }
 
+    const finalAppointmentTime = `${newAppointment.appointmentTime} ${newAppointment.ampm}`;
+
+    const appointmentData = { ...newAppointment, appointmentTime: finalAppointmentTime };
+
     try {
       await axios.post(
         `http://localhost:8080/api/v1/appointments/addAppointment/${ownerID}/${selectedPetID}`,
-        newAppointment
+        appointmentData
       );
       toast.success("Appointment Saved!", { position: toast.POSITION.TOP_CENTER });
-      fetchAppointments(); // Refresh appointments after adding a new one
+      fetchAppointments();
       setNewAppointment({
         clinicName: "",
         location: "",
@@ -141,10 +143,11 @@ const AppointmentScheduler = () => {
         appointmentTime: "",
         appointmentDate: "",
         description: "",
+        ampm: "AM",
       });
       setSelectedPetName("");
       setSelectedPetID(null);
-      setIsFormVisible(false);  // Hide the form after saving the appointment
+      setIsFormVisible(false);
     } catch (error) {
       toast.error(`Error saving appointment: ${error.response?.data || error.message}`, {
         position: toast.POSITION.TOP_CENTER,
@@ -153,9 +156,17 @@ const AppointmentScheduler = () => {
   };
 
   return (
-    <div className="p-4 h-3/4vh bg-gray-50">
+    <div className="p-4 h-screen bg-gray-50">
       <ToastContainer />
-      
+      <div className="flex justify-between items-center mb-4">
+        <h1 className="text-4xl font-semibold text-blue-600">Appointment Scheduler</h1>
+        <button
+          onClick={() => window.history.back()}
+          className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+        >
+          Go Back
+        </button>
+      </div>
 
       <div className="flex space-x-10">
         <div className="w-1/3 p-4 border rounded-lg shadow-md bg-white">
@@ -230,125 +241,128 @@ const AppointmentScheduler = () => {
 
         <div className="w-2/3 p-4 border rounded-lg shadow-md bg-white">
           {isFormVisible ? (
-            <div>
-              <h3 className="text-xl font-semibold mb-4">New Appointment</h3>
-              <form onSubmit={handleSubmit}>
-                <div className="mb-4">
-                  <label className="block font-medium mb-2">Select Pet</label>
-                  <select
-                    value={selectedPetName}
-                    onChange={handlePetChange}
-                    className="w-full border p-2 rounded"
-                  >
-                     <option value="">Select a Pet</option>
-                  {pets.map((pet) => (
-                    <option key={pet} value={pet}>
+            <form onSubmit={handleSubmit}>
+              <div className="mb-4">
+                <label className="block font-medium mb-2">Pet Name</label>
+                <select
+                  name="petName"
+                  value={selectedPetName}
+                  onChange={handlePetChange}
+                  className="w-full border p-2 rounded"
+                  required
+                >
+                  <option value="">Select a Pet</option>
+                  {pets.map((pet, index) => (
+                    <option key={index} value={pet}>
                       {pet}
                     </option>
                   ))}
                 </select>
-                </div>
+              </div>
 
-                <div className="mb-4">
-                  <label className="block font-medium mb-2">Clinic Name</label>
-                  <input
-                    type="text"
-                    name="clinicName"
-                    placeholder="Clinic Name"
-                    value={newAppointment.clinicName}
-                    onChange={handleChange}
-                    className="w-full border p-2 rounded"
-                    required
-                  />
-                </div>
+              <div className="mb-4">
+                <label className="block font-medium mb-2">Clinic Name</label>
+                <input
+                  type="text"
+                  name="clinicName"
+                  value={newAppointment.clinicName}
+                  onChange={handleChange}
+                  className="w-full border p-2 rounded"
+                  required
+                />
+              </div>
 
-                <div className="mb-4">
-                  <label className="block font-medium mb-2">Location</label>
-                  <input
-                    type="text"
-                    name="location"
-                    placeholder="Location"
-                    value={newAppointment.location}
-                    onChange={handleChange}
-                    className="w-full border p-2 rounded"
-                    required
-                  />
-                </div>
+              <div className="mb-4">
+                <label className="block font-medium mb-2">Location</label>
+                <input
+                  type="text"
+                  name="location"
+                  value={newAppointment.location}
+                  onChange={handleChange}
+                  className="w-full border p-2 rounded"
+                  required
+                />
+              </div>
 
-                <div className="mb-4">
-                  <label className="block font-medium mb-2">Veterinarian Name</label>
-                  <input
-                    type="text"
-                    name="veterinarianName"
-                    placeholder="Veterinarian Name"
-                    value={newAppointment.veterinarianName}
-                    onChange={handleChange}
-                    className="w-full border p-2 rounded"
-                    required
-                  />
-                </div>
+              <div className="mb-4">
+                <label className="block font-medium mb-2">Veterinarian Name</label>
+                <input
+                  type="text"
+                  name="veterinarianName"
+                  value={newAppointment.veterinarianName}
+                  onChange={handleChange}
+                  className="w-full border p-2 rounded"
+                  required
+                />
+              </div>
 
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="mb-4">
-                    <label className="block font-medium mb-2">Appointment Type</label>
-                    <select
-                      name="appointmentType"
-                      value={newAppointment.appointmentType}
-                      onChange={handleChange}
-                      className="w-full border p-2 rounded"
-                      required
-                    >
-                      <option value="regular">Regular</option>
-                      <option value="emergency">Emergency</option>
-                      <option value="vaccination">Vaccination</option>
-                    </select>
-                  </div>
-                  <div className="mb-4">
-                    <label className="block font-medium mb-2">Appointment Time</label>
-                    <input
-                      type="time"
-                      name="appointmentTime"
-                      value={newAppointment.appointmentTime}
-                      onChange={handleChange}
-                      className="w-full border p-2 rounded"
-                      required
-                    />
-                  </div>
-                </div>
+              <div className="mb-4">
+                <label className="block font-medium mb-2">Appointment Type</label>
+                <select
+                  name="appointmentType"
+                  value={newAppointment.appointmentType}
+                  onChange={handleChange}
+                  className="w-full border p-2 rounded"
+                >
+                  <option value="regular">Regular</option>
+                  <option value="vaccination">Vaccination</option>
+                </select>
+              </div>
 
+              <div className="mb-4">
+                <label className="block font-medium mb-2">Appointment Time</label>
+                <input
+                  type="time"
+                  name="appointmentTime"
+                  value={newAppointment.appointmentTime}
+                  onChange={handleChange}
+                  className="w-full border p-2 rounded"
+                  required
+                />
+              </div>
 
-                <div className="mb-4">
-                  <label className="block font-medium mb-2">Description</label>
-                  <textarea
-                    name="description"
-                    value={newAppointment.description}
-                    onChange={handleChange}
-                    className="w-full border p-2 rounded"
-                  />
-                </div>
+              <div className="mb-4">
+                <label className="block font-medium mb-2">Description</label>
+                <textarea
+                  name="description"
+                  value={newAppointment.description}
+                  onChange={handleChange}
+                  className="w-full border p-2 rounded"
+                  rows="3"
+                  required
+                />
+              </div>
 
+              <div className="mb-4">
                 <button
                   type="submit"
-                  className="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600"
+                  className="w-full bg-blue-500 text-white p-3 rounded hover:bg-blue-600"
                 >
-                  Add Appointment
+                  Save Appointment
                 </button>
-              </form>
-            </div>
+              </div>
+            </form>
           ) : selectedAppointment ? (
-            <div>
-              <h3 className="text-xl font-semibold mb-4">Appointment Details</h3>
-              <p><strong>Pet Name:</strong> {selectedAppointment.petId}</p>
-              <p><strong>Clinic:</strong> {selectedAppointment.clinicName}</p>
-              <p><strong>Location:</strong> {selectedAppointment.location}</p>
-              <p><strong>Veterinarian:</strong> {selectedAppointment.veterinarianName}</p>
-              <p><strong>Type:</strong> {selectedAppointment.appointmentType}</p>
-              <p><strong>Date:</strong> {selectedAppointment.appointmentDate}</p>
-              <p><strong>Time:</strong> {selectedAppointment.appointmentTime}</p>
-              <p><strong>Description:</strong> {selectedAppointment.description}</p>
+            <div
+              className={`border-2 border-blue-500 bg-blue-50 rounded-lg p-6 max-w-2xl mx-auto text-center shadow-xl transition-transform duration-300 ease-in-out transform ${
+                isHovered ? 'scale-105' : ''
+              }`}
+              onClick={() => setIsHovered(!isHovered)}
+              onMouseEnter={() => setIsHovered(true)}
+              onMouseLeave={() => setIsHovered(false)}
+            >
+              <h3 className="text-3xl font-bold text-blue-600 mb-6">Appointment Details</h3>
+              <p className="text-lg mb-2"><strong>Pet Name:</strong> {selectedAppointment.petId}</p>
+              <p className="text-lg mb-2"><strong>Clinic:</strong> {selectedAppointment.clinicName}</p>
+              <p className="text-lg mb-2"><strong>Location:</strong> {selectedAppointment.location}</p>
+              <p className="text-lg mb-2"><strong>Veterinarian:</strong> {selectedAppointment.veterinarianName}</p>
+              <p className="text-lg mb-2"><strong>Type:</strong> {selectedAppointment.appointmentType}</p>
+              <p className="text-lg mb-2"><strong>Date:</strong> {selectedAppointment.appointmentDate}</p>
+              <p className="text-lg mb-2"><strong>Time:</strong> {selectedAppointment.appointmentTime}</p>
+              <p className="text-lg mb-4"><strong>Description:</strong> {selectedAppointment.description}</p>
             </div>
           ) : (
-            <p>Select a date to view or add an appointment.</p>
+            <div className="text-center text-xl text-gray-600">Click a date to view or create an appointment</div>
           )}
         </div>
       </div>
