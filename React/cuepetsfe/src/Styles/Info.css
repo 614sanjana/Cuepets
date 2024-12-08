@@ -29,7 +29,7 @@
     text-align: center;
     color: rgb(77, 75, 75);
     font-family: 'Rubik', sans-serif;
-    font-size: 1.2rem;
+    font-size: 18px;
     letter-spacing: .8px;
     line-height: 1.8rem;
 }
@@ -46,6 +46,13 @@
     border-radius: 12px;
     background-color: white;
     position: relative;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+.info-cards:hover {
+    background-color: #DCE6FF; /* Pale blue background on hover */
+    transform: translateY(-5px); /* Subtle lift effect */
+    cursor: pointer; /* Pointer to indicate interactivity */
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1); /* Optional hover shadow */
 }
 .info-card-title {
     margin: 32px 0 40px 0;
@@ -54,6 +61,10 @@
     font-size: 28px;
     font-weight: bold;
     letter-spacing: .8px;
+    transition: color 0.3s ease;
+}
+.info-cards:hover .info-card-title {
+    color: #2C96FF; /* Blue color on hover */
 }
 .info-card-description {
     margin: 24px;
@@ -62,18 +73,26 @@
     font-size: 18px;
     letter-spacing: .8px;
     line-height: 1.5rem;
+    transition: color 0.3s ease;
+}
+.info-cards:hover .info-card-description {
+    color: #2C96FF; /* Blue color on hover */
 }
 .info-card-icon {
     position: absolute;
     top: -24px;
     left: 44%;
     padding: 10px;
-    background-color: #DCE6FF;
+    background-color: #DCE6FF; /* Pale blue for consistency */
     border-radius: 30px;
 }
 .info-fa-icon {
     color: #2C96FF;
     font-size: 24px;
+    transition: color 0.3s ease;
+}
+.info-cards:hover .info-fa-icon {
+    color: #9D2553; /* Pinkish tone for the icon on hover */
 }
 /* Responsive */
 @media screen and (max-width: 1000px) {

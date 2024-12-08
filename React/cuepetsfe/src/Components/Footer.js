@@ -70,16 +70,16 @@ function Footer() {
           <p className="ft-list-title">Talk To Us</p>
           <ul className="ft-list-items">
             <li>
-              <a href="mailto:support@petcare.com">support@petcare.com</a>
+              <a href="mailto:support@petcare.com">support@cuepets.com</a>
             </li>
             <li>
-              <a href="mailto:appointments@petcare.com">appointments@petcare.com</a>
+              <a href="mailto:appointments@petcare.com">appointments@cuepets.com</a>
             </li>
             <li>
-              <a href="tel:+022 5454 5252">+922 5454 5252</a>
+              <a href="tel:+022 5454 5252">+91 9000000000</a>
             </li>
             <li>
-              <a href="tel:+022 2326 6232">+822 2326 6232</a>
+              <a href="tel:+022 2326 6232">+91 9000000001</a>
             </li>
           </ul>
         </div>

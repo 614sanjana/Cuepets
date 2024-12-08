@@ -1,6 +1,9 @@
 import React from "react";
 import DoctorCard from "./DoctorCard";
-import profile1 from "../Assets/profile-1.png";
+import profile1 from "../Assets/har.png";
+import profile2 from "../Assets/mah.png";
+import profile3 from "../Assets/san.png";
+import profile4 from "../Assets/thr.png";
 import "../Styles/Doctors.css";
 
 function Creators() {
@@ -21,25 +24,25 @@ function Creators() {
         <DoctorCard
           img={profile1}
           name="Harshitha A Pai"
-          title="Backend Developer"
+          title="4CB22CG012"
           college="Canara Engineering College"
         />
         <DoctorCard
-          img={profile1}
-          name="Sanjana"
-          title="Backend Developer"
+          img={profile2}
+          name="Mahima U S"
+          title="4CB22CG022"
           college="Canara Engineering College"
         />
         <DoctorCard
-          img={profile1}
-          name="Mahima"
-          title="Frontend Developer"
+          img={profile3}
+          name="Sanjana Karanth U"
+          title="4CB22CG041"
           college="Canara Engineering College"
         />
         <DoctorCard
-          img={profile1}
-          name="Trisha"
-          title="Frontend Developer"
+          img={profile4}
+          name="Thrisha S Shetty"
+          title="4CB22CG055"
           college="Canara Engineering College"
         />
       </div>
