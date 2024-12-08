@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link,Navigate } from "react-router-dom";
 import AppNavbar from "./AppNavbar";
 import Footer from "./Footer";
 import axios from "axios";
 
 export default function Dashboard() {
+  const [imageUrl, setImageUrl] = useState(null);
   const [userData, setUserData] = useState({
     userName: "",
     userEmail: "",
@@ -12,8 +13,11 @@ export default function Dashboard() {
     profilePicture: "https://via.placeholder.com/150", // Default picture URL
   });
 
+
   const [isEditing, setIsEditing] = useState(false);
   const ownerID = localStorage.getItem("ownerID");
+
+ 
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -31,7 +35,6 @@ export default function Dashboard() {
     fetchUserData();
   }, [ownerID]);
 
-  const [imageUrl, setImageUrl] = useState(null);
 
   useEffect(() => {
     const fetchImage = async () => {
@@ -70,10 +73,13 @@ export default function Dashboard() {
       console.error("Error updating user data", error);
     }
   };
+  if (!ownerID) {
+    alert("Login First !!");
+    return <Navigate to="/login" />;  // Redirect to login page if not logged in
+  }
 
   return (
     <div>
-      <AppNavbar />
       <div className="dashboard h-[90vh] flex flex-grow bg-gray-100">
         {/* Sidebar */}
         <div className="w-1/3 bg-blue-200 p-6 flex flex-col items-center">
@@ -225,7 +231,6 @@ export default function Dashboard() {
           </div>
         </div>
       </div>
-      <Footer />
     </div>
   );
 }

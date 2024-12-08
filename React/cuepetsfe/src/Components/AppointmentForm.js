@@ -153,17 +153,9 @@ const AppointmentScheduler = () => {
   };
 
   return (
-    <div className="p-4 h-screen bg-gray-50">
+    <div className="p-4 h-3/4vh bg-gray-50">
       <ToastContainer />
-      <div className="flex justify-between items-center mb-4">
-        <h1 className="text-4xl font-semibold text-blue-600">Appointment Scheduler</h1>
-        <button
-          onClick={() => window.history.back()}
-          className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-        >
-          Go Back
-        </button>
-      </div>
+      
 
       <div className="flex space-x-10">
         <div className="w-1/3 p-4 border rounded-lg shadow-md bg-white">

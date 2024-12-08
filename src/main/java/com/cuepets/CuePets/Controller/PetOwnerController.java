@@ -1,6 +1,7 @@
 package com.cuepets.CuePets.Controller;
 
 import com.cuepets.CuePets.Model.PetOwner;
+import com.cuepets.CuePets.Model.Pets;
 import com.cuepets.CuePets.Repository.PetAdoptionRepo;
 import com.cuepets.CuePets.Repository.PetOwnerRepo;
 import com.cuepets.CuePets.Repository.PetsRepo;
@@ -94,5 +95,15 @@ public class PetOwnerController {
     @GetMapping("/viewImage/{ownerID}")
     public ResponseEntity<Resource> viewUserPfpImage(@PathVariable String ownerID) {
         return petOwnerServices.viewUserImage(ownerID);
+    }
+
+    @GetMapping("/getUserName/{ownerID}")
+    public ResponseEntity<String> getUserNameByID(@PathVariable String ownerID){
+        PetOwner owner = petOwnerRepo.findByOwnerID(ownerID);
+        if (owner != null) {
+            return ResponseEntity.ok(owner.getUserName()); // Return 200 OK with the petID
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found"); // Return 404 with error message
+        }
     }
 }
