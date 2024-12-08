@@ -39,7 +39,7 @@ export default function SignIn({ setAuthState, setUser }) {
           localStorage.setItem("ownerID", ownerID);
           localStorage.setItem("userName", userName);
           alert("Login Successful !!");
-          navigate("/dashboard");
+          navigate("/dash-home");
         }
       })
       .catch((err) => {
@@ -58,7 +58,7 @@ export default function SignIn({ setAuthState, setUser }) {
     <div className="min-h-screen bg-gray-100 flex items-center justify-center">
       <div className="flex bg-white rounded-xl shadow-md border border-gray-300 overflow-hidden w-full sm:w-[800px]">
         {/* Left Section - Cat Image */}
-        <div className="w-1/2 hidden sm:block">
+        <div className="w-1/2">
           <img
             src={signinCat}
             alt="Sign In Cat"

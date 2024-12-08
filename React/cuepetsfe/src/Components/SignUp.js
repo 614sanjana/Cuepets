@@ -166,7 +166,7 @@ export default function SignUp({ setAuthState, setUser }) {
         </div>
 
         {/* Right Section - Dog Image */}
-        <div className="w-1/2 hidden sm:block">
+        <div className="w-1/2">
           <img
             src={signupDog}
             alt="Sign Up Dog"
