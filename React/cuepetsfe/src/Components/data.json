@@ -1,0 +1,353 @@
+[
+    {
+      "breedID": "",
+      "breedName": "Labrador Retriever",
+      "petTypeID": "1111"
+    },
+    {
+      "breedID": "",
+      "breedName": "German Shepherd",
+      "petTypeID": "1111"
+    },
+    {
+      "breedID": "",
+      "breedName": "Golden Retriever",
+      "petTypeID": "1111"
+    },
+    {
+      "breedID": "",
+      "breedName": "Bulldog",
+      "petTypeID": "1111"
+    },
+    {
+      "breedID": "",
+      "breedName": "Beagle",
+      "petTypeID": "1111"
+    },
+    {
+      "breedID": "",
+      "breedName": "Poodle",
+      "petTypeID": "1111"
+    },
+    {
+      "breedID": "",
+      "breedName": "Rottweiler",
+      "petTypeID": "1111"
+    },
+    {
+      "breedID": "",
+      "breedName": "Boxer",
+      "petTypeID": "1111"
+    },
+    {
+      "breedID": "",
+      "breedName": "Dachshund",
+      "petTypeID": "1111"
+    },
+    {
+      "breedID": "0",
+      "breedName": "Chihuahua",
+      "petTypeID": "1111"
+    },
+    {
+      "breedID": "",
+      "breedName": "Persian",
+      "petTypeID": "1112"
+    },
+    {
+      "breedID": "",
+      "breedName": "Maine Coon",
+      "petTypeID": "1112"
+    },
+    {
+      "breedID": "",
+      "breedName": "Bengal",
+      "petTypeID": "1112"
+    },
+    {
+      "breedID": "",
+      "breedName": "Siamese",
+      "petTypeID": "1112"
+    },
+    {
+      "breedID": "",
+      "breedName": "British Shorthair",
+      "petTypeID": "1112"
+    },
+    {
+      "breedID": "",
+      "breedName": "Sphynx",
+      "petTypeID": "1112"
+    },
+    {
+      "breedID": "",
+      "breedName": "Scottish Fold",
+      "petTypeID": "1112"
+    },
+    {
+      "breedID": "",
+      "breedName": "Ragdoll",
+      "petTypeID": "1112"
+    },
+    {
+      "breedID": "",
+      "breedName": "Abyssinian",
+      "petTypeID": "1112"
+    },
+    {
+      "breedID": "0",
+      "breedName": "Russian Blue",
+      "petTypeID": "1112"
+    },
+    {
+      "breedID": "",
+      "breedName": "Parakeet",
+      "petTypeID": "1113"
+    },
+    {
+      "breedID": "",
+      "breedName": "Cockatiel",
+      "petTypeID": "1113"
+    },
+    {
+      "breedID": "",
+      "breedName": "Macaw",
+      "petTypeID": "1113"
+    },
+    {
+      "breedID": "",
+      "breedName": "African Grey",
+      "petTypeID": "1113"
+    },
+    {
+      "breedID": "",
+      "breedName": "Lovebird",
+      "petTypeID": "1113"
+    },
+    {
+      "breedID": "",
+      "breedName": "Budgerigar",
+      "petTypeID": "1113"
+    },
+    {
+      "breedID": "",
+      "breedName": "Canary",
+      "petTypeID": "1113"
+    },
+    {
+      "breedID": "",
+      "breedName": "Finch",
+      "petTypeID": "1113"
+    },
+    {
+      "breedID": "",
+      "breedName": "Cockatoo",
+      "petTypeID": "1113"
+    },
+    {
+      "breedID": "0",
+      "breedName": "Conure",
+      "petTypeID": "1113"
+    },
+    {
+      "breedID": "",
+      "breedName": "Himalayan Rabbit",
+      "petTypeID": "1114"
+    },
+    {
+      "breedID": "",
+      "breedName": "Mini Rex",
+      "petTypeID": "1114"
+    },
+    {
+      "breedID": "",
+      "breedName": "Dutch Rabbit",
+      "petTypeID": "1114"
+    },
+    {
+      "breedID": "",
+      "breedName": "Lionhead Rabbit",
+      "petTypeID": "1114"
+    },
+    {
+      "breedID": "",
+      "breedName": "Holland Lop",
+      "petTypeID": "1114"
+    },
+    {
+      "breedID": "",
+      "breedName": "Netherland Dwarf",
+      "petTypeID": "1114"
+    },
+    {
+      "breedID": "",
+      "breedName": "English Angora",
+      "petTypeID": "1114"
+    },
+    {
+      "breedID": "",
+      "breedName": "Californian Rabbit",
+      "petTypeID": "1114"
+    },
+    {
+      "breedID": "",
+      "breedName": "English Spot",
+      "petTypeID": "1114"
+    },
+    {
+      "breedID": "0",
+      "breedName": "Mini Lop",
+      "petTypeID": "1114"
+    },
+    {
+      "breedID": "",
+      "breedName": "American Guinea Pig",
+      "petTypeID": "1115"
+    },
+    {
+      "breedID": "",
+      "breedName": "Abyssinian Guinea Pig",
+      "petTypeID": "1115"
+    },
+    {
+      "breedID": "",
+      "breedName": "Peruvian Guinea Pig",
+      "petTypeID": "1115"
+    },
+    {
+      "breedID": "",
+      "breedName": "Teddy Guinea Pig",
+      "petTypeID": "1115"
+    },
+    {
+      "breedID": "",
+      "breedName": "Texel Guinea Pig",
+      "petTypeID": "1115"
+    },
+    {
+      "breedID": "",
+      "breedName": "Silkie Guinea Pig",
+      "petTypeID": "1115"
+    },
+    {
+      "breedID": "",
+      "breedName": "Baldwin Guinea Pig",
+      "petTypeID": "1115"
+    },
+    {
+      "breedID": "",
+      "breedName": "White Crested Guinea Pig",
+      "petTypeID": "1115"
+    },
+    {
+      "breedID": "",
+      "breedName": "American Satin Guinea Pig",
+      "petTypeID": "1115"
+    },
+    {
+      "breedID": "0",
+      "breedName": "Himalayan Guinea Pig",
+      "petTypeID": "1115"
+    },
+    {
+      "breedID": "",
+      "breedName": "Goldfish",
+      "petTypeID": "1116"
+    },
+    {
+      "breedID": "",
+      "breedName": "Betta Fish",
+      "petTypeID": "1116"
+    },
+    {
+      "breedID": "",
+      "breedName": "Guppy",
+      "petTypeID": "1116"
+    },
+    {
+      "breedID": "",
+      "breedName": "Angelfish",
+      "petTypeID": "1116"
+    },
+    {
+      "breedID": "",
+      "breedName": "Neon Tetra",
+      "petTypeID": "1116"
+    },
+    {
+      "breedID": "",
+      "breedName": "Molly Fish",
+      "petTypeID": "1116"
+    },
+    {
+      "breedID": "",
+      "breedName": "Corydoras Catfish",
+      "petTypeID": "1116"
+    },
+    {
+      "breedID": "",
+      "breedName": "Clownfish",
+      "petTypeID": "1116"
+    },
+    {
+      "breedID": "",
+      "breedName": "Swordtail",
+      "petTypeID": "1116"
+    },
+    {
+      "breedID": "0",
+      "breedName": "Rainbowfish",
+      "petTypeID": "1116"
+    },
+    {
+      "breedID": "",
+      "breedName": "Bearded Dragon",
+      "petTypeID": "1117"
+    },
+    {
+      "breedID": "",
+      "breedName": "Leopard Gecko",
+      "petTypeID": "1117"
+    },
+    {
+      "breedID": "",
+      "breedName": "Corn Snake",
+      "petTypeID": "1117"
+    },
+    {
+      "breedID": "",
+      "breedName": "Ball Python",
+      "petTypeID": "1117"
+    },
+    {
+      "breedID": "",
+      "breedName": "Chameleon",
+      "petTypeID": "1117"
+    },
+    {
+      "breedID": "",
+      "breedName": "Axolotl",
+      "petTypeID": "1117"
+    },
+    {
+      "breedID": "",
+      "breedName": "Tarantula",
+      "petTypeID": "1117"
+    },
+    {
+      "breedID": "",
+      "breedName": "Gecko",
+      "petTypeID": "1117"
+    },
+    {
+      "breedID": "",
+      "breedName": "Iguana",
+      "petTypeID": "1117"
+    },
+    {
+      "breedID": "0",
+      "breedName": "Hermit Crab",
+      "petTypeID": "1117"
+    }
+  ]
+  

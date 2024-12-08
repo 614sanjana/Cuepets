@@ -6,9 +6,11 @@ const Record = () => {
   const [pets, setPets] = useState([]);
   const [selectedPet, setSelectedPet] = useState(null);
   const [healthRecords, setHealthRecords] = useState([]);
-  const [selectedFile, setSelectedFile] = useState(null);
-  const [showModal, setShowModal] = useState(false); // Modal visibility state
-  const [imageToShow, setImageToShow] = useState(null); // The image to display in the modal
+  const [showAddRecordModal, setShowAddRecordModal] = useState(false); // Modal visibility state for adding a record
+  const [imageFile, setImageFile] = useState(null);
+  const [description, setDescription] = useState("");
+  const [showModal, setShowModal] = useState(false); // Modal for viewing image
+  const [imageToShow, setImageToShow] = useState(null);
   const navigate = useNavigate();
 
   // Fetch pets data
@@ -48,22 +50,15 @@ const Record = () => {
     setSelectedPet(pet);
   };
 
-  const handleBackButton = () => {
-    window.history.back();
-  };
-
-  const handleFileChange = (event) => {
-    setSelectedFile(event.target.files[0]);
-  };
-
   const handleAddRecord = async () => {
-    if (!selectedPet || !selectedFile) {
-      alert("Please select a pet and upload a file.");
+    if (!selectedPet || !imageFile || !description) {
+      alert("Please fill all fields.");
       return;
     }
 
     const formData = new FormData();
-    formData.append("file", selectedFile);
+    formData.append("file", imageFile);
+    formData.append("description", description);
 
     try {
       const response = await axios.post(
@@ -72,11 +67,13 @@ const Record = () => {
         {
           headers: {
             "Content-Type": "multipart/form-data",
-          },
+          },    
         }
       );
       alert(response.data);
-      setSelectedFile(null); // Clear the selected file
+      setImageFile(null);
+      setDescription("");
+      setShowAddRecordModal(false); // Close the modal
       // Fetch the updated health records
       const updatedRecords = await axios.get(
         `http://localhost:8080/api/v1/healthrecord/getRecords/${selectedPet.petID}`
@@ -87,59 +84,37 @@ const Record = () => {
     }
   };
 
-  const [imageUrl, setImageUrl] = useState(null);
-  const [error, setError] = useState(null);
-
-  // Open the modal with the image
   const handleViewImage = async (record) => {
-    const recordID = record.recordID; // Get the recordID for the specific record
-
-    // Store the recordID in localStorage to persist it
-    localStorage.setItem("recordID", recordID);
+    const recordID = record.recordID;
 
     try {
-      // Fetch the image using the stored recordID
       const response = await fetch(`http://localhost:8080/api/v1/healthrecord/viewImage/${recordID}`);
-      
       if (!response.ok) {
         throw new Error("Image not found or an error occurred");
       }
-
-      // Create a URL for the image from the response blob
       const imageBlob = await response.blob();
       const imageUrl = URL.createObjectURL(imageBlob);
-      
-      // Set the image URL in the state to display in the modal
       setImageToShow(imageUrl);
       setShowModal(true);
-    } catch (err) {
-      setError(err.message);
+    } catch (error) {
+      console.error(error.message);
     }
   };
 
-  // Close the modal
   const closeModal = () => {
     setShowModal(false);
     setImageToShow(null);
   };
 
   return (
-    <div className="h-screen p-8 bg-gradient-to-br from-white to-blue-100 text-center font-sans">
-      <button
-        className="fixed top-5 left-5 bg-blue-600 text-white px-4 py-2 rounded-lg shadow hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 transform hover:-translate-x-1 transition-all"
-        onClick={handleBackButton}
-      >
-        &larr; Back
-      </button>
-
-      <h1 className="text-4xl font-bold text-blue-600 mb-6">Pet Health Records</h1>
+    <div className="h-screen p-4 bg-gradient-to-br from-white to-blue-100 text-center font-sans">
+      <h1 className="text-4xl font-bold text-blue-600 mb-0">Pet Health Records</h1>
       <p className="text-lg text-gray-600 mb-8">
         Manage and view all your pet health records.
       </p>
-
       <div className="flex h-full">
         {/* Left Side: Pet List */}
-        <div className="w-1/4 p-6 overflow-y-auto bg-white shadow rounded-lg">
+        <div className="w-1/4 p-6 overflow-y-auto bg-white shadow rounded-lg max-h-screen">
           <h2 className="text-2xl font-semibold text-blue-600 mb-4">Your Pets</h2>
           {pets.length === 0 ? (
             <p className="text-gray-500">No pets found. Add your pets to see them here.</p>
@@ -147,7 +122,7 @@ const Record = () => {
             pets.map((pet, index) => (
               <div
                 key={index}
-                className="bg-gray-100 rounded-lg w-6/7 shadow-md p-4 mb-4 hover:shadow-lg transition-all"
+                className="bg-gray-100 rounded-lg w-3/4 ml-14 shadow-md p-4 mb-4 hover:shadow-lg transition-all"
               >
                 <img
                   src={pet.petImage || "https://via.placeholder.com/150"}
@@ -174,15 +149,12 @@ const Record = () => {
                 <h2 className="text-2xl font-semibold text-blue-600">
                   {selectedPet.petName}'s Records
                 </h2>
-                <label className="block">
-                  <input type="file" onChange={handleFileChange} />
-                  <button
-                    className="bg-green-600 text-white px-6 py-2 ml-4 rounded-lg shadow hover:bg-green-800 focus:outline-none focus:ring-4 focus:ring-green-300 transform hover:scale-105 transition-all"
-                    onClick={handleAddRecord}
-                  >
-                    + Add New Record
-                  </button>
-                </label>
+                <button
+                  className="bg-green-600 text-white px-6 py-2 rounded-lg shadow hover:bg-green-800 focus:outline-none"
+                  onClick={() => setShowAddRecordModal(true)} // Open the modal
+                >
+                  + Add New Record
+                </button>
               </div>
               <table className="table-auto w-full border-collapse mb-6">
                 <thead>
@@ -198,7 +170,7 @@ const Record = () => {
                       <td className="border px-4 py-2">
                         <button
                           className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-800"
-                          onClick={() => handleViewImage(record)} // Pass the record to view the image
+                          onClick={() => handleViewImage(record)}
                         >
                           View Image
                         </button>
@@ -216,7 +188,41 @@ const Record = () => {
         </div>
       </div>
 
-      {/* Modal for full-screen image */}
+      {/* Modal for Adding Record */}
+      {showAddRecordModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg">
+            <h2 className="text-xl font-semibold mb-4">Add New Record</h2>
+            <input
+              type="file"
+              className="mb-4"
+              onChange={(e) => setImageFile(e.target.files[0])}
+            />
+            <textarea
+              className="w-full border rounded-lg p-2 mb-4"
+              placeholder="Enter description"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+            />
+            <div className="flex justify-end">
+              <button
+                className="bg-green-600 text-white px-4 py-2 rounded-lg mr-2"
+                onClick={handleAddRecord}
+              >
+                Save
+              </button>
+              <button
+                className="bg-red-600 text-white px-4 py-2 rounded-lg"
+                onClick={() => setShowAddRecordModal(false)}
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Modal for Viewing Image */}
       {showModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
           <div className="relative bg-white p-4">
@@ -226,10 +232,10 @@ const Record = () => {
             >
               X
             </button>
-            {error ? (
-              <p className="text-red-500">{error}</p>
-            ) : (
+            {imageToShow ? (
               <img src={imageToShow} alt="Health Record" className="max-w-full max-h-screen" />
+            ) : (
+              <p className="text-red-500">Error loading image</p>
             )}
           </div>
         </div>

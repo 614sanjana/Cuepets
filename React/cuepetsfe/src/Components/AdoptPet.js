@@ -4,10 +4,10 @@ import axios from 'axios';
 
 const AdoptPet = () => {
   const [pets, setPets] = useState([]);
-  const [expandedIndex, setExpandedIndex] = useState(null);
-  const [editPet, setEditPet] = useState(null);
-  const [isEditPopupOpen, setIsEditPopupOpen] = useState(false);
-  const [formValues, setFormValues] = useState({});
+  const [selectedPet, setSelectedPet] = useState(null);  // Holds the pet selected for the popup
+  const [isDetailsPopupOpen, setIsDetailsPopupOpen] = useState(false); // To manage the popup visibility
+  const [selectedPetOwnerID, setSelectedPetOwnerID] = useState(null);
+  const [owner, setOwner] = useState([]);
   const navigate = useNavigate();
   const [imageUrls, setImageUrls] = useState({});
 
@@ -25,6 +25,23 @@ const AdoptPet = () => {
 
     fetchPets();
   }, []);
+
+  // Fetch owner data when selectedPetOwnerID changes
+  useEffect(() => {
+    if (selectedPetOwnerID) {  // Only fetch owner details if selectedPetOwnerID exists
+      const fetchOwner = async () => {
+        try {
+          const response = await axios.get(`http://localhost:8080/api/v1/user/getUsersByID/${selectedPetOwnerID}`);
+          console.log(response.data);
+          setOwner(response.data);
+        } catch (error) {
+          console.error("Error fetching owner:", error);
+        }
+      };
+
+      fetchOwner();
+    }
+  }, [selectedPetOwnerID]);  // Watch for changes in selectedPetOwnerID
 
   // Fetch image for each pet
   useEffect(() => {
@@ -52,20 +69,14 @@ const AdoptPet = () => {
     });
   }, [pets, imageUrls]);
 
-  // Open edit popup
-  const handleEditClick = (pet) => {
-    setEditPet(pet);
-    setFormValues(pet);
-    setIsEditPopupOpen(true);
+  // Open details popup
+  const handleAdoptClick = (pet) => {
+    setSelectedPet(pet);
+    setSelectedPetOwnerID(pet.ownerID);  // Set the ownerID when a pet is selected
+    setIsDetailsPopupOpen(true);
   };
 
-  // Handle form changes
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormValues({ ...formValues, [name]: value });
-  };
-
-
+  // Handle the Back button
   const handleBackButton = () => {
     window.history.back();
   };
@@ -83,10 +94,10 @@ const AdoptPet = () => {
         Adopt Cute Pets from CuePets
       </h1>
       <p className="text-lg text-gray-600 mb-8">
-        Give new home to your favourite pets
+        Give a new home to your favourite pets
       </p>
 
-      <div className="flex flex-wrap ml-0 p-10 gap-6 max-w-6xl mx-auto">
+      <div className="flex flex-wrap w-full ml-0 p-10 gap-6 mx-auto">
         {pets.map((pet, index) => (
           <div
             key={index}
@@ -101,7 +112,6 @@ const AdoptPet = () => {
                   className="w-60 h-60 rounded-xl mb-4"
                 />
               </div>
-              
             </div>
             <h3 className="text-xl font-semibold text-blue-600 mb-2">
               {pet.petName}
@@ -109,70 +119,43 @@ const AdoptPet = () => {
             <p className="text-gray-500 mb-4">Age: {pet.petAge}</p>
             <button
               className="bg-blue-600 text-white px-4 py-2 rounded-lg font-semibold shadow hover:bg-green-500 transform hover:scale-105 transition-all"
-              onClick={() => handleEditClick(pet)}
+              onClick={() => handleAdoptClick(pet)}
             >
-            Adopt Now
+              Adopt Now
             </button>
           </div>
         ))}
       </div>
 
-      {isEditPopupOpen && (
+      {isDetailsPopupOpen && selectedPet && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
           <div className="bg-white rounded-lg p-6 w-full max-w-md">
-            <h2 className="text-xl font-bold text-blue-600 mb-4">Edit Pet Details</h2>
-            <form>
-              <div className="mb-4">
-                <label className="block text-gray-700 mb-2">Name:</label>
-                <input
-                  type="text"
-                  name="petName"
-                  value={formValues.petName || ''}
-                  onChange={handleChange}
-                  className="w-full border rounded-lg p-2"
-                />
-              </div>
-              <div className="mb-4">
-                <label className="block text-gray-700 mb-2">Age:</label>
-                <input
-                  type="number"
-                  name="petAge"
-                  value={formValues.petAge || ''}
-                  onChange={handleChange}
-                  className="w-full border rounded-lg p-2"
-                />
-              </div>
-              <div className="mb-4">
-                <label className="block text-gray-700 mb-2">Age:</label>
-                <input
-                  type="number"
-                  name="petAge"
-                  value={formValues.petAge || ''}
-                  onChange={handleChange}
-                  className="w-full border rounded-lg p-2"
-                />
-              </div>
-              <div className="mb-4">
-                <label className="block text-gray-700 mb-2">Age:</label>
-                <input
-                  type="number"
-                  name="petAge"
-                  value={formValues.petGender || ''}
-                  onChange={handleChange}
-                  className="w-full border rounded-lg p-2"
-                />
-              </div>
-              <div className="flex justify-end">
-                <button
-                  type="button"
-                  className="bg-gray-400 text-white px-4 py-2 rounded-lg mr-2"
-                  onClick={() => setIsEditPopupOpen(false)}
-                >
-                  Cancel
-                </button>
-               
-              </div>
-            </form>
+            <h2 className="text-xl font-bold text-blue-600 mb-4">Pet Details</h2>
+            <div className="mb-4">
+              <img
+                src={imageUrls[selectedPet.petID] || "https://via.placeholder.com/150"} // Display selected pet image
+                alt="Pet Details"
+                className="w-60 h-60 rounded-xl mb-4"
+              />
+              <h3 className="text-2xl font-semibold text-blue-600 mb-2">{selectedPet.petName}</h3>
+              <p className="text-gray-500">Age: {selectedPet.petAge}</p>
+              <p className="text-gray-500">Gender: {selectedPet.petGender}</p>
+              <p className="text-gray-500">Behavior: {selectedPet.petBehaviour}</p>
+              <p className="text-gray-500">Allergies: {selectedPet.petAllergies || 'None'}</p>
+              <p className="text-gray-500">Breed: {selectedPet.petBreedID || 'None'}</p>
+              <p className="text-gray-500">Owner Phone Number: {owner.userPhone || 'None'}</p>
+
+            </div>
+
+            <div className="flex justify-end">
+              <button
+                type="button"
+                className="bg-gray-400 text-white px-4 py-2 rounded-lg mr-2"
+                onClick={() => setIsDetailsPopupOpen(false)}
+              >
+                Close
+              </button>
+            </div>
           </div>
         </div>
       )}

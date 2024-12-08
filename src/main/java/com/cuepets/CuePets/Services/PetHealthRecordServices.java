@@ -38,7 +38,7 @@ public class PetHealthRecordServices {
 
     private static final org.slf4j.Logger LOGGER = org.slf4j.LoggerFactory.getLogger(PetOwnerController.class);
 
-    public ResponseEntity<String> addPetHealthRecord(String petId, MultipartFile file) {
+    public ResponseEntity<String> addPetHealthRecord(String petId, MultipartFile file,String desc) {
         try {
             // Validate the file
             if (file.isEmpty()) {
@@ -84,7 +84,7 @@ public class PetHealthRecordServices {
             healthRecord.setPetID(petId);
             healthRecord.setRecordDateAndTime(LocalDate.now());
             healthRecord.setReportImage(Collections.singletonList(uniqueFileName)); // Save file path or name
-
+            healthRecord.setDescription(desc);
             // Save the health record to the database
             petHealthRecordRepo.save(healthRecord);
 

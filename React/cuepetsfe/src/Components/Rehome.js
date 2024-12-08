@@ -1,32 +1,113 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import axios from 'axios';
 
 const Rehome = () => {
+  const ownerID = localStorage.getItem('ownerID');
+  const [pets, setPets] = useState([]);
+  const [selectedPetName, setSelectedPetName] = useState("");
+  const [selectedPetID, setSelectedPetID] = useState(null);
+  const [ownerName, setOwnerName] = useState(null); // State for storing owner's name
+  const [isSubmitting, setIsSubmitting] = useState(false); // State to track form submission status
+
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
-    ownerName: '',
     location: '',
-    email: '',
-    phone: '',
-    petImage: null,
-    petName: '',
-    petAge: '',
-    petSex: '',
-    petType: '',
-    petBreed: '',
     vaccinated: '',
     spayed: '',
   });
 
-  const [petNames, setPetNames] = useState(['Buddy', 'Max', 'Bella']); // Sample data, replace with API call
+  // Fetch owner name from the backend
+  const fetchOwnerName = async (ownerID) => {
+    try {
+      const response = await axios.get(`http://localhost:8080/api/v1/user/getUserName/${ownerID}`);
+      setOwnerName(response.data); // Set the fetched owner name
+    } catch (error) {
+      console.error("Error fetching owner name:", error);
+    }
+  };
 
+  // Call fetchOwnerName when the component mounts
   useEffect(() => {
-    // Fetch pet names from API if required
-    // Example: setPetNames(fetchPetNamesFromAPI());
-  }, []);
+    if (ownerID) {
+      fetchOwnerName(ownerID);
+    }
+  }, [ownerID]);
 
   const handleViewStatusClick = () => {
     navigate('/view-status');
+  };
+
+  const fetchPetID = async (petName) => {
+    try {
+      const response = await axios.get(`http://localhost:8080/api/v1/pets/getPetID/${petName}`);
+      setSelectedPetID(response.data);
+    } catch (error) {
+      toast.error(`Error fetching pet ID: ${error.response?.data || error.message}`, {
+        position: toast.POSITION.TOP_CENTER,
+      });
+    }
+  };
+
+  useEffect(() => {
+    const fetchPets = async () => {
+      try {
+        const response = await axios.get(`http://localhost:8080/api/v1/pets/names/${ownerID}`);
+        setPets(response.data);
+      } catch (error) {
+        console.error("Error fetching pets:", error);
+      }
+    };
+    fetchPets();
+  }, [ownerID]);
+
+  const handlePetChange = (e) => {
+    const petName = e.target.value;
+    setSelectedPetName(petName);
+    fetchPetID(petName);
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    
+    // Prevent double submission
+    if (isSubmitting) return;
+
+    setIsSubmitting(true); // Set the submitting flag to true
+    
+    // Prepare data for the POST request
+    const data = {
+      location: formData.location,
+      vaccinated: formData.vaccinated,
+      spayedOrNeutered: formData.spayed,
+    };
+
+    // Send POST request
+    axios.post(`http://localhost:8080/api/v1/adoption/addAdopt/${ownerID}/${selectedPetID}`, data)
+      .then((response) => {
+        toast.success("Pet adoption process started!", {
+          position: toast.POSITION.TOP_CENTER,
+        });
+        console.log("Adoption added:", response.data);
+      })
+      .catch((error) => {
+        console.error("Error submitting adoption:", error);
+        toast.error("Failed to start adoption process", {
+          position: toast.POSITION.TOP_CENTER,
+        });
+      })
+      .finally(() => {
+        setIsSubmitting(false); // Reset the submitting flag
+      });
+
+    // Clear the form data after submission
+    setFormData({
+      location: '',
+      vaccinated: '',
+      spayed: '',
+    });
   };
 
   const handleChange = (e) => {
@@ -36,25 +117,6 @@ const Rehome = () => {
     } else {
       setFormData((prev) => ({ ...prev, [name]: value }));
     }
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log('Form Data:', formData);
-    setFormData({
-      ownerName: '',
-      location: '',
-      email: '',
-      phone: '',
-      petImage: null,
-      petName: '',
-      petAge: '',
-      petSex: '',
-      petType: '',
-      petBreed: '',
-      vaccinated: '',
-      spayed: '',
-    });
   };
 
   return (
@@ -68,14 +130,9 @@ const Rehome = () => {
         >
           <div>
             <label className="block mb-2 font-medium">Owner Name</label>
-            <input
-              type="text"
-              name="ownerName"
-              value={formData.ownerName}
-              onChange={handleChange}
-              required
-              className="w-full p-3 border border-gray-300 rounded-md"
-            />
+            <p className="w-full p-3 border border-gray-300 rounded-md bg-gray-100">
+              {ownerName || "Loading..."} {/* Display 'Loading...' until the name is fetched */}
+            </p>
           </div>
           <div>
             <label className="block mb-2 font-medium">Location</label>
@@ -88,19 +145,19 @@ const Rehome = () => {
               className="w-full p-3 border border-gray-300 rounded-md"
             />
           </div>
-          <div>
-            <label className="block mb-2 font-medium">Pet Name</label>
+          <div className="mb-4">
+            <label className="block font-medium mb-2">Pet Name</label>
             <select
               name="petName"
-              value={formData.petName}
-              onChange={handleChange}
+              value={selectedPetName}
+              onChange={handlePetChange}
+              className="w-full border p-2 rounded"
               required
-              className="w-full p-3 border border-gray-300 rounded-md"
             >
-              <option value="">Select Pet</option>
-              {petNames.map((name) => (
-                <option key={name} value={name}>
-                  {name}
+              <option value="">Select a Pet</option>
+              {pets.map((pet, index) => (
+                <option key={index} value={pet}>
+                  {pet}
                 </option>
               ))}
             </select>
@@ -160,8 +217,9 @@ const Rehome = () => {
           <button
             type="submit"
             className="w-full py-3 bg-blue-500 text-white rounded-md hover:bg-blue-600"
+            disabled={isSubmitting} // Disable button while submitting
           >
-            Save Pet
+            {isSubmitting ? 'Saving...' : 'Save Pet'}
           </button>
         </form>
 
@@ -186,6 +244,9 @@ const Rehome = () => {
           </button>
         </div>
       </div>
+
+      {/* Toast Notification Container */}
+      <ToastContainer />
     </div>
   );
 };
