@@ -16,7 +16,7 @@ import Adopt from "./Components/Adopt";
 import Record from "./Components/Records";
 import Rehome from "./Components/Rehome";
 import ViewStatus from "./Components/ViewStatus";
-
+import AdoptPet from "./Components/AdoptPet";
 
 function App() {
   return (
@@ -38,7 +38,7 @@ function App() {
           <Route path="/pet-records" element={<Record/>}/>
           <Route path="/rehome" element={<Rehome/>}/>
           <Route path="/view-status" element={<ViewStatus/>}/>
-
+          <Route path="/adopt-pet" element={<AdoptPet/>}/>
         </Routes>
       </Router>
     </div>
