@@ -107,5 +107,15 @@ public class PetsController {
         }
     }
 
+    @GetMapping("/getPetName/{petID}")
+    public ResponseEntity<String> getPetName(@PathVariable(name = "petID") String petID) {
+        Pets pet = petsRepo.findByPetID(petID);
+        if (pet != null) {
+            return ResponseEntity.ok(pet.getPetName()); // Return 200 OK with the petID
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Pet not found"); // Return 404 with error message
+        }
+    }
+
 
 }

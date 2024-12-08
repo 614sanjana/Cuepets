@@ -57,6 +57,18 @@ const AppointmentScheduler = () => {
       setIsFormVisible(true);  // Show the form when no appointment is available for the selected date
     }
   };
+  
+  useEffect(() => {
+    const fetchPets = async () => {
+      try {
+        const response = await axios.get(`http://localhost:8080/api/v1/pets/names/${ownerID}`);
+        setPets(response.data);
+      } catch (error) {
+        console.error("Error fetching pets:", error);
+      }
+    };
+    fetchPets()},[ownerID]);
+  
 
   const fetchPetID = async (petName) => {
     try {
@@ -88,6 +100,7 @@ const AppointmentScheduler = () => {
       const response = await axios.get(
         `http://localhost:8080/api/v1/appointments/getAppointments/${ownerID}`
       );
+      console.log(response.data);
       const appointmentsData = response.data.reduce((acc, appointment) => {
         const date = new Date(appointment.appointmentDate).toLocaleDateString();
         if (!acc[date]) acc[date] = [];
@@ -103,6 +116,7 @@ const AppointmentScheduler = () => {
   useEffect(() => {
     fetchAppointments();
   }, [ownerID]);
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -234,9 +248,13 @@ const AppointmentScheduler = () => {
                     onChange={handlePetChange}
                     className="w-full border p-2 rounded"
                   >
-                    <option value="">Select a Pet</option>
-                    {/* Add pet options here */}
-                  </select>
+                     <option value="">Select a Pet</option>
+                  {pets.map((pet) => (
+                    <option key={pet} value={pet}>
+                      {pet}
+                    </option>
+                  ))}
+                </select>
                 </div>
 
                 <div className="mb-4">
@@ -306,17 +324,6 @@ const AppointmentScheduler = () => {
                   </div>
                 </div>
 
-                <div className="mb-4">
-                  <label className="block font-medium mb-2">Appointment Date</label>
-                  <input
-                    type="date"
-                    name="appointmentDate"
-                    value={newAppointment.appointmentDate}
-                    onChange={handleChange}
-                    className="w-full border p-2 rounded"
-                    required
-                  />
-                </div>
 
                 <div className="mb-4">
                   <label className="block font-medium mb-2">Description</label>
@@ -339,7 +346,7 @@ const AppointmentScheduler = () => {
           ) : selectedAppointment ? (
             <div>
               <h3 className="text-xl font-semibold mb-4">Appointment Details</h3>
-              <p><strong>Pet Name:</strong> {selectedAppointment.petName}</p>
+              <p><strong>Pet Name:</strong> {selectedAppointment.petId}</p>
               <p><strong>Clinic:</strong> {selectedAppointment.clinicName}</p>
               <p><strong>Location:</strong> {selectedAppointment.location}</p>
               <p><strong>Veterinarian:</strong> {selectedAppointment.veterinarianName}</p>
