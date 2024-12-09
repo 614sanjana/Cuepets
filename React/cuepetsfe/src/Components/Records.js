@@ -61,6 +61,7 @@ const Record = () => {
     formData.append("description", description);
 
     try {
+      console.log(formData);
       const response = await axios.post(
         `http://localhost:8080/api/v1/healthrecord/addRecord/${selectedPet.petID}`,
         formData,
@@ -160,6 +161,7 @@ const Record = () => {
                 <thead>
                   <tr>
                     <th className="border px-4 py-2">Date</th>
+                    <th className="border px-4 py-2">Description</th>
                     <th className="border px-4 py-2">Actions</th>
                   </tr>
                 </thead>
@@ -167,6 +169,7 @@ const Record = () => {
                   {healthRecords.map((record) => (
                     <tr key={record.recordID}>
                       <td className="border px-4 py-2">{record.recordDateAndTime}</td>
+                      <td className="border px-4 py-2">{record.description}</td>
                       <td className="border px-4 py-2">
                         <button
                           className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-800"

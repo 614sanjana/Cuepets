@@ -26,7 +26,7 @@ public class PetHealthRecordController {
     public ResponseEntity<String> addHealthRecord(
             @PathVariable(name = "id") String id,
             @RequestParam("file") MultipartFile file,
-            @RequestParam("desc") String desc) {
+            @RequestParam("description") String desc) {
         try {
             // Call the service to store the profile picture
             return petHealthRecordServices.addPetHealthRecord(id, file,desc); // Return the response from the service
