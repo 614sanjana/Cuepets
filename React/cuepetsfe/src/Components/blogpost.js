@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import defaultImage from "../Assets/defaultImage.jpg";
+import axios from "axios"; // Import Axios
 
 const PetBlog = () => {
   const navigate = useNavigate();
@@ -21,9 +22,9 @@ const PetBlog = () => {
 
   const fetchUserBlogs = async () => {
     try {
-      const response = await fetch(`http://localhost:8080/api/v1/blogs/getBlogs/${userId}`);
-      const data = await response.json();
-      setArticles(data);
+      const response = await axios.get(`http://localhost:8080/api/v1/blogs/getBlogs/${userId}`);
+      console.log(response.data);
+      setArticles(response.data);
     } catch (error) {
       console.error("Error fetching user blogs:", error);
     }
@@ -47,24 +48,18 @@ const PetBlog = () => {
     };
 
     try {
-      const response = await fetch(`http://localhost:8080/api/v1/blogs/addBlogPosts/${userId}`, {
-        method: "POST",
+      const response = await axios.post(`http://localhost:8080/api/v1/blogs/addBlogPosts/${userId}`, blogData, {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(blogData),
       });
 
-      if (response.ok) {
-        const addedBlog = await response.json();
-        setArticles((prev) => [...prev, addedBlog]);
-        setShowModal(false);
-        setNewBlog({ blogTitle: "", blogDesc: "", blogContent: "" });
-      } else {
-        alert("Failed to add blog. Please try again.");
-      }
+      setArticles((prev) => [...prev, response.data]);
+      setShowModal(false);
+      setNewBlog({ blogTitle: "", blogDesc: "", blogContent: "" });
     } catch (error) {
       console.error("Error adding blog:", error);
+      alert("Failed to add blog. Please try again.");
     }
   };
 
@@ -73,7 +68,22 @@ const PetBlog = () => {
   };
 
   const handleBackButton = () => {
-    navigate(-1);
+    navigate('/');
+  };
+
+  const handleDeleteBlog = async (blogID) => {
+    try {
+      const response = await axios.delete(`http://localhost:8080/api/v1/blogs/deleteBlogPost/${blogID}`);
+      if (response.status === 200) {
+        setArticles((prev) => prev.filter((article) => article.blogId !== blogID));
+        alert(response.data);
+      } else {
+        alert("Failed to delete blog. Please try again.");
+      }
+    } catch (error) {
+      console.error("Error deleting blog:", error);
+      alert("An error occurred while deleting the blog.");
+    }
   };
 
   return (
@@ -102,7 +112,7 @@ const PetBlog = () => {
       <div className="flex flex-wrap justify-center gap-6 max-w-6xl mx-auto">
         {articles.map((article, index) => (
           <div
-            key={article.id}
+            key={article.blogId}
             className="bg-white rounded-xl shadow-lg p-6 w-full sm:w-80 text-center transform transition-transform hover:-translate-y-2 hover:shadow-xl"
           >
             <img
@@ -111,6 +121,7 @@ const PetBlog = () => {
               className="w-full rounded-lg mb-4 transform transition-transform hover:scale-105"
             />
             <h3 className="text-xl font-semibold text-blue-600 mb-2">{article.blogTitle}</h3>
+            <p className="text-gray-500 mb-4">{article.blogId}</p>
             <p className="text-gray-500 mb-4">{article.blogDesc}</p>
             <button
               className="bg-blue-600 text-white px-4 py-2 rounded-lg font-semibold shadow hover:bg-blue-800 transform hover:scale-105 transition-all"
@@ -124,6 +135,12 @@ const PetBlog = () => {
                 <p className="text-gray-600 whitespace-pre-wrap">{article.blogContent}</p>
               </div>
             )}
+            <button
+              className="mt-4 bg-red-500 text-white px-4 py-2 rounded-lg shadow hover:bg-red-700 transform hover:scale-105 transition-all"
+              onClick={() => handleDeleteBlog(article.blogId)}
+            >
+              Delete
+            </button>
           </div>
         ))}
       </div>

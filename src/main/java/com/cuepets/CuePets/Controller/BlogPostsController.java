@@ -32,4 +32,15 @@ public class BlogPostsController {
     public List<BlogPosts> getAllBlogPosts() {
         return blogPostsRepo.findAll();
     }
+
+    @DeleteMapping(value="/deleteBlogPost/{blogID}")
+    public String deleteBlogPost(@PathVariable(name="blogID") String blogID) {
+        if (blogPostsRepo.existsById(blogID)) {
+            blogPostsRepo.deleteById(blogID);
+            return "Blog post with ID " + blogID + " has been successfully deleted.";
+        } else {
+            return "Blog post with ID " + blogID + " does not exist.";
+        }
+    }
+
 }

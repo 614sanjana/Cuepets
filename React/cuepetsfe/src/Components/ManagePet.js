@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import axios from "axios";
 
 const ManagePets = () => {
   const [pets, setPets] = useState([]);
@@ -8,15 +7,16 @@ const ManagePets = () => {
   const [editPet, setEditPet] = useState(null);
   const [isEditPopupOpen, setIsEditPopupOpen] = useState(false);
   const [formValues, setFormValues] = useState({});
-  const navigate = useNavigate();
   const [imageUrls, setImageUrls] = useState({});
 
   // Fetch pets data
   useEffect(() => {
     const fetchPets = async () => {
       try {
-        const ownerId = localStorage.getItem('ownerID'); // Replace with the actual owner ID
-        const response = await axios.get(`http://localhost:8080/api/v1/pets/allPets/${ownerId}`);
+        const ownerId = localStorage.getItem("ownerID"); // Replace with actual owner ID
+        const response = await axios.get(
+          `http://localhost:8080/api/v1/pets/allPets/${ownerId}`
+        );
         setPets(response.data);
       } catch (error) {
         console.error("Error fetching pets:", error);
@@ -30,7 +30,9 @@ const ManagePets = () => {
   useEffect(() => {
     const fetchImage = async (petID) => {
       try {
-        const response = await fetch(`http://localhost:8080/api/v1/pets/viewImage/${petID}`);
+        const response = await fetch(
+          `http://localhost:8080/api/v1/pets/viewImage/${petID}`
+        );
         const imageBlob = await response.blob();
         const imageUrl = URL.createObjectURL(imageBlob);
         setImageUrls((prevState) => ({
@@ -40,13 +42,13 @@ const ManagePets = () => {
       } catch (err) {
         setImageUrls((prevState) => ({
           ...prevState,
-          [petID]: "https://via.placeholder.com/150",  // Fallback image if fetch fails
+          [petID]: "https://via.placeholder.com/150", // Fallback image if fetch fails
         }));
       }
     };
 
-    pets.forEach(pet => {
-      if (!imageUrls[pet.petID]) {  // Check if imageUrl is already set
+    pets.forEach((pet) => {
+      if (!imageUrls[pet.petID]) {
         fetchImage(pet.petID);
       }
     });
@@ -55,7 +57,12 @@ const ManagePets = () => {
   // Open edit popup
   const handleEditClick = (pet) => {
     setEditPet(pet);
-    setFormValues(pet);
+    setFormValues({
+      petName: pet.petName,
+      petAge: pet.petAge,
+      petAllergies: pet.petAllergies,
+      petBehaviour: pet.petBehaviour,
+    });
     setIsEditPopupOpen(true);
   };
 
@@ -68,39 +75,20 @@ const ManagePets = () => {
   // Save edited pet details
   const handleSave = async () => {
     try {
-      const ownerId = localStorage.getItem('ownerID'); // Replace with the actual owner ID
-      const response = await axios.put(`http://localhost:8080/api/v1/pets/addPet/${editPet.ownerId}`, formValues);
-      console.log(response.data);
-      setPets((prevPets) => prevPets.map((pet) => pet.petID === editPet.petID ? response.data : pet));
+      const response = await axios.put(
+        `http://localhost:8080/api/v1/pets/updatePet/${editPet.petID}`,
+        formValues
+      );
+      alert("Pet details updated successfully!");
+      setPets((prevPets) =>
+        prevPets.map((pet) =>
+          pet.petID === editPet.petID ? { ...pet, ...formValues } : pet
+        )
+      );
       setIsEditPopupOpen(false);
     } catch (error) {
       console.error("Error saving pet details:", error);
-    }
-  };
-
-  // Handle file upload for image
-  const handleFileUpload = (event, pet) => {
-    const file = event.target.files[0];
-    if (file) {
-      console.log(`Uploading ${file.name} for ${pet.petName}`);
-      const formData = new FormData();
-      formData.append("file", file);
-
-      const ownerId = localStorage.getItem('ownerID');
-      axios.post(`http://localhost:8080/api/v1/pets/setPfp/${pet.petID}`, formData, {
-        headers: { "Content-Type": "multipart/form-data" },
-      })
-      .then(response => {
-        alert('Image uploaded successfully');
-        // Update the pet image after upload
-        setImageUrls((prevState) => ({
-          ...prevState,
-          [pet.petID]: URL.createObjectURL(file), // Display the new image immediately
-        }));
-      })
-      .catch(error => {
-        console.error("Error uploading image", error);
-      });
+      alert("Failed to update pet details!");
     }
   };
 
@@ -124,36 +112,19 @@ const ManagePets = () => {
         Manage or edit your Pets
       </p>
 
-      <div className="flex flex-wrap ml-0 p-10 gap-6 max-w-6xl mx-auto">
+      <div className="flex flex-wrap ml-0 p-10 gap-6 mx-auto">
         {pets.map((pet, index) => (
           <div
             key={index}
             className="bg-white rounded-xl shadow-lg p-6 w-full sm:w-80 text-center transform transition-transform hover:-translate-y-2 hover:shadow-xl"
           >
             <div className="p-6 flex flex-col items-center">
-              {/* Profile Photo */}
               <div className="mb-4">
                 <img
-                  src={imageUrls[pet.petID] || "https://via.placeholder.com/150"}  // Default to placeholder if no image URL
+                  src={imageUrls[pet.petID] || "https://via.placeholder.com/150"}
                   alt="Profile"
                   className="w-60 h-60 rounded-xl mb-4"
                 />
-              </div>
-              {/* Upload New Profile Picture */}
-              <div className="mb-6">
-                <input
-                  type="file"
-                  id={`profilePictureUpload-${pet.petID}`} // Make the ID unique per pet
-                  accept="image/*"
-                  className="hidden"
-                  onChange={(e) => handleFileUpload(e, pet)} // Pass pet object to the handler
-                />
-                <label
-                  htmlFor={`profilePictureUpload-${pet.petID}`} // Unique label for each pet
-                  className="cursor-pointer bg-blue-500 text-white px-4 py-2 rounded-lg shadow-md hover:bg-blue-600 transition duration-200"
-                >
-                  Upload New Picture
-                </label>
               </div>
             </div>
             <h3 className="text-xl font-semibold text-blue-600 mb-2">
@@ -180,7 +151,7 @@ const ManagePets = () => {
                 <input
                   type="text"
                   name="petName"
-                  value={formValues.petName || ''}
+                  value={formValues.petName || ""}
                   onChange={handleChange}
                   className="w-full border rounded-lg p-2"
                 />
@@ -190,7 +161,27 @@ const ManagePets = () => {
                 <input
                   type="number"
                   name="petAge"
-                  value={formValues.petAge || ''}
+                  value={formValues.petAge || ""}
+                  onChange={handleChange}
+                  className="w-full border rounded-lg p-2"
+                />
+              </div>
+              <div className="mb-4">
+                <label className="block text-gray-700 mb-2">Behaviour:</label>
+                <input
+                  type="text"
+                  name="petBehaviour"
+                  value={formValues.petBehaviour || ""}
+                  onChange={handleChange}
+                  className="w-full border rounded-lg p-2"
+                />
+              </div>
+              <div className="mb-4">
+                <label className="block text-gray-700 mb-2">Allergies:</label>
+                <input
+                  type="text"
+                  name="petAllergies"
+                  value={formValues.petAllergies || ""}
                   onChange={handleChange}
                   className="w-full border rounded-lg p-2"
                 />
