@@ -26,6 +26,19 @@ const ManagePets = () => {
     fetchPets();
   }, []);
 
+  const handleDeletePet = async (petID) => {
+    if (window.confirm("Are you sure you want to delete this pet?")) {
+      try {
+        await axios.delete(`http://localhost:8080/api/v1/pets/deletePet/${petID}`);
+        alert("Pet deleted successfully!");
+        setPets((prevPets) => prevPets.filter((pet) => pet.petID !== petID));
+      } catch (error) {
+        console.error("Error deleting pet:", error);
+        alert("Failed to delete pet!");
+      }
+    }
+  };
+
   // Fetch image for each pet
   useEffect(() => {
     const fetchImage = async (petID) => {
@@ -137,6 +150,13 @@ const ManagePets = () => {
             >
               Edit Details
             </button>
+            <button
+  className="bg-red-600 text-white px-4 py-2 rounded-lg font-semibold shadow hover:bg-red-800 transform hover:scale-105 transition-all mt-4"
+  onClick={() => handleDeletePet(pet.petID)}
+>
+  Delete Pet
+</button>
+
           </div>
         ))}
       </div>
