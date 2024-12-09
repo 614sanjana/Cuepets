@@ -2,6 +2,7 @@ package com.cuepets.CuePets.Controller;
 
 import com.cuepets.CuePets.Model.PetBreed;
 import com.cuepets.CuePets.Model.PetHealthRecord;
+import com.cuepets.CuePets.Model.PetOwner;
 import com.cuepets.CuePets.Model.Pets;
 import com.cuepets.CuePets.Repository.PetsRepo;
 import com.cuepets.CuePets.Services.PetsServices;
@@ -31,11 +32,11 @@ public class PetsController {
 
     // Endpoint to add a new pet
     @PostMapping("/addPet/{id}")
-    public ResponseEntity<String> addPet(@PathVariable(name="id") String id,@RequestBody Pets pet) {
+    public ResponseEntity<String> addPet(@PathVariable(name = "id") String id, @RequestBody Pets pet) {
         try {
-            Pets savedPet = petsServices.savePets(pet,id);
-            String petId=savedPet.getPetID();
-            petsServices.createPetsFolder(petId,id);
+            Pets savedPet = petsServices.savePets(pet, id);
+            String petId = savedPet.getPetID();
+            petsServices.createPetsFolder(petId, id);
             return new ResponseEntity<>("Pet added successfully with ID: " + savedPet.getPetID(), HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>("Error adding pet: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
@@ -117,5 +118,20 @@ public class PetsController {
         }
     }
 
-
+    @PutMapping("/updatePet/{petID}")
+    public ResponseEntity<String> updatePetByID(@PathVariable String petID, @RequestBody Pets pet) {
+        Pets pets = petsRepo.findByPetID(petID);
+        if (pets != null) {
+            // Update fields of the existing owner object with the new user data
+            pets.setPetName(pet.getPetName()); // Example of updating the name
+            pets.setPetAge(pet.getPetAge());
+            pets.setPetAllergies(pet.getPetAllergies());
+            pets.setPetBehaviour(pet.getPetBehaviour());
+            // Save the updated owner object
+            petsRepo.save(pets);
+            return ResponseEntity.ok("Updated");
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
+        }
+    }
 }

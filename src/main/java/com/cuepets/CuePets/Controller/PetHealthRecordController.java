@@ -20,6 +20,9 @@ public class PetHealthRecordController {
     @Autowired
     private PetHealthRecordServices petHealthRecordServices;
 
+    @Autowired
+    private PetHealthRecordRepo petHealthRecordRepo;
+
     private static final org.slf4j.Logger LOGGER = org.slf4j.LoggerFactory.getLogger(PetOwnerController.class);
 
     @PostMapping(value = "/addRecord/{id}")
@@ -48,19 +51,14 @@ public class PetHealthRecordController {
         return petHealthRecordServices.viewHealthRecordImage(recordID);
     }
 
-    /*
-     Endpoint to delete the record
-  */
-//    @DeleteMapping(value = "/deleteRecord/{id}")
-//    public ResponseEntity<String> deleteRecordByID(@PathVariable(name = "id") String recordId) {
-//        try {
-//            String result = petOwnerServices.deleteUserByID(id);
-//            return ResponseEntity.ok(result);
-//        } catch (NoSuchElementException e) {
-//            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-//        } catch (Exception e) {
-//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-//                    .body("Failed to delete user and associated data. Error: " + e.getMessage());
-//        }
-//    }
+    @DeleteMapping(value="/deleteHealthRecord/{recordID}")
+    public String deleteHealthRecord(@PathVariable(name="recordID") String recordID) {
+        if (petHealthRecordRepo.existsByRecordID(recordID)) {
+            petHealthRecordRepo.deleteByRecordID(recordID);
+            return "Health Record with ID " + recordID + " has been successfully deleted.";
+        } else {
+            return "Health Record with ID " + recordID + " does not exist.";
+        }
+    }
+
 }

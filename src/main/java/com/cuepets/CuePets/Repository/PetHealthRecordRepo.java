@@ -10,4 +10,8 @@ public interface PetHealthRecordRepo extends MongoRepository<PetHealthRecord, St
     Optional<Object> findByRecordID(String recordID);
 
     List<PetHealthRecord> findByPetID(String petId);
+
+    boolean existsByRecordID(String recordID);
+
+    void deleteByRecordID(String recordID);
 }

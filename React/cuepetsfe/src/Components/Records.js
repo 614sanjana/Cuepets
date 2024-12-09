@@ -6,10 +6,10 @@ const Record = () => {
   const [pets, setPets] = useState([]);
   const [selectedPet, setSelectedPet] = useState(null);
   const [healthRecords, setHealthRecords] = useState([]);
-  const [showAddRecordModal, setShowAddRecordModal] = useState(false); // Modal visibility state for adding a record
+  const [showAddRecordModal, setShowAddRecordModal] = useState(false);
   const [imageFile, setImageFile] = useState(null);
   const [description, setDescription] = useState("");
-  const [showModal, setShowModal] = useState(false); // Modal for viewing image
+  const [showModal, setShowModal] = useState(false);
   const [imageToShow, setImageToShow] = useState(null);
   const navigate = useNavigate();
 
@@ -61,24 +61,24 @@ const Record = () => {
     formData.append("description", description);
 
     try {
-      console.log(formData);
       const response = await axios.post(
         `http://localhost:8080/api/v1/healthrecord/addRecord/${selectedPet.petID}`,
         formData,
         {
           headers: {
             "Content-Type": "multipart/form-data",
-          },    
+          },
         }
       );
       alert(response.data);
       setImageFile(null);
       setDescription("");
-      setShowAddRecordModal(false); // Close the modal
+      setShowAddRecordModal(false);
       // Fetch the updated health records
       const updatedRecords = await axios.get(
         `http://localhost:8080/api/v1/healthrecord/getRecords/${selectedPet.petID}`
       );
+      console.log(response.data);
       setHealthRecords(updatedRecords.data || []);
     } catch (error) {
       console.error("Error adding health record:", error);
@@ -107,12 +107,27 @@ const Record = () => {
     setImageToShow(null);
   };
 
+  const handleDeleteRecord = async (recordID) => {
+    try {
+      const response = await axios.delete(`http://localhost:8080/api/v1/healthrecord/deleteHealthRecord/${recordID}`);
+      alert(response.data); // Show success message from the backend
+      // Fetch the updated health records after deletion
+      if (selectedPet) {
+        const updatedRecords = await axios.get(
+          `http://localhost:8080/api/v1/healthrecord/getRecords/${selectedPet.petID}`
+        );
+        setHealthRecords(updatedRecords.data || []);
+      }
+    } catch (error) {
+      console.error("Error deleting health record:", error);
+      alert("Error deleting health record.");
+    }
+  };
+
   return (
     <div className="h-screen p-4 bg-gradient-to-br from-white to-blue-100 text-center font-sans">
       <h1 className="text-4xl font-bold text-blue-600 mb-0">Pet Health Records</h1>
-      <p className="text-lg text-gray-600 mb-8">
-        Manage and view all your pet health records.
-      </p>
+      <p className="text-lg text-gray-600 mb-8">Manage and view all your pet health records.</p>
       <div className="flex h-full">
         {/* Left Side: Pet List */}
         <div className="w-1/4 p-6 overflow-y-auto bg-white shadow rounded-lg max-h-screen">
@@ -147,12 +162,10 @@ const Record = () => {
           {selectedPet ? (
             <>
               <div className="flex justify-between items-center mb-4">
-                <h2 className="text-2xl font-semibold text-blue-600">
-                  {selectedPet.petName}'s Records
-                </h2>
+                <h2 className="text-2xl font-semibold text-blue-600">{selectedPet.petName}'s Records</h2>
                 <button
                   className="bg-green-600 text-white px-6 py-2 rounded-lg shadow hover:bg-green-800 focus:outline-none"
-                  onClick={() => setShowAddRecordModal(true)} // Open the modal
+                  onClick={() => setShowAddRecordModal(true)}
                 >
                   + Add New Record
                 </button>
@@ -176,6 +189,12 @@ const Record = () => {
                           onClick={() => handleViewImage(record)}
                         >
                           View Image
+                        </button>
+                        <button
+                          className="bg-red-600 text-white px-4 ml-10 py-2 rounded-lg hover:bg-red-800 mt-2"
+                          onClick={() => handleDeleteRecord(record.recordID)}
+                        >
+                          Delete
                         </button>
                       </td>
                     </tr>
