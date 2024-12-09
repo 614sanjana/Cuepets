@@ -134,4 +134,9 @@ public class PetsController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
         }
     }
+
+    @DeleteMapping("/deletePet/{petID}")
+    public void deletePet(@PathVariable String petID) {
+        petsRepo.deleteById(petID);
+    }
 }
