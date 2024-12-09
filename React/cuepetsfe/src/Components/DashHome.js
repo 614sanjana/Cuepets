@@ -7,13 +7,12 @@ import Record from "./Records";
 import BlogManage from "./BlogManage";
 import AppointmentScheduler from "./AppointmentForm";
 import AdoptOrRehome from "./Adopt";
-import axios from 'axios';
+import axios from "axios";
 import Cat from "./Cat";
-import { OrbitControls,Text} from '@react-three/drei';
 
 export default function DashHome() {
   const ownerID = localStorage.getItem("ownerID");
-  const [currentComponent, setCurrentComponent] = useState('home');
+  const [currentComponent, setCurrentComponent] = useState("home");
   const [pets, setPets] = useState([]);
   const [imageUrls, setImageUrls] = useState({});
 
@@ -24,8 +23,10 @@ export default function DashHome() {
   useEffect(() => {
     const fetchPets = async () => {
       try {
-        const ownerId = localStorage.getItem('ownerID');
-        const response = await axios.get(`http://localhost:8080/api/v1/pets/allPets/${ownerId}`);
+        const ownerId = localStorage.getItem("ownerID");
+        const response = await axios.get(
+          `http://localhost:8080/api/v1/pets/allPets/${ownerId}`
+        );
         setPets(response.data);
       } catch (error) {
         console.error("Error fetching pets:", error);
@@ -38,7 +39,9 @@ export default function DashHome() {
   useEffect(() => {
     const fetchImage = async (petID) => {
       try {
-        const response = await fetch(`http://localhost:8080/api/v1/pets/viewImage/${petID}`);
+        const response = await fetch(
+          `http://localhost:8080/api/v1/pets/viewImage/${petID}`
+        );
         const imageBlob = await response.blob();
         const imageUrl = URL.createObjectURL(imageBlob);
         setImageUrls((prevState) => ({
@@ -53,7 +56,7 @@ export default function DashHome() {
       }
     };
 
-    pets.forEach(pet => {
+    pets.forEach((pet) => {
       if (!imageUrls[pet.petID]) {
         fetchImage(pet.petID);
       }
@@ -68,14 +71,14 @@ export default function DashHome() {
   return (
     <div className="flex flex-col min-h-screen">
       <AppNavbar onLinkClick={handleLinkClick} />
-      <div className="flex-grow mt-2 p-4 flex">
+      <div className={`flex-grow mt-2 p-4 flex ${currentComponent !== "home" ? "justify-center" : ""}`}>
         {/* Left Side Content */}
-        <div className="w-1/2 p-4">
-          {currentComponent === 'home' && (
+        <div className={`${currentComponent === "home" ? "w-1/2" : "w-full"} p-4`}>
+          {currentComponent === "home" && (
             <div>
               <h1 className="text-4xl font-bold text-blue-600 mb-6">My Pets</h1>
               <div className="flex flex-wrap ml-0 p-10 gap-6 max-w-6xl mx-auto">
-                {pets.slice(0, 2).map((pet, index) => ( // Show only first two pets
+                {pets.slice(0, 2).map((pet, index) => (
                   <div
                     key={index}
                     className="bg-white rounded-xl grid items-center justify-center shadow-lg p-4 w-40 sm:w-60 text-center shadow-blue-400 transform transition-transform hover:-translate-y-2 hover:shadow-xl"
@@ -85,36 +88,42 @@ export default function DashHome() {
                       alt="Profile"
                       className="w-34 h-26 rounded-xl mb-4"
                     />
-                    <h3 className="text-lg font-semibold text-blue-600">{pet.petName}</h3>
+                    <h3 className="text-lg font-semibold text-blue-600">
+                      {pet.petName}
+                    </h3>
                     <p className="text-gray-500">Age: {pet.petAge}</p>
                   </div>
                 ))}
                 <div
                   className="bg-gray-100 rounded-xl shadow-lg p-4 w-40 sm:w-60 text-center transform transition-transform hover:-translate-y-2 hover:shadow-xl cursor-pointer"
-                  onClick={() => setCurrentComponent('dashboard')}
+                  onClick={() => setCurrentComponent("dashboard")}
                 >
                   <div className="flex flex-col items-center justify-center h-full">
                     <p className="text-blue-600 font-bold">View More Pets</p>
-                    <span className="text-sm text-gray-500">(Go to Dashboard)</span>
+                    <span className="text-sm text-gray-500">
+                      (Go to Dashboard)
+                    </span>
                   </div>
                 </div>
               </div>
             </div>
           )}
-          {currentComponent === 'petrecord' && <Record />}
-          {currentComponent === 'article' && <BlogManage />}
-          {currentComponent === 'appointment' && <AppointmentScheduler />}
-          {currentComponent === 'petadopt' && <AdoptOrRehome />}
-          {currentComponent === 'dashboard' && <Dashboard />}
+          {currentComponent === "petrecord" && <Record />}
+          {currentComponent === "article" && <BlogManage />}
+          {currentComponent === "appointment" && <AppointmentScheduler />}
+          {currentComponent === "petadopt" && <AdoptOrRehome />}
+          {currentComponent === "dashboard" && <Dashboard />}
         </div>
 
         {/* Right Side (3D model) */}
-        <div className="w-1/2 h-screen p-4 bg-gray-200">
-  <div className="font-mono text-blue-700 font-semibold text-2xl">
-    Virtual Pet
-  </div>
-  <Cat />
-</div>
+        {currentComponent === "home" && (
+          <div className="w-1/2 h-screen p-4 bg-gray-200">
+            <div className="font-mono text-blue-700 font-semibold text-2xl">
+              Virtual Pet
+            </div>
+            <Cat />
+          </div>
+        )}
       </div>
       <Footer />
     </div>
