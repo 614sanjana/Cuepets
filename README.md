@@ -82,12 +82,6 @@ This will launch both the React frontend and Spring Boot backend together.
 
 ---
 
-### ⚙️ Environment Variables
-
-No special environment variables are currently required for local development.
-
----
-
 ## 🤝 Contributing
 
 Thank you for using Cuepets!  
