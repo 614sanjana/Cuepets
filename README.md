@@ -78,8 +78,6 @@ Make sure the following are installed and configured in your system:
    npm run dev
    ```
 
-This will launch both the React frontend and Spring Boot backend together.
-
 ---
 
 ## 🤝 Contributing
