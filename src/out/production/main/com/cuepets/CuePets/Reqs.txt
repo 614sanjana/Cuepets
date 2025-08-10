@@ -1,0 +1,12 @@
+delete mapping with cascade delete
+get mapping
+get by id
+search method
+pet adoption
+how to retrive all the data in the front end
+CI / CD
+admin board
+clinic ka methods
+
+Addition Things
+virtual pet
