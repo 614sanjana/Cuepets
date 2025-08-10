@@ -19,7 +19,7 @@ Cuepets is a platform designed to streamline the management and maintenance of p
 - 📋 Add, edit, and view pet health records and vaccination schedules  
 - 📅 Schedule and save appointments for pets  
 - 🐶 Add and manage multiple pets  
-- 📝 Post and manage veterinary blogs and articles  
+- 📝 Post and manage veterinary blogs 
 - 🏠 Adopt and rehome pets through the platform  
 - 📊 Dashboard overview for pet owners  
 
