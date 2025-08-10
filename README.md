@@ -11,11 +11,9 @@ Cuepets is a platform designed to streamline the management and maintenance of p
 - Access veterinary blogs  
 - Adopt or rehome pets  
 
-Cuepets also aims to address the growing issue of abandoned and stray animals by facilitating responsible pet ownership and rehoming.
-
 ---
 
-## 🚀 Features
+##  Features
 
 - 🔐 User login/signup (basic authentication)  
 - 📋 Add, edit, and view pet health records and vaccination schedules  
@@ -36,7 +34,7 @@ Cuepets also aims to address the growing issue of abandoned and stray animals by
 
 ---
 
-## 📁 Project Structure
+##  Project Structure
 
 ```
 Cuepets/
@@ -47,9 +45,9 @@ Cuepets/
 
 ---
 
-## 🧰 Getting Started
+##  Getting Started
 
-### ✅ Prerequisites
+###  Prerequisites
 
 Make sure the following are installed and configured in your system:
 
@@ -59,7 +57,7 @@ Make sure the following are installed and configured in your system:
 
 ---
 
-### 🏃‍♀️ Running Locally
+###  Running Locally
 
 1. **Clone the repository:**
 
